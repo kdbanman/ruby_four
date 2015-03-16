@@ -1,0 +1,9 @@
+Connect 4 UI Notes
+==================
+
+1. Gameboard comprised of columns
+	- Columns have slots
+
+2.) Hovering a column displays a ghost token in, "insertion slot"
+
+3.) Indicator of who's turn
