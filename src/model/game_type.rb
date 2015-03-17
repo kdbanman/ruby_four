@@ -1,17 +1,23 @@
-class GameType
+require_relative './game_type_contracts'
+require_relative '../util/common_contracts'
 
-  attr_reader :win_condition
+module GameType
 
-  private
+	include gameTypeContracts
 
   public
 
   def initialize
-
   end
 
-  def new_token(coordinate)
-
+  def GameType.new_token
+  	
+  	#post
+  	isAToken(out)
   end
 
+  def GameType.win_condition(tokenList)
+  	CommonContracts.array(tokenList)
+  	isAToken(tokenList)
+  end
 end
