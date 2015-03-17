@@ -8,6 +8,7 @@ require '../src/model/game_type'
 require '../src/model/game_type_factory'
 require '../src/model/player'
 require '../src/model/token'
+require '../src/model/game_config'
 
 class ModelTests < Minitest::Test
 
@@ -32,11 +33,15 @@ class ModelTests < Minitest::Test
   end
 
   def test_player
-    p = Player.new
+    p = Player.new 'namey'
   end
 
   def test_token
-    t = Token.new
+    t = Token.new Coord.new(1,1), :otto, :T
+  end
+
+  def test_config
+    c = GameConfig.new :otto, :human, :computer, :hard
   end
 
 end

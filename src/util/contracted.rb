@@ -8,3 +8,7 @@ class ContractFailure < StandardError
   end
 
 end
+
+def failure(msg)
+  raise ContractFailure, msg
+end
