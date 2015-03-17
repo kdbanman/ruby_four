@@ -1,5 +1,9 @@
+require_relative '../model/coord_contracts'
+
 # Read only coordinate class with x (column number) and y (height)
 class Coord
+
+  include CoordContracts
 
   attr_reader :column, :height
 
@@ -16,7 +20,7 @@ class Coord
   private
 
   def verify_invariants
-
+    valid_coordinate self
   end
 
 end
