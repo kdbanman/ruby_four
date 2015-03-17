@@ -10,4 +10,10 @@ class HumanPlayer < Player
 
   end
 
+  def get_column(list)
+  	return nil
+  end
+
+
+
 end

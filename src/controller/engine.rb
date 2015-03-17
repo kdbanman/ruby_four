@@ -26,4 +26,10 @@ class Engine
   def setupCloseListener
   end
 
+  def startNewGameMenu
+  end
+
+  def startNewGameScreen
+  end
+
 end
