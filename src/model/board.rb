@@ -15,7 +15,8 @@ class Board
     valid_width col_count
     valid_height col_height
 
-    #postconditions
+    @col_count = col_count
+    @col_height = col_height
 
     invariants self
   end
