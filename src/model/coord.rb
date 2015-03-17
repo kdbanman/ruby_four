@@ -8,6 +8,15 @@ class Coord
   alias_method :y, :height
 
   def initialize(column, height)
+    @column = column
+    @height = height
+
+    verify_invariants
+  end
+
+  private
+
+  def verify_invariants
 
   end
 

@@ -1,8 +1,10 @@
 require 'observer'
+require_relative '../model/data_source_contracts'
 
 class DataSource
 
   include Observable
+  include DataSourceContracts
 
   private
 
@@ -13,13 +15,24 @@ class DataSource
 
   def initialize
 
+    @players = Array.new
+    @players[1] = Player.new 'default'
+    @players[2] = Player.new 'default'
 
-    # invariants
-    #TODO 2 players, players array has 1 and 2 separate players
+    @board = Board.new 6, 7
+
+    verify_invariants
   end
 
   def execute(placeTokenCommand)
 
+  end
+
+  private
+
+  def verify_invariants
+    two_players @players
+    has_board @board
   end
 
 end
