@@ -13,6 +13,9 @@ class DataSource
 
   def initialize
 
+
+    # invariants
+    #TODO 2 players, players array has 1 and 2 separate players
   end
 
   def execute(placeTokenCommand)
