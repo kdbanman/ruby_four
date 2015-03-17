@@ -16,6 +16,7 @@ class GameScreen
 		#pre
 		gameTypeGneratesTokens(gametype)
 		datasource_observable(datasource)
+		input_is_datasource(datasource)
 	end
 
 	def setup
@@ -32,3 +33,8 @@ class GameScreen
 	def setNewGameListener(&block)
 		CommonContracts.block_callable(block)
 	end
+
+	def update(datasource)
+		input_is_datasource(datasource)
+	end
+end

@@ -1,4 +1,3 @@
-
 # Read only coordinate class with x (column number) and y (height)
 class Coord
 
