@@ -1,0 +1,3 @@
+class GameTypeFactory
+
+end
