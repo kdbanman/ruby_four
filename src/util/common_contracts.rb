@@ -1,4 +1,4 @@
-require './contracted'
+require_relative './contracted'
 
 module CommonContracts
 
@@ -47,18 +47,7 @@ module CommonContracts
     end
   end
 
-  def CommonContracts.verify_player(player)
-    unless player == :human || player == :computer
-      failure 'Player must either be :human or :computer'
-    end
-  end
-
-  def CommonContracts.verify_difficulty(difficulty)
-    unless difficulty == :easy || difficulty == :hard
-      failure 'Difficulty must either be :easy or :hard'
-    end
-  end
-
   def CommonContracts.block_callable(block)
     raise ContractFailure, "Block not callable" unless block.responds_to? :call
+  end
 end

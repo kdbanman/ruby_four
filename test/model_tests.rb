@@ -1,14 +1,14 @@
 gem 'minitest'
 require 'minitest/autorun'
-require '../src/util/contracted'
-require '../src/model/board'
-require '../src/model/coord'
-require '../src/model/data_source'
-require '../src/model/game_type'
-require '../src/model/game_type_factory'
-require '../src/model/player'
-require '../src/model/token'
-require '../src/model/game_config'
+require_relative '../src/util/contracted'
+require_relative '../src/model/board'
+require_relative '../src/model/coord'
+require_relative '../src/model/data_source'
+require_relative '../src/model/game_type'
+require_relative '../src/model/game_type_factory'
+require_relative '../src/model/player'
+require_relative '../src/model/token'
+require_relative '../src/model/game_config'
 
 class ModelTests < Minitest::Test
 
@@ -41,7 +41,7 @@ class ModelTests < Minitest::Test
   end
 
   def test_config
-    c = GameConfig.new :otto, :human, :computer, :hard
+    c = GameConfig.new :otto, :human, :computer, 'steve', 'jimbo', :hard
   end
 
 end
