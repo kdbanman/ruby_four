@@ -1,4 +1,4 @@
-require './player'
+require_relative '../model/player'
 
 class ComputerPlayer < Player
 
