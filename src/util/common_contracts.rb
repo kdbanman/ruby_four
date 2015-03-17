@@ -1,4 +1,4 @@
-require_relative './contracted'
+require './contracted'
 
 module CommonContracts
 
@@ -41,4 +41,7 @@ module CommonContracts
       raise ContractFailure, msg
     end
   end
+
+  def CommonContracts.block_callable(block)
+    raise ContractFailure, "Block not callable" unless block.responds_to? :call
 end
