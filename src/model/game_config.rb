@@ -1,17 +1,21 @@
 require_relative '../model/game_config_contracts'
 
+# Object for game initialization.  Produced before any game model.
+# Used to create game type and game model.
 class GameConfig
 
   include GameConfigContracts
 
-  attr_reader :type, :player1, :player2, :difficulty
+  attr_reader :type, :player1, :player2, :name1, :name2, :difficulty
 
   public
 
-  def initialize(type, player1, player2, difficulty)
+  def initialize(type, player1, player2, name1, name2, difficulty)
     @type = type
     @player1 = player1
     @player2 = player2
+    @name1 = name1
+    @name2 = name2
     @difficulty = difficulty
 
     verify_invariants
@@ -23,6 +27,8 @@ class GameConfig
     verify_type type
     verify_player player1
     verify_player player2
+    verify_name name1
+    verify_name name2
     verify_difficulty difficulty
   end
 
