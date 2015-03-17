@@ -6,4 +6,8 @@ class HumanPlayer < Player
 
   public
 
+  def initialize
+
+  end
+
 end

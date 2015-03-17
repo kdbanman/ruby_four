@@ -38,5 +38,5 @@ class ModelTests < Minitest::Test
   def test_token
     t = Token.new
   end
-  
+
 end

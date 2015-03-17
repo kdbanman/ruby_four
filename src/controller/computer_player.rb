@@ -6,4 +6,8 @@ class ComputerPlayer < Player
 
   public
 
+  def initialize
+
+  end
+
 end
