@@ -2,17 +2,16 @@ require_relative './game_board_contracts.rb'
 require_relative '../util/common_contracts.rb'
 
 class GameBoard
-	
-	include GameBoard_Contracts
 
-	private
-	@columnClickListener
-	@columns
-	@@gametype
+  attr_reader :columnClickListener
+  attr_reader :columns
+  attr_reader :gameType
+
+	include GameBoardContracts
 
 	public
 	def initialize(gametype, size)
-		gameTypeGneratesTokens(gametype)
+		game_type_generates_tokens(gametype)
 	end
 
 	def set_column_click_listener(&block)
@@ -24,11 +23,11 @@ class GameBoard
 	end
 
 	def draw_token(coordinate)
-		CommonContracts.valid_coordinate(coordinate, @columns.size, @columns[0].size)
+		CommonContracts.valid_coordinate(coordinate)
 	end
 
 	def draw_ghost(coordinate)
-		CommonContracts.valid_coordinate(coordinate, @columns.size, @columns[0].size)
+		CommonContracts.valid_coordinate(coordinate)
 	end
 	
 	def column_hover_action

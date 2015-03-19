@@ -3,12 +3,9 @@ require_relative './column_contracts.rb'
 
 class Column
 	include ColumnContracts
+  attr_reader :slots
+  attr_reader :size
 
-	private
-	@size
-	@slots
-
-	public
 	def initialize(size)
 	end
 

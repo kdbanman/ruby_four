@@ -2,11 +2,9 @@ require_relative '../util/common_contracts.rb'
 require_relative './slot_contracts.rb'
 
 class Slot
+  attr_accessor :filled
+	include SlotContracts
 
-	include Slot_contracts
-
-	private
-	@filled
 
 	public
 
@@ -15,13 +13,13 @@ class Slot
 
 	def fill
 		#post
-		filled?(filled)
+		filled?(@filled)
 	end
 
 	def draw
 	end
 
-	def is_filled
+	def is_filled?
 	end
 
 end

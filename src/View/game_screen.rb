@@ -1,22 +1,19 @@
 require_relative './game_screen_contracts.rb'
 require './game_board_contracts.rb'
 require '../util/common_contracts.rb'
-require '../util/common_contracts.rb'
 
 class GameScreen
+  attr_reader :gameBoard
 
 	include GameScreenContracts
 	include GameBoardContracts
 
-	private 
-	@gameboard
-
 	public 
 	def initialize(gametype, datasource)
 		#pre
-		gameTypeGneratesTokens(gametype)
-		datasource_observable(datasource)
-		input_is_datasource(datasource)
+		game_type_generates_tokens(gametype)
+		data_source_observable(datasource)
+		input_is_data_source(datasource)
 	end
 
 	def setup
@@ -35,6 +32,6 @@ class GameScreen
 	end
 
 	def update(datasource)
-		input_is_datasource(datasource)
+		input_is_data_source(datasource)
 	end
 end
