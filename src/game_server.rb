@@ -3,7 +3,6 @@ require_relative '../src/util/net_protocol'
 
 require_relative '../src/model/game_config'
 require_relative '../src/model/model'
-require_relative '../src/model/game_type'
 require_relative '../src/model/game_type_factory'
 
 class GameServer

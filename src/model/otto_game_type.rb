@@ -1,7 +1,19 @@
-require_relative '../model/game_type'
+require_relative '../model/game_type_contracts'
 
 module  OttoGameType
 
-  include GameType
+  include GameTypeContracts
+
+  # @param [Coord] coord
+  # @param [Symbol] side either :T or :O
+  def new_token(coord, side)
+    Token.new(coord, :otto, side)
+  end
+
+  # @param [Array<Token>] player_tokens
+  def is_winner(player_tokens)
+    #TODO implement me
+    player_tokens.length > 4 && Random.rand(100) < 50
+  end
 
 end
