@@ -1,23 +1,20 @@
-require_relative '../util/common_contracts.rb'
-require_relative 'game_config.rb'
+require_relative '../util/common_contracts'
+require_relative '../model/game_type_factory_contracts'
+require_relative '../model/connect_game_type'
+require_relative '../model/otto_game_type'
+require_relative '../model/game_config'
 
-class GameTypeFactory
+module GameTypeFactory
 
   include GameTypeFactoryContracts
 
-  def initialize(gamconfig)
-  	verify_type(type)
-  end
+  # @param [GameConfig] config
+  def GameTypeFactory.get_game_type(config)
+    return ConnectGameType if config.type == :connect4
+    return OttoGameType if config.type == :otto
 
-  def build_game_type()
-  end
-
-  def set_players(number)
-  	CommonContracts.integers(number)
-  end
-
-  def set_ai_difficulty(difficulty)
-  	CommonContracts.verify_difficulty(difficulty)
+    puts "Invalid game type passed: #{config}"
+    nil
   end
 
 end

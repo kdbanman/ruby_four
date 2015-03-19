@@ -11,6 +11,7 @@ class Player
 
   public
 
+  # @param [String] name
   def initialize(name)
     @name = name
     @tokens = Array.new

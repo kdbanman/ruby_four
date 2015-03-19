@@ -6,7 +6,7 @@ class GameConfig
 
   include GameConfigContracts
 
-  attr_reader :type, :player1, :player2, :name1, :name2, :difficulty
+  attr_reader :type, :player1, :player2, :name1, :name2, :difficulty, :num_cols, :num_rows
 
   public
 
@@ -17,6 +17,9 @@ class GameConfig
     @name1 = name1
     @name2 = name2
     @difficulty = difficulty
+
+    @num_cols = 7
+    @num_rows = 6
 
     verify_invariants
   end

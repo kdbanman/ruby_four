@@ -3,12 +3,9 @@ require_relative '../util/common_contracts'
 
 module GameType
 
-  include gameTypeContracts
+  include GameTypeContracts
 
   public
-
-  def initialize
-  end
 
   def GameType.new_token
   	

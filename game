@@ -1,0 +1,12 @@
+#! /bin/ruby
+
+require_relative 'src/game_server'
+require_relative 'src/model/game_config'
+
+PORT = 4242
+
+fork { GameServer.new 4242 }
+
+sock = TCPSocket.open('localhost', PORT)
+
+sock.puts Marshal.dump(GameConfig.new(:connect4, :human, :human, 'steve', 'john', :easy))

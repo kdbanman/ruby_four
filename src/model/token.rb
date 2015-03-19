@@ -1,4 +1,5 @@
 require_relative '../model/token_contracts'
+require_relative '../model/coord'
 
 class Token
 
@@ -10,6 +11,9 @@ class Token
 
   public
 
+  # @param [Coord] coord
+  # @param [Symbol] type either :otto or :connect4
+  # @param [Symbol] side either :T or :O (or default nil for :connect4 game type)
   def initialize(coord, type, side = nil)
     @coord = coord
     @type = type
