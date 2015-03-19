@@ -3,7 +3,7 @@ require_relative '../util/common_contracts'
 
 module GameType
 
-	include gameTypeContracts
+  include gameTypeContracts
 
   public
 
@@ -12,12 +12,12 @@ module GameType
 
   def GameType.new_token
   	
-  	#post
-  	isAToken(out)
+    #postconditions
+    isAToken(out)
   end
 
   def GameType.win_condition(tokenList)
-  	CommonContracts.array(tokenList)
-  	isAToken(tokenList)
+    CommonContracts.array(tokenList)
+    isAToken(tokenList)
   end
 end

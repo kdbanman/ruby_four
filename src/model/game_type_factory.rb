@@ -9,14 +9,14 @@ class GameTypeFactory
   	verify_type(type)
   end
 
-  def buildGameType()
+  def build_game_type()
   end
 
-  def setPlayers(number)
+  def set_players(number)
   	CommonContracts.integers(number)
   end
 
-  def setAIdifficulty(difficulty)
+  def set_ai_difficulty(difficulty)
   	CommonContracts.verify_difficulty(difficulty)
   end
 
