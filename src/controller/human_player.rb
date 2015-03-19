@@ -11,7 +11,7 @@ class HumanPlayer < Player
   end
 
   def get_column(list)
-  	return nil
+    return nil
   end
 
 

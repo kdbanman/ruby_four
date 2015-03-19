@@ -11,11 +11,11 @@ class PlaceTokenCommand
   public
 
   def initialize(coordinate)
-  	CommonContracts.valid_coordinate(coordinate)
+    CommonContracts.valid_coordinate(coordinate)
   end
 
   def run(datasource)
-  	input_is_datasource(datasource)
+    input_is_datasource(datasource)
   end
 
 end

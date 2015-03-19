@@ -14,7 +14,7 @@ class Engine
   end
 
   def new_token_command(coordinate)
-  	CommonContracts.valid_coordinate(coordinate)
+    CommonContracts.valid_coordinate(coordinate)
   end
 
   def setupColumnClickListener
