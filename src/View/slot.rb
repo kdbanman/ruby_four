@@ -1,5 +1,5 @@
-require './util/common_contracts.rb'
-require './View/Slot_Contracts.rb'
+require_relative '../util/common_contracts.rb'
+require_relative './slot_contracts.rb'
 
 class Slot
 
@@ -21,7 +21,7 @@ class Slot
 	def draw
 	end
 
-	def isFilled
+	def is_filled
 	end
 
 end

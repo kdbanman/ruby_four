@@ -1,7 +1,7 @@
-require './util/contracted.rb'
-require './model/data_source.rb'
+require_relative '../util/contracted.rb'
+require_relative '../model/data_source.rb'
 
-module GameScreen_Contracts
+module GameScreenContracts
 	def datasource_observable(ds)
 		raise ContractFailure, "Datasource cannot be observed" unless ds.respoonds_to? :addObserver
 	end

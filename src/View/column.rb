@@ -1,8 +1,8 @@
-require './util/common_contracts.rb'
-require './View/Column_Contracts.rb'
+require_relative '../util/common_contracts.rb'
+require_relative './column_contracts.rb'
 
 class Column
-	include Column_Contracts
+	include ColumnContracts
 
 	private
 	@size
@@ -12,7 +12,7 @@ class Column
 	def initialize(size)
 	end
 
-	def drawToken(coordinate)
+	def draw_token(coordinate)
 		#pre
 		valid_coordinate(coordinate, @size)
 
@@ -20,11 +20,11 @@ class Column
 		slot_is_filled(@slots[coordinate.y])
 	end
 
-	def drawGhost(coordinate)
+	def draw_ghost(coordinate)
 		valid_coordinate(coordinate, @size)
 	end
 
-	def setHoverListener(&block)
+	def set_hover_listener(&block)
 		CommonContracts.block_callable(block)
 	end
 end

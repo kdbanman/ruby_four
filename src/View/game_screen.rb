@@ -1,12 +1,12 @@
-require './View/GameScreen_Contracts.rb'
-require './util/common_contracts.rb'
-require './View/GameBoard_Contracts.rb'
-require './util/common_contracts.rb'
+require_relative './game_screen_contracts.rb'
+require './game_board_contracts.rb'
+require '../util/common_contracts.rb'
+require '../util/common_contracts.rb'
 
 class GameScreen
 
-	include GameScreen_Contracts
-	include GameBoard_Contracts
+	include GameScreenContracts
+	include GameBoardContracts
 
 	private 
 	@gameboard
@@ -22,15 +22,15 @@ class GameScreen
 	def setup
 	end
 
-	def setColumnSelectedListener(&block)
+	def set_column_selected_listener(&block)
 		CommonContracts.block_callable(block)
 	end
 
-	def setCloseListener(&block)
+	def set_close_listener(&block)
 		CommonContracts.block_callable(block)
 	end
 
-	def setNewGameListener(&block)
+	def set_new_game_listener(&block)
 		CommonContracts.block_callable(block)
 	end
 

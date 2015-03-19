@@ -1,6 +1,6 @@
 include './util/contracted.rb'
 
-module Column_Contracts
+module ColumnContracts
 	def valid_coordinate(coordinate, col_size)
 		raise ContractFailure, "invalid column coord" unless coordinate.y <= col_size && coordinate.y >= 0 
 	end

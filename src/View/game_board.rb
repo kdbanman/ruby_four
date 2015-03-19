@@ -1,5 +1,5 @@
-require './View/GameBoard_Contracts.rb'
-require './util/common_contracts.rb'
+require_relative './game_board_contracts.rb'
+require_relative '../util/common_contracts.rb'
 
 class GameBoard
 	
@@ -15,7 +15,7 @@ class GameBoard
 		gameTypeGneratesTokens(gametype)
 	end
 
-	def setColumnClickListener(&block)
+	def set_column_click_listener(&block)
 		CommonContracts.block_callable(block)
 	end
 
@@ -23,21 +23,21 @@ class GameBoard
 	def setup
 	end
 
-	def drawToken(coordinate)
+	def draw_token(coordinate)
 		CommonContracts.valid_coordinate(coordinate, @columns.size, @columns[0].size)
 	end
 
-	def drawGhost(coordinate)
+	def draw_ghost(coordinate)
 		CommonContracts.valid_coordinate(coordinate, @columns.size, @columns[0].size)
 	end
 	
-	def columnHoverAction
+	def column_hover_action
 	end
 
-	def handleColumnClick
+	def handle_column_click
 	end
 
-	def handleColumnHover
+	def handle_column_hover
 	end
 
 end
