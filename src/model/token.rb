@@ -30,4 +30,10 @@ class Token
     verify_side @side, @type
   end
 
+  def to_s
+    str = "col: #{coord.column} height: #{coord.height}"
+    str += " side: #{side.to_s}" if @type == :otto
+    str
+  end
+
 end

@@ -4,6 +4,8 @@ class Player
 
   include PlayerContracts
 
+  attr_reader :name, :tokens
+
   private
 
   @name
