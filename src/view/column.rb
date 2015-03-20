@@ -1,13 +1,18 @@
 require_relative '../util/common_contracts.rb'
+require_relative '../resources/column_view.rb'
 require_relative './column_contracts.rb'
 
 class Column
 	include ColumnContracts
   attr_reader :slots
   attr_reader :size
+  attr_reader :colView
 
 	def initialize(size)
-	end
+    @slots = []
+    size.times {slots << Slot.new}
+    @colView = ColumnView.new(@slots.collect {|x| x.slotView})
+  end
 
 	def draw_token(coordinate)
 		#pre
