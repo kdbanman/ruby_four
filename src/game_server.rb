@@ -1,11 +1,13 @@
 require 'socket'
+require_relative '../src/util/net_protocol'
 
 require_relative '../src/model/game_config'
 require_relative '../src/model/model'
-require_relative '../src/model/game_type'
 require_relative '../src/model/game_type_factory'
 
 class GameServer
+
+  include NetProtocol
 
   private
 
@@ -21,13 +23,16 @@ class GameServer
   def initialize(listen_port = 4242)
     server = TCPServer.new listen_port
 
-    puts "'Waiting on client connection on port #{listen_port}..."
+    yield if block_given?
+
+    puts "Waiting on client connection on port #{listen_port}..."
     @client_socket = server.accept
     puts "Client connection accepted: #{@client_socket}"
 
     puts 'Waiting on game config...'
-    config_str = @client_socket.gets
-    puts "Config string received: #{config_str}"
+    config_str = recv_str(@client_socket)
+    puts 'Config string received: '
+    puts config_str
 
     begin
       @config = Marshal.load(config_str) { |parsed| raise TypeError, 'Not a GameConfig object!' unless parsed.is_a? GameConfig }
@@ -43,7 +48,7 @@ class GameServer
 
     puts 'Listening for client messages...'
     loop do
-      message = @client_socket.gets
+      message = recv_str(@client_socket)
 
       process_message(message)
     end

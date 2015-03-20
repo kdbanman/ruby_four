@@ -1,6 +1,5 @@
 require_relative '../util/contracted'
 require_relative '../util/common_contracts'
-require_relative './game_type.rb'
 
 module GameTypeFactoryContracts
   def verify_type(gametype)
