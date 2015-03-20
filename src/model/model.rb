@@ -40,8 +40,8 @@ class Model
   # @param [Integer] column
   def get_col_height(column)
     height = 0
-    @player1.tokens.each { |token| height = [height, token.coord.height].max}
-    @player2.tokens.each { |token| height = [height, token.coord.height].max}
+    @player1.tokens.each { |token| height = [height, token.coord.height].max if token.coord.column == column }
+    @player2.tokens.each { |token| height = [height, token.coord.height].max if token.coord.column == column }
     height
   end
 

@@ -54,6 +54,7 @@ class GameServer
     loop do
       break if @client_socket.closed?
 
+
       message = recv_str(@client_socket)
 
       process_message(message)
@@ -72,11 +73,14 @@ class GameServer
     elsif message =~ token_pattern
       id = message[token_pattern, 1].to_i
       col = message[token_pattern, 2].to_i
-      side = message[token_pattern, 3].to_sym unless message[token_pattern, 3].nil?
+      side = message[token_pattern, 3].to_sym unless message[token_pattern, 3].nil? || @config.type == :connect4
       place_token(col, id, side)
     else
       $stderr.puts 'Invalid command syntax!'
     end
+
+    # Send model to clients
+    send_str(Marshal.dump(@model), @client_socket)
   end
 
   # @param [Integer] playerID
@@ -84,6 +88,7 @@ class GameServer
     # TODO part 5, save game, broadcast exit to both clients, close both sockets
     send_str("exit #{playerID}", @client_socket)
     @client_socket.close
+    exit 0
   end
 
   # @param [Integer] column
@@ -95,7 +100,7 @@ class GameServer
 
     # Make sure column is in bounds [0, col_count - 1], column has at least 1 space
     return unless column >= 0 && column < @model.board.col_count
-    return unless (height = @model.get_col_height(column)) < @model.board.col_height - 1
+    return unless (height = @model.get_col_height(column)) < @model.board.col_height
 
     # Create token at column, stack height + 1
     token = @game_type.new_token(Coord.new(column, height + 1), side)
@@ -108,9 +113,6 @@ class GameServer
 
     # Update current player
     @model.switch_player
-
-    # Send model to clients
-    send_str(Marshal.dump(@model), @client_socket)
   end
 
 end
