@@ -2,10 +2,10 @@ require 'gtk2'
 
 class SlotView < Gtk::Image
 
-  @empty_slot = File.dirname(__FILE__) + '/emptySlot.png'
+  @empty_slot = File.dirname(__FILE__) + 'emptySlot.png'
 
   def initialize
-    super(@empty_slot)
+    super(File.dirname(__FILE__) + '/emptySlot.png')
   end
 
   def fill(filename)

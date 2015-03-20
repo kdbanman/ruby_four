@@ -24,10 +24,11 @@ class GameScreen
     @screen = @builder.get_object('game_screen')
     @boardContainer = @builder.get_object('board_container')
     #TODO CHANGE THIS TO USE GAMETYPE
-    @gameBoard = GameBoard.new(nil,5,5)
+    @gameBoard = GameBoard.new(nil,15,15)
     @boardContainer.add(@gameBoard.boardView)
     @screen.show_all()
     Gtk.main()
+    @screen.resize()
 
 	end
 

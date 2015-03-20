@@ -9,7 +9,7 @@ class BoardView < Gtk::HBox
 
   def addColumn(columnViews)
     columnViews.each do |view|
-      pack_start(view)
+      pack_start(view, true, true, 0)
     end
   end
 

@@ -19,7 +19,7 @@ class Slot
 	def initialize
     #pre
     class_variables_not_null @@player1Token, @@player2Token
-    @slotView = SlotView
+    @slotView = SlotView.new
   end
 
 	def fill
