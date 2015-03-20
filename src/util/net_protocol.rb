@@ -4,17 +4,17 @@ module NetProtocol
 
   # @param [String] str
   # @param [TCPSocket] sock
-  def send_str(str, sock)
+  def send_str(str, sock, err = $stderr)
     # Send pending message size
     size = str.bytesize.to_s
     sock.syswrite size
     # Wait until receiver responds with same confirmed size
-    response = sock.sysread str.bytesize.to_s.bytesize
+    response_size = sock.sysread str.bytesize.to_s.bytesize
     # Send pending message
-    if response == size
+    if response_size == size
       sock.syswrite str
     else
-      $stderr.puts "ERROR: Protocol size mismatch. got #{response} expected #{size}"
+      err.puts "ERROR: Protocol size mismatch. got #{response_size} expected #{size} for msg\n #{str}"
     end
   end
 

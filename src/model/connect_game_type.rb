@@ -13,7 +13,7 @@ module  ConnectGameType
   # @param [Array<Token>] player_tokens
   def ConnectGameType.is_winner(player_tokens)
     #TODO implement me
-    player_tokens.length > 4 && Random.rand(100) < 50
+    Random.rand(100) < 80
   end
 
 end

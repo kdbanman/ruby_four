@@ -17,43 +17,49 @@ class GameServer
   @model
   @game_type
 
+  @out
+  @err
+
 
   public
 
-  def initialize(listen_port = 4242)
+  def initialize(listen_port = 4242, out_file = nil, err_file = nil)
+
+    @out = out_file == nil ? $stdout : File.open(out_file, 'w')
+    @err = err_file == nil ? @out : File.open(err_file, 'w')
+
     server = TCPServer.new listen_port
 
 
     yield if block_given?
 
-    puts "Waiting on client connection on port #{listen_port}..."
+    @out.puts "Waiting on client connection on port #{listen_port}..."
     @client_socket = server.accept
-    puts "Client connection accepted: #{@client_socket.addr[-1]}:#{@client_socket.addr[1]}"
+    @out.puts "Client connection accepted: #{@client_socket.addr[-1]}:#{@client_socket.addr[1]}"
 
-    puts 'Waiting on game config...'
+    @out.puts 'Waiting on game config...'
     config_str = recv_str(@client_socket)
-    puts 'Config string received: '
-    puts config_str
+    @out.puts 'Config string received: '
+    @out.puts config_str
 
     begin
       @config = Marshal.load(config_str) { |parsed| raise TypeError, 'Not a GameConfig object!' unless parsed.is_a? GameConfig }
     rescue TypeError => msg
-      puts 'Client sent unexpected data:'
-      puts msg
+      @err.puts 'Client sent unexpected data:'
+      @err.puts msg
       exit 1
     end
 
-    puts "Initializing game with config:\n#{@config}"
+    @out.puts "Initializing game with config:\n#{@config}"
     @game_type = GameTypeFactory.get_game_type(@config)
     @model = Model.new(@config)
-    send_str(Marshal.dump(@model), @client_socket)
+    send_str(Marshal.dump(@model), @client_socket, @err)
 
     # New Game Sequence now complete, enter game loop.
 
-    puts 'Listening for client messages...'
+    @out.puts 'Listening for client messages...'
     loop do
       break if @client_socket.closed?
-
 
       message = recv_str(@client_socket)
 
@@ -66,7 +72,7 @@ class GameServer
     exit_pattern = /exit (\d)/
     token_pattern = /token (\d) (\d) ?([TO])?/
 
-    puts "Message received from client: #{message}"
+    @out.puts "Message received from client: #{message}"
 
     if message =~ exit_pattern
       exit_game(message[exit_pattern, 1].to_i)
@@ -76,17 +82,28 @@ class GameServer
       side = message[token_pattern, 3].to_sym unless message[token_pattern, 3].nil? || @config.type == :connect4
       place_token(col, id, side)
     else
-      $stderr.puts 'Invalid command syntax!'
+      @err.puts 'Invalid command syntax!'
+    end
+
+    if @game_type.is_winner(@model.player1.tokens)
+      @out.puts 'Player 1 wins'
+      send_str('win 1', @client_socket, @err)
+    elsif @game_type.is_winner(@model.player2.tokens)
+      @out.puts 'Player 2 wins'
+      send_str('win 2', @client_socket, @err)
     end
 
     # Send model to clients
-    send_str(Marshal.dump(@model), @client_socket)
+    @out.puts 'Sending model to clients...'
+    send_str(Marshal.dump(@model), @client_socket, @err)
+    @out.puts 'Model sent'
+
   end
 
   # @param [Integer] playerID
   def exit_game(playerID)
     # TODO part 5, save game, broadcast exit to both clients, close both sockets
-    send_str("exit #{playerID}", @client_socket)
+    send_str("exit #{playerID}", @client_socket, @err)
     @client_socket.close
     exit 0
   end
@@ -107,9 +124,6 @@ class GameServer
 
     # Add token to current player's list
     @model.current_player.tokens.push token
-
-    # Check win condition
-    @game_type.is_winner(@model.current_player.tokens)
 
     # Update current player
     @model.switch_player

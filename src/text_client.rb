@@ -9,7 +9,7 @@ PORT = 1024 + Random.rand(60000)
 
 # Wait for game server to open server socket, then fork a client process
 # to connect to the server.
-GameServer.new(PORT) do
+GameServer.new(PORT, 'out.txt') do
 
   fork do
     sock = TCPSocket.new('localhost', PORT)
@@ -66,8 +66,18 @@ GameServer.new(PORT) do
       if recvd =~ /exit.*/
         puts recvd
         exit 0
+      elsif recvd =~ /win.*/
+        puts "Player #{recvd[/win (\d)/, 1]} wins! 'exit 1' or 'exit 2' to quit."
+        recvd = recv_str(sock)
       end
-      model = Marshal.load(recvd)
+
+      begin
+        model = Marshal.load(recvd)
+      rescue ArgumentError => msg
+        warn "ERROR: did not receive Model marshal.  Got:\n#{recvd}"
+        exit 1
+      end
+
       puts 'player 1 tokens:'
       model.player1.tokens.each { |token| puts "  #{token}" }
       puts 'player 2 tokens:'
