@@ -36,3 +36,4 @@ build/
 *.dia~
 *.dia.autosave
 *.swp
+*.glade~
