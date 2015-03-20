@@ -20,12 +20,17 @@ class GameBoard
     @columns = []
     width.times {@columns << Column.new(height)}
     @boardView = BoardView.new
-    @boardView.addColumn @columns.collect {|x| x.colView}
+    #TODO x.event box should be replaced with x.topWindow or something like that
+    @boardView.addColumn @columns.collect {|x| x.eventBox}
 	end
 
 	def set_column_click_listener(&block)
 		CommonContracts.block_callable(block)
 	end
+
+  def connect_event_handlers
+    @columns.each {|col| col.connect_events}
+  end
 
 	private
 	def draw_token(coordinate)
@@ -35,14 +40,12 @@ class GameBoard
 	def draw_ghost(coordinate)
 		CommonContracts.valid_coordinate(coordinate)
 	end
-	
-	def column_hover_action
-	end
 
 	def handle_column_click
 	end
 
 	def handle_column_hover
-	end
+  end
+
 
 end

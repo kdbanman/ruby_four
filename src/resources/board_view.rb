@@ -3,7 +3,7 @@ require 'gtk2'
 class BoardView < Gtk::HBox
 
   def initialize()
-    super(true, 10)
+    super(true, 5)
     @colViews = []
   end
 

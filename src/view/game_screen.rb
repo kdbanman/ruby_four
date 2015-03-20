@@ -27,9 +27,10 @@ class GameScreen
     @gameBoard = GameBoard.new(nil,15,15)
     @boardContainer.add(@gameBoard.boardView)
     @screen.show_all()
+    #TODO move this into set_close_listener and connect to passed block
+    @screen.signal_connect('destroy') { Gtk.main_quit }
+    set_up_game_board_events
     Gtk.main()
-    @screen.resize()
-
 	end
 
 	def setup
@@ -49,7 +50,14 @@ class GameScreen
 
 	def update(datasource)
 		input_is_data_source(datasource)
-	end
+  end
+
+  private
+
+  def set_up_game_board_events
+    @gameBoard.connect_event_handlers
+  end
+
 end
 
 h = GameScreen.new(1,2)
