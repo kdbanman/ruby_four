@@ -6,12 +6,12 @@ module  ConnectGameType
   include GameTypeContracts
 
   # @param [Coord] coord
-  def new_token(coord)
+  def ConnectGameType.new_token(coord, side = nil)
     Token.new(coord, :connect4)
   end
 
   # @param [Array<Token>] player_tokens
-  def is_winner(player_tokens)
+  def ConnectGameType.is_winner(player_tokens)
     #TODO implement me
     player_tokens.length > 4 && Random.rand(100) < 50
   end

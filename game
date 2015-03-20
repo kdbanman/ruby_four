@@ -15,12 +15,18 @@ GameServer.new(PORT) do
   fork do
     sock = TCPSocket.new('localhost', PORT)
 
-    # TODO this should eventually start the engine and UI stuff.  For now it sends strings to
-    # test the server
+    # TODO start engine
+
+    # TODO start new game dialog, send config with code like below
 
     puts "CLIENT: connected to server at #{sock}"
     config_str = Marshal.dump(GameConfig.new(:connect4, :human, :human, 'steve', 'john', :easy))
     send_str(config_str, sock)
+
+    # TODO the rest
+
+
+
   end
 
 end

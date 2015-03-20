@@ -6,12 +6,12 @@ module  OttoGameType
 
   # @param [Coord] coord
   # @param [Symbol] side either :T or :O
-  def new_token(coord, side)
+  def OttoGameType.new_token(coord, side)
     Token.new(coord, :otto, side)
   end
 
   # @param [Array<Token>] player_tokens
-  def is_winner(player_tokens)
+  def OttoGameType.is_winner(player_tokens)
     #TODO implement me
     player_tokens.length > 4 && Random.rand(100) < 50
   end
