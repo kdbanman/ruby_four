@@ -14,7 +14,7 @@ class GameServer
   @client_socket
 
   @config
-  @model
+  @board
   @game_type
 
   @out
@@ -25,14 +25,16 @@ class GameServer
 
   def initialize(listen_port = 4242, out_file = nil, err_file = nil)
 
-    server = init_io listen_port, out_file, err_file
+    server_sock = init_io listen_port, out_file, err_file
 
     yield if block_given?
 
-    @client_socket = get_client_blocking listen_port, server
+    @client_socket = get_client_blocking listen_port, server_sock
 
     @config = get_config_blocking
-    @game_type, @model = create_game_objects(@config)
+    @game_type, @board = create_game_objects(@config)
+
+    send_board
 
     # New Game Sequence now complete, enter game loop.
 
@@ -81,16 +83,15 @@ class GameServer
   # @param [GameConfig] config
   # @return [Array] Multiple return [GameType, Board]
   def create_game_objects(config)
-    @out.puts "Initializing game with config:\n#{@config}"
-    game_type = GameTypeFactory.get_game_type(@config)
-    model = Board.new(@config)
-    send_str(Marshal.dump(@model), @client_socket, @err)
+    @out.puts "Initializing game with config:\n#{config}"
+    game_type = GameTypeFactory.get_game_type(config)
+    model = Board.new(config)
     [game_type, model]
   end
 
-  def send_model
+  def send_board
     @out.puts 'Sending model to clients...'
-    send_str(Marshal.dump(@model), @client_socket, @err)
+    send_str(Marshal.dump(@board), @client_socket, @err)
     @out.puts 'Model sent'
   end
 
@@ -124,16 +125,16 @@ class GameServer
       @err.puts 'Invalid command syntax!'
     end
 
-    if @game_type.is_winner(@model.player1.tokens)
+    if @game_type.is_winner(@board.player1.tokens)
       @out.puts 'Player 1 wins'
       send_str('win 1', @client_socket, @err)
-    elsif @game_type.is_winner(@model.player2.tokens)
+    elsif @game_type.is_winner(@board.player2.tokens)
       @out.puts 'Player 2 wins'
       send_str('win 2', @client_socket, @err)
     end
 
     # Send model to clients
-    send_model
+    send_board
   end
 
   # @param [Integer] playerID
@@ -148,20 +149,20 @@ class GameServer
   # @param [Symbol] side :T :O or nil
   def place_token(column, playerID, side = nil)
     # Make sure current player is placing
-    return unless @model.is_current_player playerID
+    return unless @board.is_current_player playerID
 
     # Make sure column is in bounds [0, col_count - 1], column has at least 1 space
-    return unless column >= 0 && column < @model.board.col_count
-    return unless (height = @model.get_col_height(column)) < @model.board.col_height
+    return unless column >= 0 && column < @board.board.col_count
+    return unless (height = @board.get_col_height(column)) < @board.board.col_height
 
     # Create token at column, stack height + 1
     token = @game_type.new_token(Coord.new(column, height + 1), side)
 
     # Add token to current player's list
-    @model.current_player.tokens.push token
+    @board.current_player.tokens.push token
 
     # Update current player
-    @model.switch_player
+    @board.switch_player
   end
 
 end
