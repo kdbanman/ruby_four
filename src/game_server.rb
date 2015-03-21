@@ -25,38 +25,76 @@ class GameServer
 
   def initialize(listen_port = 4242, out_file = nil, err_file = nil)
 
-    @out = out_file == nil ? $stdout : File.open(out_file, 'w')
-    @err = err_file == nil ? @out : File.open(err_file, 'w')
-
-    server = TCPServer.new listen_port
-
+    server = init_io listen_port, out_file, err_file
 
     yield if block_given?
 
-    @out.puts "Waiting on client connection on port #{listen_port}..."
-    @client_socket = server.accept
-    @out.puts "Client connection accepted: #{@client_socket.addr[-1]}:#{@client_socket.addr[1]}"
+    @client_socket = get_client_blocking listen_port, server
 
+    @config = get_config_blocking
+    @game_type, @model = create_game_objects(@config)
+
+    # New Game Sequence now complete, enter game loop.
+
+    run_game
+  end
+
+  private
+
+  # @param [Integer] listen_port
+  # @param [String] out_file
+  # @param [String] err_file
+  # @return [TCPServer]
+  def init_io(listen_port, out_file, err_file)
+    @out = out_file == nil ? $stdout : File.open(out_file, 'w')
+    @err = err_file == nil ? @out : File.open(err_file, 'w')
+
+    TCPServer.new listen_port
+  end
+
+  # @param [Integer] listen_port
+  # @param [TCPServer] server
+  # @return [TCPSocket]
+  def get_client_blocking(listen_port, server)
+    @out.puts "Waiting on client connection on port #{listen_port}..."
+    client_socket = server.accept
+    @out.puts "Client connection accepted: #{client_socket.addr[-1]}:#{client_socket.addr[1]}"
+    client_socket
+  end
+
+  # @return [GameConfig]
+  def get_config_blocking
     @out.puts 'Waiting on game config...'
     config_str = recv_str(@client_socket)
     @out.puts 'Config string received: '
     @out.puts config_str
 
     begin
-      @config = Marshal.load(config_str) { |parsed| raise TypeError, 'Not a GameConfig object!' unless parsed.is_a? GameConfig }
+      Marshal.load(config_str) { |parsed| raise TypeError, 'Not a GameConfig object!' unless parsed.is_a? GameConfig }
     rescue TypeError => msg
       @err.puts 'Client sent unexpected data:'
       @err.puts msg
       exit 1
     end
+  end
 
+  # @param [GameConfig] config
+  # @return [Array] Multiple return [GameType, Board]
+  def create_game_objects(config)
     @out.puts "Initializing game with config:\n#{@config}"
-    @game_type = GameTypeFactory.get_game_type(@config)
-    @model = Board.new(@config)
+    game_type = GameTypeFactory.get_game_type(@config)
+    model = Board.new(@config)
     send_str(Marshal.dump(@model), @client_socket, @err)
+    [game_type, model]
+  end
 
-    # New Game Sequence now complete, enter game loop.
+  def send_model
+    @out.puts 'Sending model to clients...'
+    send_str(Marshal.dump(@model), @client_socket, @err)
+    @out.puts 'Model sent'
+  end
 
+  def run_game
     @out.puts 'Listening for client messages...'
     loop do
       break if @client_socket.closed?
@@ -66,8 +104,6 @@ class GameServer
       process_message(message)
     end
   end
-
-  private
 
   # @param [String] message
   def process_message(message)
@@ -126,12 +162,6 @@ class GameServer
 
     # Update current player
     @model.switch_player
-  end
-
-  def send_model
-    @out.puts 'Sending model to clients...'
-    send_str(Marshal.dump(@model), @client_socket, @err)
-    @out.puts 'Model sent'
   end
 
 end
