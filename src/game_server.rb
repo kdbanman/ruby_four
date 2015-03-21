@@ -2,7 +2,7 @@ require 'socket'
 require_relative '../src/util/net_protocol'
 
 require_relative '../src/model/game_config'
-require_relative '../src/model/model'
+require_relative '../src/model/board'
 require_relative '../src/model/game_type_factory'
 
 class GameServer
@@ -52,7 +52,7 @@ class GameServer
 
     @out.puts "Initializing game with config:\n#{@config}"
     @game_type = GameTypeFactory.get_game_type(@config)
-    @model = Model.new(@config)
+    @model = Board.new(@config)
     send_str(Marshal.dump(@model), @client_socket, @err)
 
     # New Game Sequence now complete, enter game loop.
@@ -67,6 +67,8 @@ class GameServer
     end
   end
 
+  private
+
   # @param [String] message
   def process_message(message)
     exit_pattern = /exit (\d)/
@@ -76,6 +78,7 @@ class GameServer
 
     if message =~ exit_pattern
       exit_game(message[exit_pattern, 1].to_i)
+      return
     elsif message =~ token_pattern
       id = message[token_pattern, 1].to_i
       col = message[token_pattern, 2].to_i
@@ -94,10 +97,7 @@ class GameServer
     end
 
     # Send model to clients
-    @out.puts 'Sending model to clients...'
-    send_str(Marshal.dump(@model), @client_socket, @err)
-    @out.puts 'Model sent'
-
+    send_model
   end
 
   # @param [Integer] playerID
@@ -105,7 +105,6 @@ class GameServer
     # TODO part 5, save game, broadcast exit to both clients, close both sockets
     send_str("exit #{playerID}", @client_socket, @err)
     @client_socket.close
-    exit 0
   end
 
   # @param [Integer] column
@@ -127,6 +126,12 @@ class GameServer
 
     # Update current player
     @model.switch_player
+  end
+
+  def send_model
+    @out.puts 'Sending model to clients...'
+    send_str(Marshal.dump(@model), @client_socket, @err)
+    @out.puts 'Model sent'
   end
 
 end

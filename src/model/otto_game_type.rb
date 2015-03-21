@@ -13,7 +13,7 @@ module  OttoGameType
   # @param [Array<Token>] player_tokens
   def OttoGameType.is_winner(player_tokens)
     #TODO implement me
-    player_tokens.length > 4 && Random.rand(100) < 50
+    false
   end
 
 end

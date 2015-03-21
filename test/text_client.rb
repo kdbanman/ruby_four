@@ -1,4 +1,4 @@
-require_relative '../src/model/model'
+require_relative '../src/model/board'
 require_relative '../src/util/net_protocol'
 require_relative '../src/game_server'
 require_relative '../src/model/game_config'

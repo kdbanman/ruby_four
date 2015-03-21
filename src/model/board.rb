@@ -1,24 +1,48 @@
-require_relative './board_contracts'
+require_relative '../model/player'
+require_relative '../model/board_dimensions'
+require_relative '../model/game_config'
 
 class Board
 
-  include BoardContracts
-
-  attr_reader :col_count, :col_height
+  attr_reader :board, :player1, :player2, :current_player_id
 
   private
 
+  @board
+  @player1
+  @player2
+  @current_player_id
+
   public
 
-  def initialize(col_count, col_height)
-    # preconditions
-    valid_width col_count
-    valid_height col_height
+  # @param [GameConfig] config
+  def initialize(config)
+    @board = BoardDimensions.new(config.num_cols, config.num_rows)
+    @player1 = Player.new(config.name1)
+    @player2 = Player.new(config.name2)
+    @current_player_id = 1
+  end
 
-    @col_count = col_count
-    @col_height = col_height
+  def switch_player
+    @current_player_id = 1 + @current_player_id % 2
+  end
 
-    invariants self
+  def current_player
+    return @player1 if @current_player_id == 1
+    return @player2 if @current_player_id == 2
+  end
+
+  # @param [Integer] id
+  def is_current_player(id)
+    id == @current_player_id
+  end
+
+  # @param [Integer] column
+  def get_col_height(column)
+    height = 0
+    @player1.tokens.each { |token| height = [height, token.coord.height].max if token.coord.column == column }
+    @player2.tokens.each { |token| height = [height, token.coord.height].max if token.coord.column == column }
+    height
   end
 
 end

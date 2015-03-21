@@ -19,7 +19,7 @@ class DataSource
     @players[1] = Player.new 'default'
     @players[2] = Player.new 'default'
 
-    @board = Board.new 6, 7
+    @board = BoardDimensions.new 6, 7
 
     verify_invariants
   end

@@ -1,7 +1,7 @@
 require_relative '../util/contracted'
 require_relative '../util/common_contracts'
 require_relative '../model/player'
-require_relative '../model/board'
+require_relative '../model/board_dimensions'
 
 module DataSourceContracts
 
@@ -17,7 +17,7 @@ module DataSourceContracts
   end
 
   def has_board(board)
-    unless board.is_a? Board
+    unless board.is_a? BoardDimensions
       failure 'Must have a board attribute'
     end
   end
