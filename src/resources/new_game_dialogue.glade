@@ -2,9 +2,11 @@
 <interface>
   <requires lib="gtk+" version="2.24"/>
   <!-- interface-naming-policy project-wide -->
-  <object class="GtkDialog" id="dialog1">
+  <object class="GtkDialog" id="main_window">
     <property name="can_focus">False</property>
     <property name="border_width">5</property>
+    <property name="title" translatable="yes">New Game</property>
+    <property name="resizable">False</property>
     <property name="type_hint">dialog</property>
     <child internal-child="vbox">
       <object class="GtkVBox" id="dialog-vbox1">
@@ -156,7 +158,7 @@
               </packing>
             </child>
             <child>
-              <object class="GtkRadioButton" id="radiobutton1">
+              <object class="GtkRadioButton" id="players2_radio_button">
                 <property name="label" translatable="yes">2</property>
                 <property name="width_request">41</property>
                 <property name="height_request">20</property>
@@ -170,6 +172,123 @@
               <packing>
                 <property name="x">217</property>
                 <property name="y">103</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkEntry" id="player1_entry_box">
+                <property name="width_request">100</property>
+                <property name="height_request">24</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="invisible_char">•</property>
+                <property name="primary_icon_activatable">False</property>
+                <property name="secondary_icon_activatable">False</property>
+                <property name="primary_icon_sensitive">True</property>
+                <property name="secondary_icon_sensitive">True</property>
+              </object>
+              <packing>
+                <property name="x">10</property>
+                <property name="y">160</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel" id="label1">
+                <property name="width_request">83</property>
+                <property name="height_request">31</property>
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="label" translatable="yes">Player 1:</property>
+              </object>
+              <packing>
+                <property name="y">128</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel" id="label2">
+                <property name="width_request">100</property>
+                <property name="height_request">24</property>
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="label" translatable="yes">Player 2:</property>
+              </object>
+              <packing>
+                <property name="x">160</property>
+                <property name="y">133</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkEntry" id="player2_entry_box">
+                <property name="width_request">100</property>
+                <property name="height_request">24</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="invisible_char">•</property>
+                <property name="xalign">0.039999999105930328</property>
+                <property name="primary_icon_activatable">False</property>
+                <property name="secondary_icon_activatable">False</property>
+                <property name="primary_icon_sensitive">True</property>
+                <property name="secondary_icon_sensitive">True</property>
+              </object>
+              <packing>
+                <property name="x">171</property>
+                <property name="y">160</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkHSeparator" id="hseparator2">
+                <property name="width_request">365</property>
+                <property name="height_request">20</property>
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+              </object>
+              <packing>
+                <property name="y">183</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel" id="label3">
+                <property name="width_request">150</property>
+                <property name="height_request">35</property>
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="label" translatable="yes">Computer Difficulty:</property>
+              </object>
+              <packing>
+                <property name="y">201</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkRadioButton" id="computer_difficulty_easy">
+                <property name="label" translatable="yes">Easy</property>
+                <property name="width_request">67</property>
+                <property name="height_request">24</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">False</property>
+                <property name="use_action_appearance">False</property>
+                <property name="active">True</property>
+                <property name="draw_indicator">True</property>
+              </object>
+              <packing>
+                <property name="x">15</property>
+                <property name="y">242</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkRadioButton" id="computer_difficulty_hard">
+                <property name="label" translatable="yes">Hard</property>
+                <property name="width_request">71</property>
+                <property name="height_request">20</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">False</property>
+                <property name="use_action_appearance">False</property>
+                <property name="active">True</property>
+                <property name="draw_indicator">True</property>
+              </object>
+              <packing>
+                <property name="x">152</property>
+                <property name="y">245</property>
               </packing>
             </child>
           </object>
