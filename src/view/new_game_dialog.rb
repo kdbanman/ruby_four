@@ -18,12 +18,31 @@ class NewGameDialog
     Gtk.main
   end
 
+  def setup_ok_listener (&block)
+
+  end
+
+  def setup_cancel_listener(&block)
+
+  end
+
   private
   def set_up_game_type
     tootButton = @builder.get_object('toot_radio_button')
     c4Button = @builder.get_object('connect4_radio_button')
 
     c4Button.group = tootButton
+
+    @gametype = :toot
+    tootButton.group.each do |groupItem|
+      groupItem.signal_connect('toggled') do |button|
+        if button.active?
+          #todo could be extracted into class if have time
+          @gametype = :toot if button.name == 'toot_radio_button'
+          @gametype = :connect4 if button.name == 'connect4_radio_button'
+        end
+      end
+    end
   end
 
   def set_up_players
@@ -36,6 +55,7 @@ class NewGameDialog
 
     player2Name = @builder.get_object('player2_entry_box')
     player2Name.set_sensitive FALSE
+
   end
 
   def set_up_difficulty
@@ -44,6 +64,8 @@ class NewGameDialog
 
     hardButton.group = easyButton
   end
+
+
 end
 
 h = NewGameDialog.new
