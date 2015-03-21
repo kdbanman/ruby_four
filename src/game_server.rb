@@ -113,10 +113,10 @@ class GameServer
 
     @out.puts "Message received from client: #{message}"
 
-    if message =~ exit_pattern
-      exit_game(message[exit_pattern, 1].to_i)
+    if message =~ @game_type::EXIT_PATTERN
+      exit_game(@game_type.get_exiter(message))
       return
-    elsif message =~ token_pattern
+    elsif message =~ @game_type::TOKEN_PATTERN
       id = message[token_pattern, 1].to_i
       col = message[token_pattern, 2].to_i
       side = message[token_pattern, 3].to_sym unless message[token_pattern, 3].nil? || @config.type == :connect4
