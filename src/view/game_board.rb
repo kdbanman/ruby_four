@@ -21,7 +21,6 @@ class GameBoard
     @columns = []
     width.times {@columns << Column.new(height)}
     @boardView = BoardView.new
-    #TODO x.event box should be replaced with x.topWindow or something like that
     @boardView.addColumn @columns.collect {|x| x.topView}
 	end
 
