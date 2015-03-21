@@ -25,7 +25,12 @@ class GameBoard
 	end
 
 	def set_column_click_listener(&block)
-		CommonContracts.block_callable(block)
+    CommonContracts.block_callable(block)
+    @columnClickListener = block
+    columns.length.times do |i|
+      column = @columns[i]
+      column.set_on_click_listener {handle_column_click i}
+    end
 	end
 
   def connect_event_handlers
@@ -41,7 +46,8 @@ class GameBoard
 		CommonContracts.valid_coordinate(coordinate)
 	end
 
-	def handle_column_click
+	def handle_column_click (colNumber)
+    @columnClickListener.call colNumber
 	end
 
 	def handle_column_hover

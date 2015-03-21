@@ -39,6 +39,11 @@ class Column
     @eventBox.add(@colView)
   end
 
+  def set_on_click_listener(&block)
+    @eventBox.signal_connect('button_release_event') do
+      yield
+    end
+  end
 
   def connect_events
     @eventBox.realize

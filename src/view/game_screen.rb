@@ -28,24 +28,27 @@ class GameScreen
     @boardContainer.add(@gameBoard.boardView)
     @screen.show_all()
     #TODO move this into set_close_listener and connect to passed block
-    @screen.signal_connect('destroy') { Gtk.main_quit }
     set_up_game_board_events
-    Gtk.main()
 	end
 
-	def setup
+	def start
+    @screen.signal_connect('destroy') { Gtk.main_quit }
+    Gtk.main()
 	end
 
 	def set_column_selected_listener(&block)
 		CommonContracts.block_callable(block)
+    @gameBoard.set_column_click_listener &block
 	end
 
 	def set_close_listener(&block)
 		CommonContracts.block_callable(block)
+    @closeListener = block
 	end
 
 	def set_new_game_listener(&block)
 		CommonContracts.block_callable(block)
+    @newGameListener = block
 	end
 
 	def update(datasource)
@@ -56,8 +59,11 @@ class GameScreen
 
   def set_up_game_board_events
     @gameBoard.connect_event_handlers
+
   end
 
 end
 
 h = GameScreen.new(1,2)
+h.set_column_selected_listener {|col| puts "clicked in col: #{col}"}
+h.start
