@@ -14,6 +14,7 @@ class GameBoard
 
 	public
 	def initialize(gametype, width, height)
+    #TODO uncomment this contract
 		#game_type_generates_tokens(gametype)
     #TODO change this to use gametype
     Slot.initializeTokens 'a', 'b'
@@ -21,7 +22,7 @@ class GameBoard
     width.times {@columns << Column.new(height)}
     @boardView = BoardView.new
     #TODO x.event box should be replaced with x.topWindow or something like that
-    @boardView.addColumn @columns.collect {|x| x.eventBox}
+    @boardView.addColumn @columns.collect {|x| x.topView}
 	end
 
 	def set_column_click_listener(&block)
@@ -45,6 +46,7 @@ class GameBoard
 	end
 
 	def handle_column_hover
+
   end
 
 

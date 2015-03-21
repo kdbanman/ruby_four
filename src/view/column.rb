@@ -44,11 +44,22 @@ class Column
     @eventBox.realize
 
     @eventBox.signal_connect('enter_notify_event') do
-      puts 'entered'
+      @slots.each do |slot|
+        unless slot.is_filled?
+          slot.draw_ghost
+          break
+        end
+      end
     end
 
     @eventBox.signal_connect('leave_notify_event') do
-      puts 'exited'
+      @slots.each do |slot|
+        slot.clear_ghost
+      end
     end
+  end
+
+  def topView
+    @eventBox
   end
 end
