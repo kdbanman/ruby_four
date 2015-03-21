@@ -27,11 +27,11 @@ class GameScreen
     @gameBoard = GameBoard.new(nil,15,15)
     @boardContainer.add(@gameBoard.boardView)
     @screen.show_all()
-    #TODO move this into set_close_listener and connect to passed block
     set_up_game_board_events
 	end
 
 	def start
+    #TODO move this into set_close_listener and connect to passed block
     @screen.signal_connect('destroy') { Gtk.main_quit }
     Gtk.main()
 	end
@@ -59,7 +59,6 @@ class GameScreen
 
   def set_up_game_board_events
     @gameBoard.connect_event_handlers
-
   end
 
 end

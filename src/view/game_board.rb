@@ -50,9 +50,4 @@ class GameBoard
     @columnClickListener.call colNumber
 	end
 
-	def handle_column_hover
-
-  end
-
-
 end
