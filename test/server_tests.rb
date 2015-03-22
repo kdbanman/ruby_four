@@ -29,7 +29,7 @@ class ServerTests < Minitest::Test
 
   def test_config
     wrapped_server do |sock|
-      config_str = Marshal.dump(GameConfig.new(:connect4, :human, :human, 'steve', 'john', :easy))
+      config_str = Marshal.dump(GameConfig.new(:connect4, :human, :human, 'steve', 'john', :easy, 6, 7))
       send_str(config_str, sock)
 
       puts 'receiving model...'
@@ -47,7 +47,7 @@ class ServerTests < Minitest::Test
 
   def test_exit_1
     wrapped_server do |sock|
-      config_str = Marshal.dump(GameConfig.new(:connect4, :human, :human, 'steve', 'john', :easy))
+      config_str = Marshal.dump(GameConfig.new(:connect4, :human, :human, 'steve', 'john', :easy, 10, 9))
       send_str(config_str, sock)
 
       model = Marshal.load(recv_str(sock))
@@ -61,7 +61,7 @@ class ServerTests < Minitest::Test
 
   def test_exit_2
     wrapped_server do |sock|
-      config_str = Marshal.dump(GameConfig.new(:connect4, :human, :human, 'steve', 'john', :easy))
+      config_str = Marshal.dump(GameConfig.new(:connect4, :human, :human, 'steve', 'john', :easy, 4, 4))
       send_str(config_str, sock)
 
       model = Marshal.load(recv_str(sock))

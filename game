@@ -20,7 +20,7 @@ GameServer.new(PORT) do
     # TODO start new game dialog, send config with code like below
 
     puts "CLIENT: connected to server at #{sock}"
-    config_str = Marshal.dump(GameConfig.new(:connect4, :human, :human, 'steve', 'john', :easy))
+    config_str = Marshal.dump(GameConfig.new(:connect4, :human, :human, 'steve', 'john', :easy, 6, 7))
     send_str(config_str, sock)
 
     # TODO the rest
