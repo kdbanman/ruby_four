@@ -19,7 +19,7 @@ class NewGameDialog
     set_up_game_type
     set_up_players
     set_up_difficulty
-    setup_cancel_listener
+    connect_cancel_listener
   end
 
   def start
@@ -33,16 +33,42 @@ class NewGameDialog
   end
 
   def setup_ok_listener (&block)
-
+    @okListener = block
   end
 
   private
 
-  def setup_cancel_listener
+  def connect_cancel_listener
     cancel_button = @builder.get_object('cancel_button')
     cancel_button.signal_connect('released') do
       kill
     end
+  end
+
+  def connect_ok_listener
+    ok_button = @builder.get_object('ok_button')
+    ok_button.signal_connect('released') do
+      ok_listener
+    end
+  end
+
+  def ok_listener
+    if validate_fields
+      @okListener.call(get_fields)
+      kill
+    end
+  end
+
+  def get_fields
+
+  end
+
+  def validate_fields
+
+  end
+
+  def validate_name
+
   end
 
   def set_up_game_type
