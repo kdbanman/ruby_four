@@ -78,10 +78,8 @@ GameServer.new(PORT, 'out.txt') do
         exit 1
       end
 
-      puts 'player 1 tokens:'
-      model.player1.tokens.each { |token| puts "  #{token}" }
-      puts 'player 2 tokens:'
-      model.player2.tokens.each { |token| puts "  #{token}" }
+      puts 'tokens:'
+      model.tokens.each { |token| puts "  #{token}" }
 
       puts "current player: #{model.current_player_id}"
       puts 'command?'

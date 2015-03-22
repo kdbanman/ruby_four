@@ -108,7 +108,6 @@ class GameServer
 
   # @param [String] message
   def process_message(message)
-    exit_pattern = /exit (\d)/
     token_pattern = /token (\d) (\d) ?([TO])?/
 
     @out.puts "Message received from client: #{message}"
@@ -125,10 +124,10 @@ class GameServer
       @err.puts 'Invalid command syntax!'
     end
 
-    if @game_type.is_winner(@board.player1.tokens)
+    if @game_type.is_winner(@board.tokens)
       @out.puts 'Player 1 wins'
       send_str('win 1', @client_socket, @err)
-    elsif @game_type.is_winner(@board.player2.tokens)
+    elsif @game_type.is_winner(@board.tokens)
       @out.puts 'Player 2 wins'
       send_str('win 2', @client_socket, @err)
     end
@@ -155,11 +154,13 @@ class GameServer
     return unless column >= 0 && column < @board.board.col_count
     return unless (height = @board.get_col_height(column)) < @board.board.col_height
 
+    side = playerID if @config.type == :connect4 #TODO fix token creation system this is ugly
+
     # Create token at column, stack height + 1
     token = @game_type.new_token(Coord.new(column, height + 1), side)
 
     # Add token to current player's list
-    @board.current_player.tokens.push token
+    @board.add_token token
 
     # Update current player
     @board.switch_player

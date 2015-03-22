@@ -20,6 +20,10 @@ class Coord
     verify_invariants
   end
 
+  def to_s
+    "(#{@column}, #{@height}}"
+  end
+
   private
 
   def verify_invariants

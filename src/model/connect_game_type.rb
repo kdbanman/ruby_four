@@ -10,8 +10,11 @@ module  ConnectGameType
   TOKEN_PATTERN = /token ([12]) (\d)/
 
   # @param [Coord] coord
-  def ConnectGameType.new_token(coord, side = nil)
-    Token.new(coord, :connect4)
+  # @param [Integer] player 1 for player 1, 2 for player 2
+  def GameType.new_token(coord, player)
+    # preconditions
+    # TODO player is 1 or 2
+    Token.new(coord, player)
   end
 
   # @param [Array<Token>] player_tokens
