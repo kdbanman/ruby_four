@@ -108,25 +108,15 @@ class GameServer
 
   # @param [String] message
   def process_message(message)
-    token_pattern = /token (\d) (\d) ?([TO])?/
-
     @out.puts "Message received from client: #{message}"
 
     if message =~ @game_type::EXIT_PATTERN
       exit_game(@game_type.get_exiter(message))
       return
     elsif message =~ @game_type::TOKEN_PATTERN
-      PlaceTokenCommand.new(message, @game_type).run(@board)
+      check_winner if PlaceTokenCommand.new(message, @game_type).run(@board)
     else
       @err.puts 'Invalid command syntax!'
-    end
-
-    if @game_type.get_winner(@board.tokens)
-      @out.puts 'Player 1 wins'
-      send_str('win 1', @client_socket, @err)
-    elsif @game_type.get_winner(@board.tokens)
-      @out.puts 'Player 2 wins'
-      send_str('win 2', @client_socket, @err)
     end
 
     # Send model to clients
@@ -138,6 +128,15 @@ class GameServer
     # TODO part 5, save game, broadcast exit to both clients, close both sockets
     send_str("exit #{playerID}", @client_socket, @err)
     @client_socket.close
+  end
+
+  def check_winner
+    puts @board.most_recent_token
+
+    if (winner = @game_type.get_winner(@board))
+      @out.puts "Player #{winner} wins"
+      send_str("win #{winner}", @client_socket, @err)
+    end
   end
 
 end

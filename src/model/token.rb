@@ -29,8 +29,7 @@ class Token
 
   def to_s
     str = "col: #{coord.column} height: #{coord.height}"
-    str += " type: #{@type.to_s}"
-    str
+    str + " type: #{@type.to_s}"
   end
 
 end

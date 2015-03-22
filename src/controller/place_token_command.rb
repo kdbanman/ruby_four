@@ -30,16 +30,18 @@ class PlaceTokenCommand
   end
 
   # @param [Board] board
+  # @return [Boolean] whether or not token was placed
   def run(board)
     #preconditions
     #TODO input is a board
 
-    return unless is_valid_command(board) && board.get_player(@player_id).pop_token(@token_type)
+    return false unless is_valid_command(board) && board.get_player(@player_id).pop_token(@token_type)
 
     height = board.get_col_height @column
     token = @game_type.new_token(Coord.new(@column, height + 1), @token_type)
     board.add_token token
     board.switch_player
+    true
   end
 
   private

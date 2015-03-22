@@ -36,7 +36,7 @@ module CommonContracts
       failure 'Parameter must a Coordinate'
     end
 
-    unless [coordinate.x, coordinate.y].each.all? { |param| param.is_a?(Integer) && param >= 0 }
+    unless [coordinate.x, coordinate.y].each.all? { |param| param.is_a?(Integer) }
       raise ContractFailure, 'Parameter must a Coordinate of positive integers.'
     end
   end

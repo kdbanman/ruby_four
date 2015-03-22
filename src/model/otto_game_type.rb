@@ -41,7 +41,12 @@ module  OttoGameType
   # @param [Board] board
   # @return [Integer or nil] nil for no winner, 1 or 2 for player winner
   def OttoGameType.get_winner(board)
-    #TODO implement me
+    board.each_colinear(board.most_recent_token.coord) do |line|
+      puts line.to_s
+
+      return 1 if line == WIN_PATTERN_1
+      return 2 if line == WIN_PATTERN_2
+    end
     nil
   end
 
