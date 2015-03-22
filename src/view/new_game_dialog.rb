@@ -1,3 +1,6 @@
+require_relative '../model/game_config.rb'
+require_relative '../util/name_entry.rb'
+require_relative '../util/size_entry.rb'
 require 'gtk2'
 #TODO this file could use some major refactoring
 class NewGameDialog
@@ -11,6 +14,9 @@ class NewGameDialog
 
   PLAYER1_ENTRY_BOX = 'player1_entry_box'
   PLAYER2_ENTRY_BOX = 'player2_entry_box'
+
+  WIDTH_ENTRY_BOX = 'width_entry_box'
+  HEIGHT_ENTRY_BOX = 'height_entry_box'
 
   OK_BUTTON = 'ok_button'
   CANCEL_BUTTON = 'cancel_button'
@@ -65,39 +71,42 @@ class NewGameDialog
 
   def ok_listener
     if validate_fields
-      @okListener.call(get_fields)
+      @okListener.call(get_config)
       kill
     end
   end
 
   def get_fields
-    player1_name = @builder.get_object(PLAYER1_ENTRY_BOX)
-    player2_name = @builder.get_object(PLAYER2_ENTRY_BOX)
+    @player1_name = NameEntry.new @builder.get_object(PLAYER1_ENTRY_BOX), PLAYER1_ENTRY_BOX
+    @player2_name = NameEntry.new @builder.get_object(PLAYER2_ENTRY_BOX), PLAYER2_ENTRY_BOX
 
-    return [player1_name, player2_name]
+    @width = SizeEntry.new @builder.get_object(WIDTH_ENTRY_BOX), WIDTH_ENTRY_BOX
+    @height = SizeEntry.new @builder.get_object(HEIGHT_ENTRY_BOX), HEIGHT_ENTRY_BOX
+  end
+
+  def get_config
+    names = get_fields
+    #TODO need rows and columns
+    GameConfig.new(@gametype, @player1, @player2, names[0] || 'computer1', names[1] || 'computer2', @difficulty)
   end
 
   def validate_fields
-    names = get_fields
+    get_fields
     if @player1 == :human
-      unless validate_name names[0].text
+      unless @player1_name.valid?
         puts 'INVALID NAME'
         return FALSE
         end
     end
 
     if @player2 == :human
-      unless validate_name names[1].text
+      unless @player2_name.valid?
         puts 'INVALID NAME'
         return FALSE
       end
     end
 
-    return TRUE
-  end
-
-  def validate_name(name)
-    name.match(/^[A-Za-z0-9]+$/)
+    return @width.valid? && @height.valid?
   end
 
   def set_up_game_type
