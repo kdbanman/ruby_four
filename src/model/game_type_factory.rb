@@ -9,6 +9,7 @@ module GameTypeFactory
   include GameTypeFactoryContracts
 
   # @param [GameConfig] config
+  # @return [GameType]
   def GameTypeFactory.get_game_type(config)
     return ConnectGameType if config.type == :connect4
     return OttoGameType if config.type == :otto

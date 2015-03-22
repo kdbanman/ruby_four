@@ -85,7 +85,7 @@ class GameServer
   def create_game_objects(config)
     @out.puts "Initializing game with config:\n#{config}"
     game_type = GameTypeFactory.get_game_type(config)
-    model = Board.new(config)
+    model = Board.new(config, game_type)
     [game_type, model]
   end
 

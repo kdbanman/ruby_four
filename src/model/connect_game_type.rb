@@ -9,6 +9,18 @@ module  ConnectGameType
 
   TOKEN_PATTERN = /token ([12]) (\d)/
 
+  WIN_PATTERN_1 = [1, 1, 1, 1]
+  WIN_PATTERN_2 = [2, 2, 2, 2]
+
+  # @param player [Integer] player 1 or 2
+  # @param board [Integer] count
+  def ConnectGameType.make_initial_tokens(player, count)
+    # preconditions
+    #TODO player is either 1 or 2
+    #TODO count is >= 16 (min 4x4 game)
+    (1..count).map { player }
+  end
+
   # @param [Coord] coord
   # @param [Integer] player 1 for player 1, 2 for player 2
   def ConnectGameType.new_token(coord, player)

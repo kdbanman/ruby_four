@@ -34,7 +34,7 @@ class PlaceTokenCommand
     #preconditions
     #TODO input is a board
 
-    return unless is_valid_command(board)
+    return unless is_valid_command(board) && board.get_player(@player_id).pop_token(@token_type)
 
     height = board.get_col_height @column
     token = @game_type.new_token(Coord.new(@column, height + 1), @token_type)

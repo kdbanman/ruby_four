@@ -80,4 +80,34 @@ class ServerTests < Minitest::Test
     end
   end
 
+
+  def test_all_the_ts
+    wrapped_server do |sock|
+      config_str = Marshal.dump(GameConfig.new(:otto, :human, :human, 'steve', 'john', :easy, 8, 8))
+      send_str(config_str, sock)
+
+      model = Marshal.load(recv_str(sock))
+
+      500.times do
+        # send token command
+        send_str("token #{model.current_player_id} #{Random.rand(8)} T", sock)
+
+        # receive new model
+        model = Marshal.load(recv_str(sock))
+      end
+
+      assert(model.player1.remaining_tokens.all? { |type| type == :O})
+      assert(model.player2.remaining_tokens.all? { |type| type == :O})
+      assert(model.token_count == 32)
+
+      puts model.tokens
+
+      # exit current player
+      send_str('exit 2', sock)
+
+      assert_equal('exit 2', recv_str(sock))
+      sock.close
+    end
+  end
+
 end

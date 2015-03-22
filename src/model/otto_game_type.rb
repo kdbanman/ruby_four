@@ -9,6 +9,20 @@ module  OttoGameType
 
   TOKEN_PATTERN = /token ([12]) (\d) ([TO])/
 
+  WIN_PATTERN_1 = [:O, :T, :T, :O]
+  WIN_PATTERN_2 = [:T, :O, :O, :T]
+
+  # @param player [Integer] player 1 or 2
+  # @param board [Integer] count
+  def OttoGameType.make_initial_tokens(player, count)
+    # preconditions
+    #TODO player is either 1 or 2
+    #TODO count is >= 8 (half of min 4x4 game)
+    t_tokens = (1..(count/2.0).ceil).map { :T }
+    o_tokens = t_tokens.map { :O }
+    t_tokens.concat o_tokens
+  end
+
   # @param [Coord] coord
   # @param [Symbol] letter either :T or :O
   def OttoGameType.new_token(coord, letter)
@@ -26,7 +40,7 @@ module  OttoGameType
 
   # @param [Board] board
   # @return [Integer or nil] nil for no winner, 1 or 2 for player winner
-  def ConnectGameType.get_winner(board)
+  def OttoGameType.get_winner(board)
     #TODO implement me
     nil
   end
