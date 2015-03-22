@@ -5,19 +5,17 @@ class Token
 
   include TokenContracts
 
-  attr_reader :coord, :type, :side
+  attr_reader :coord, :type
 
   private
 
   public
 
   # @param [Coord] coord
-  # @param [Symbol] type either :otto or :connect4
-  # @param [Symbol] side either :T or :O (or default nil for :connect4 game type)
-  def initialize(coord, type, side = nil)
+  # @param [Symbol or Integer] type either :T or :O (otto tokens) or 1 or 2 (connect4 tokens)
+  def initialize(coord, type)
     @coord = coord
     @type = type
-    @side = side
 
     verify_invariants
   end
@@ -26,13 +24,12 @@ class Token
 
   def verify_invariants
     valid_coord @coord
-    verify_type @type
-    verify_side @side, @type
+    verify_side @type
   end
 
   def to_s
     str = "col: #{coord.column} height: #{coord.height}"
-    str += " side: #{side.to_s}" if @type == :otto
+    str += " type: #{@type.to_s}"
     str
   end
 

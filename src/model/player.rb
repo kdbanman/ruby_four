@@ -4,19 +4,17 @@ class Player
 
   include PlayerContracts
 
-  attr_reader :name, :tokens
+  attr_reader :name
 
   private
 
   @name
-  @tokens
 
   public
 
   # @param [String] name
   def initialize(name)
     @name = name
-    @tokens = Array.new
 
     verify_invariants
   end
@@ -25,7 +23,6 @@ class Player
 
   def verify_invariants
     valid_name @name
-    token_array @tokens
   end
 
 end

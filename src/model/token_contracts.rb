@@ -11,19 +11,9 @@ module  TokenContracts
     CommonContracts.verify_type type
   end
 
-  def verify_side(side, type)
-    CommonContracts.verify_type type
-
-    if type == :otto
-      unless (side == :T || side == :O)
-        failure 'Otto tokens side must be :T or :O'
-      end
-    end
-
-    if type == :connect4
-      unless side == nil
-        failure 'Connect 4 tokens side must be nil'
-      end
+  def verify_side(type)
+    unless (type == :T || type == :O || type == 1 || type == 2)
+      failure 'Tokens must be :T or :O or 1 or 2'
     end
   end
 end

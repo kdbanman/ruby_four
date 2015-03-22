@@ -10,9 +10,11 @@ module  OttoGameType
   TOKEN_PATTERN = /token ([12]) (\d) ([TO])/
 
   # @param [Coord] coord
-  # @param [Symbol] side either :T or :O
-  def OttoGameType.new_token(coord, side)
-    Token.new(coord, :otto, side)
+  # @param [Symbol] letter either :T or :O
+  def OttoGameType.new_token(coord, letter)
+    # preconditions
+    #TODO letter is :T or :O
+    Token.new(coord, letter)
   end
 
   # @param [Array<Token>] player_tokens

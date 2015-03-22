@@ -9,12 +9,4 @@ module PlayerContracts
     end
   end
 
-  def token_array(tokens)
-    CommonContracts.array(tokens)
-
-    unless tokens.all? { |element| element.is_a? Token }
-      failure 'Token array must contain only Tokens'
-    end
-  end
-
 end
