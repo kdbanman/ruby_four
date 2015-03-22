@@ -4,12 +4,14 @@ require_relative '../model/game_config'
 
 class Board
 
-  attr_reader :board, :tokens, :player1, :player2, :current_player_id
+  attr_reader :board, :tokens, :most_recent_token, :player1, :player2, :current_player_id
 
   private
 
   @board
   @tokens
+  @most_recent_token
+
   @player1
   @player2
   @current_player_id
@@ -33,7 +35,7 @@ class Board
     #TODO token is in bounds
     #TODO token coord is not filled
 
-    tokens[token.coord] = token
+    @most_recent_token = tokens[token.coord] = token
   end
 
   def switch_player

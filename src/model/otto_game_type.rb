@@ -24,10 +24,11 @@ module  OttoGameType
     message[TOKEN_PATTERN, 3].to_sym
   end
 
-  # @param [Array<Token>] player_tokens
-  def OttoGameType.is_winner(player_tokens)
+  # @param [Board] board
+  # @return [Integer or nil] nil for no winner, 1 or 2 for player winner
+  def ConnectGameType.get_winner(board)
     #TODO implement me
-    false
+    nil
   end
 
   private

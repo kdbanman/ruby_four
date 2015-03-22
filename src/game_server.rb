@@ -121,10 +121,10 @@ class GameServer
       @err.puts 'Invalid command syntax!'
     end
 
-    if @game_type.is_winner(@board.tokens)
+    if @game_type.get_winner(@board.tokens)
       @out.puts 'Player 1 wins'
       send_str('win 1', @client_socket, @err)
-    elsif @game_type.is_winner(@board.tokens)
+    elsif @game_type.get_winner(@board.tokens)
       @out.puts 'Player 2 wins'
       send_str('win 2', @client_socket, @err)
     end

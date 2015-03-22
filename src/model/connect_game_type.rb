@@ -21,13 +21,14 @@ module  ConnectGameType
   def ConnectGameType.get_token_type(message)
     #precondition
     #TODO matches token pattern
-    message[TOKEN_PATTERN, 1].to_sym
+    message[TOKEN_PATTERN, 1].to_i
   end
 
-  # @param [Array<Token>] player_tokens
-  def ConnectGameType.is_winner(player_tokens)
+  # @param [Board] board
+  # @return [Integer or nil] nil for no winner, 1 or 2 for player winner
+  def ConnectGameType.get_winner(board)
     #TODO implement me
-    false
+    nil
   end
 
   private
