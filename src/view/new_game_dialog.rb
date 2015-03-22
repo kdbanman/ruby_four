@@ -85,25 +85,19 @@ class NewGameDialog
   end
 
   def get_config
-    names = get_fields
     #TODO need rows and columns
-    GameConfig.new(@gametype, @player1, @player2, names[0] || 'computer1', names[1] || 'computer2', @difficulty)
+    GameConfig.new(@gametype, @player1, @player2, @player1_name.text,
+                   @player2_name.text, @difficulty, @width.value, @height.value)
   end
 
   def validate_fields
     get_fields
     if @player1 == :human
-      unless @player1_name.valid?
-        puts 'INVALID NAME'
-        return FALSE
-        end
+      return FALSE unless @player1_name.valid?
     end
 
     if @player2 == :human
-      unless @player2_name.valid?
-        puts 'INVALID NAME'
-        return FALSE
-      end
+      return FALSE unless @player2_name.valid?
     end
 
     return @width.valid? && @height.valid?
@@ -115,12 +109,12 @@ class NewGameDialog
 
     c4Button.group = tootButton
 
-    @gametype = :toot
+    @gametype = :otto
     tootButton.group.each do |groupItem|
       groupItem.signal_connect('toggled') do |button|
         if button.active?
           #todo could be extracted into class if have time
-          @gametype = :toot if button == tootButton
+          @gametype = :otto if button == tootButton
           @gametype = :connect4 if button == c4Button
         end
       end

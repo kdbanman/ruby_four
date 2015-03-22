@@ -15,4 +15,9 @@ class TextEntry
   def valid?
     raise 'TextEntry must be subclassed'
   end
+
+  def raise_invalid_dialog(msg)
+    #TODO change to raise dialog
+    puts msg
+  end
 end

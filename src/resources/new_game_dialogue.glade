@@ -333,7 +333,7 @@
               </packing>
             </child>
             <child>
-              <object class="GtkEntry" id="heigh_entry_box">
+              <object class="GtkEntry" id="height_entry_box">
                 <property name="width_request">53</property>
                 <property name="height_request">20</property>
                 <property name="visible">True</property>

@@ -7,8 +7,15 @@ class SizeEntry < TextEntry
 
   def valid?
     if text.match(/^\d+$/)
-      return TRUE if text.to_i > 0 and text.to_i <= 10
+      if text.to_i > 0 and text.to_i <= 10
+        return true
+      end
     end
-    return FALSE
+    raise_invalid_dialog 'Sizes must be greater than 0 and less than 11'
+    return false
+  end
+
+  def value
+    text.to_i
   end
 end

@@ -7,7 +7,19 @@ class NameEntry < TextEntry
   end
 
   def valid?
-    @view.text.match(/^[A-Za-z0-9]+$/)
+    unless @view.text.match(/^[A-Za-z0-9]+$/)
+      raise_invalid_dialog 'Names must only contain alpha numeric chars'
+      return false
+    end
+    return true
+  end
+
+  def text
+    out = super
+    if out.length == 0
+      return 'computer'
+    end
+    return out
   end
 
 end

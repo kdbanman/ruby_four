@@ -10,7 +10,7 @@ class GameConfig
 
   public
 
-  def initialize(type, player1, player2, name1, name2, difficulty)
+  def initialize(type, player1, player2, name1, name2, difficulty, cols, rows)
     @type = type
     @player1 = player1
     @player2 = player2
@@ -18,8 +18,8 @@ class GameConfig
     @name2 = name2
     @difficulty = difficulty
 
-    @num_cols = 7
-    @num_rows = 6
+    @num_cols = cols
+    @num_rows = rows
 
     verify_invariants
   end
