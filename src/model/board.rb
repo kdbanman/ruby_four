@@ -52,7 +52,7 @@ class Board
 
   # @param [Integer] column
   def get_col_height(column)
-    height = 0
+    height = -1
     @tokens.each_key { |coord| height = [height, coord.height].max if coord.column == column }
     height
   end

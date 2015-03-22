@@ -17,6 +17,13 @@ module  OttoGameType
     Token.new(coord, letter)
   end
 
+  # @param [String] message
+  def OttoGameType.get_token_type(message)
+    #precondition
+    #TODO matches token pattern
+    message[TOKEN_PATTERN, 3].to_sym
+  end
+
   # @param [Array<Token>] player_tokens
   def OttoGameType.is_winner(player_tokens)
     #TODO implement me

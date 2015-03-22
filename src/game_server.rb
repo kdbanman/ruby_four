@@ -1,6 +1,6 @@
 require 'socket'
 require_relative '../src/util/net_protocol'
-
+require_relative '../src/controller/place_token_command'
 require_relative '../src/model/game_config'
 require_relative '../src/model/board'
 require_relative '../src/model/game_type_factory'
@@ -116,10 +116,7 @@ class GameServer
       exit_game(@game_type.get_exiter(message))
       return
     elsif message =~ @game_type::TOKEN_PATTERN
-      id = message[token_pattern, 1].to_i
-      col = message[token_pattern, 2].to_i
-      side = message[token_pattern, 3].to_sym unless message[token_pattern, 3].nil? || @config.type == :connect4
-      place_token(col, id, side)
+      PlaceTokenCommand.new(message, @game_type).run(@board)
     else
       @err.puts 'Invalid command syntax!'
     end
@@ -141,29 +138,6 @@ class GameServer
     # TODO part 5, save game, broadcast exit to both clients, close both sockets
     send_str("exit #{playerID}", @client_socket, @err)
     @client_socket.close
-  end
-
-  # @param [Integer] column
-  # @param [Integer] playerID
-  # @param [Symbol] side :T :O or nil
-  def place_token(column, playerID, side = nil)
-    # Make sure current player is placing
-    return unless @board.is_current_player playerID
-
-    # Make sure column is in bounds [0, col_count - 1], column has at least 1 space
-    return unless column >= 0 && column < @board.board.col_count
-    return unless (height = @board.get_col_height(column)) < @board.board.col_height
-
-    side = playerID if @config.type == :connect4 #TODO fix token creation system this is ugly
-
-    # Create token at column, stack height + 1
-    token = @game_type.new_token(Coord.new(column, height + 1), side)
-
-    # Add token to current player's list
-    @board.add_token token
-
-    # Update current player
-    @board.switch_player
   end
 
 end

@@ -21,7 +21,7 @@ class Coord
   end
 
   def to_s
-    "(#{@column}, #{@height}}"
+    "(#{@column}, #{@height})"
   end
 
   private

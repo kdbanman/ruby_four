@@ -11,10 +11,17 @@ module  ConnectGameType
 
   # @param [Coord] coord
   # @param [Integer] player 1 for player 1, 2 for player 2
-  def GameType.new_token(coord, player)
+  def ConnectGameType.new_token(coord, player)
     # preconditions
     # TODO player is 1 or 2
     Token.new(coord, player)
+  end
+
+  # @param [String] message
+  def ConnectGameType.get_token_type(message)
+    #precondition
+    #TODO matches token pattern
+    message[TOKEN_PATTERN, 1].to_sym
   end
 
   # @param [Array<Token>] player_tokens
