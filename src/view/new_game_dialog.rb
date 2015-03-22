@@ -37,6 +37,7 @@ class NewGameDialog
     set_up_difficulty
     connect_cancel_listener
     connect_ok_listener
+    get_fields
   end
 
   def start
@@ -85,13 +86,11 @@ class NewGameDialog
   end
 
   def get_config
-    #TODO need rows and columns
     GameConfig.new(@gametype, @player1, @player2, @player1_name.text,
                    @player2_name.text, @difficulty, @width.value, @height.value)
   end
 
   def validate_fields
-    get_fields
     if @player1 == :human
       return FALSE unless @player1_name.valid?
     end

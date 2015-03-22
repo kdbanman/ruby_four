@@ -12,7 +12,9 @@ class GameScreen
 	include GameScreenContracts
 	include GameBoardContracts
 
-	public 
+	public
+  # @param [GameType] gametype
+  # @param [DataSource] datasource
 	def initialize(gametype, datasource)
 		#pre
 		# game_type_generates_tokens(gametype)
@@ -55,6 +57,7 @@ class GameScreen
     @newGameListener = block
 	end
 
+  # @param [Datasource] datasource
 	def update(datasource)
 		input_is_data_source(datasource)
   end
@@ -63,10 +66,6 @@ class GameScreen
 
   def set_up_game_board_events
     @gameBoard.connect_event_handlers
-  end
-
-  def insert_sepparator
-
   end
 
   def add_token_selector

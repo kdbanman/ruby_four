@@ -9,7 +9,7 @@ class Column
   attr_reader :colView
   attr_reader :eventBox
 
-
+  # @param [Integer] size
 	def initialize(size)
     @slots = []
     size.times {slots << Slot.new}
@@ -17,17 +17,20 @@ class Column
     setup_event_box
   end
 
+  # @param [Coord] coordinate
 	def draw_token(coordinate)
 		#pre
 		valid_coordinate(coordinate, @size)
 
 		#post
 		slot_is_filled(@slots[coordinate.y])
-	end
+  end
 
+  # @param [Coord] coordinate
 	def draw_ghost(coordinate)
 		valid_coordinate(coordinate, @size)
 	end
+
 
 	def set_hover_listener(&block)
 		CommonContracts.block_callable(block)
@@ -64,6 +67,7 @@ class Column
     end
   end
 
+  # @return [Gtk::EventBox]
   def topView
     @eventBox
   end

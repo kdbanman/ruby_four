@@ -18,6 +18,8 @@ class TextEntry
 
   def raise_invalid_dialog(msg)
     #TODO change to raise dialog
-    puts msg
+    dialog = Gtk::MessageDialog.new(nil, Gtk::Dialog::DESTROY_WITH_PARENT, Gtk::MessageDialog::WARNING, Gtk::MessageDialog::BUTTONS_OK, msg)
+    dialog.run { }
+    dialog.destroy
   end
 end

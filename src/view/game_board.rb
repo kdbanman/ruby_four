@@ -38,14 +38,17 @@ class GameBoard
   end
 
 	private
+  # @param [Coord] coordinate
 	def draw_token(coordinate)
 		CommonContracts.valid_coordinate(coordinate)
 	end
 
+  # @param [Coord] coordinate
 	def draw_ghost(coordinate)
 		CommonContracts.valid_coordinate(coordinate)
 	end
 
+  # @param [Integer] colNumber
 	def handle_column_click (colNumber)
     @columnClickListener.call colNumber
 	end
