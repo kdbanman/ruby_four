@@ -19,23 +19,32 @@ class NewGameDialog
     set_up_game_type
     set_up_players
     set_up_difficulty
+    setup_cancel_listener
   end
 
   def start
     @mainWindow.show_all
-    @mainWindow.signal_connect('destroy') { Gtk.main_quit }
+    @mainWindow.signal_connect('destroy') { kill }
     Gtk.main
+  end
+
+  def kill
+    Gtk.main_quit
   end
 
   def setup_ok_listener (&block)
 
   end
 
-  def setup_cancel_listener(&block)
+  private
 
+  def setup_cancel_listener
+    cancel_button = @builder.get_object('cancel_button')
+    cancel_button.signal_connect('released') do
+      kill
+    end
   end
 
-  private
   def set_up_game_type
     tootButton = @builder.get_object(TOOT_RADIO_BUTTON)
     c4Button = @builder.get_object(CONNECT4_RADIO_BUTTON)
@@ -69,10 +78,10 @@ class NewGameDialog
     player1Name.set_sensitive FALSE
 
     @player1 = :computer
-    @player2 = :human
+    @player2 = :computer
     zeroButton.group.each do |item|
       item.signal_connect('toggled') do |button|
-        #todo could switch here
+        #todo should pll this up into anther class. This is trash.
         if button.active?
           if button == zeroButton
             @player1 = :computer
@@ -101,8 +110,16 @@ class NewGameDialog
     hardButton = @builder.get_object('computer_difficulty_hard')
 
     hardButton.group = easyButton
+    @difficulty = :easy
+    easyButton.group.each do |item|
+      item.signal_connect('toggled') do |button|
+        if button.active?
+          @difficulty = :easy if button == easyButton
+          @difficulty = :hard if button == hardButton
+        end
+      end
+    end
   end
-
 
 end
 
