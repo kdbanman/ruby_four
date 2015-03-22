@@ -1,6 +1,6 @@
 require 'socket'
 require_relative '../src/util/net_protocol'
-
+require_relative '../src/controller/place_token_command'
 require_relative '../src/model/game_config'
 require_relative '../src/model/board'
 require_relative '../src/model/game_type_factory'
@@ -85,7 +85,7 @@ class GameServer
   def create_game_objects(config)
     @out.puts "Initializing game with config:\n#{config}"
     game_type = GameTypeFactory.get_game_type(config)
-    model = Board.new(config)
+    model = Board.new(config, game_type)
     [game_type, model]
   end
 
@@ -108,28 +108,15 @@ class GameServer
 
   # @param [String] message
   def process_message(message)
-    token_pattern = /token (\d) (\d) ?([TO])?/
-
     @out.puts "Message received from client: #{message}"
 
     if message =~ @game_type::EXIT_PATTERN
       exit_game(@game_type.get_exiter(message))
       return
     elsif message =~ @game_type::TOKEN_PATTERN
-      id = message[token_pattern, 1].to_i
-      col = message[token_pattern, 2].to_i
-      side = message[token_pattern, 3].to_sym unless message[token_pattern, 3].nil? || @config.type == :connect4
-      place_token(col, id, side)
+      check_winner if PlaceTokenCommand.new(message, @game_type).run(@board)
     else
       @err.puts 'Invalid command syntax!'
-    end
-
-    if @game_type.is_winner(@board.tokens)
-      @out.puts 'Player 1 wins'
-      send_str('win 1', @client_socket, @err)
-    elsif @game_type.is_winner(@board.tokens)
-      @out.puts 'Player 2 wins'
-      send_str('win 2', @client_socket, @err)
     end
 
     # Send model to clients
@@ -143,27 +130,13 @@ class GameServer
     @client_socket.close
   end
 
-  # @param [Integer] column
-  # @param [Integer] playerID
-  # @param [Symbol] side :T :O or nil
-  def place_token(column, playerID, side = nil)
-    # Make sure current player is placing
-    return unless @board.is_current_player playerID
+  def check_winner
+    puts @board.most_recent_token
 
-    # Make sure column is in bounds [0, col_count - 1], column has at least 1 space
-    return unless column >= 0 && column < @board.board.col_count
-    return unless (height = @board.get_col_height(column)) < @board.board.col_height
-
-    side = playerID if @config.type == :connect4 #TODO fix token creation system this is ugly
-
-    # Create token at column, stack height + 1
-    token = @game_type.new_token(Coord.new(column, height + 1), side)
-
-    # Add token to current player's list
-    @board.add_token token
-
-    # Update current player
-    @board.switch_player
+    if (winner = @game_type.get_winner(@board))
+      @out.puts "Player #{winner} wins"
+      send_str("win #{winner}", @client_socket, @err)
+    end
   end
 
 end

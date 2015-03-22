@@ -21,7 +21,27 @@ class Coord
   end
 
   def to_s
-    "(#{@column}, #{@height}}"
+    "(#{@column}, #{@height})"
+  end
+
+  # @param [Coord] coord
+  def +(coord)
+    Coord.new(@column + coord.column, @height + coord.height)
+  end
+
+  # @param [Coord] coord
+  def -(coord)
+    Coord.new(@column - coord.column, @height - coord.height)
+  end
+
+  # @param [Coord] coord
+  def eql?(coord)
+    coord.class.equal?(self.class) && coord.column.eql?(@column) && coord.height.eql?(@height)
+  end
+  alias_method :==, :eql?
+
+  def hash
+    @column.hash ^ (-1 * @height).hash
   end
 
   private

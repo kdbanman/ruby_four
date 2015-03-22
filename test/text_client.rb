@@ -51,7 +51,7 @@ GameServer.new(PORT, 'out.txt') do
       puts diff
 
       begin
-        config_str = Marshal.dump(GameConfig.new(type, p1, p2, name1, name2, diff))
+        config_str = Marshal.dump(GameConfig.new(type, p1, p2, name1, name2, diff, 6, 7))
       rescue ContractFailure => msg
         $stderr.puts msg
       end
