@@ -20,6 +20,7 @@ class NewGameDialog
     set_up_players
     set_up_difficulty
     connect_cancel_listener
+    connect_ok_listener
   end
 
   def start
@@ -60,15 +61,33 @@ class NewGameDialog
   end
 
   def get_fields
+    player1_name = @builder.get_object('player1_entry_box')
+    player2_name = @builder.get_object('player2_entry_box')
 
+    return [player1_name, player2_name]
   end
 
   def validate_fields
+    names = get_fields
+    if @player1 == :human
+      unless validate_name names[0].text
+        puts 'INVALID NAME'
+        return FALSE
+        end
+    end
 
+    if @player2 == :human
+      unless validate_name names[1].text
+        puts 'INVALID NAME'
+        return FALSE
+      end
+    end
+
+    return TRUE
   end
 
-  def validate_name
-
+  def validate_name(name)
+    name.match(/^[A-Za-z0-9]+$/)
   end
 
   def set_up_game_type
@@ -121,7 +140,7 @@ class NewGameDialog
             player2Name.set_sensitive FALSE
           elsif button == twoButton
             @player1 = :human
-            @player2 = :computer
+            @player2 = :human
             player1Name.set_sensitive TRUE
             player2Name.set_sensitive TRUE
           end
