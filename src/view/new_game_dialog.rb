@@ -1,5 +1,8 @@
+require_relative '../model/game_config.rb'
+require_relative '../util/name_entry.rb'
+require_relative '../util/size_entry.rb'
 require 'gtk2'
-
+#TODO this file could use some major refactoring
 class NewGameDialog
 
   TOOT_RADIO_BUTTON = 'toot_radio_button'
@@ -8,6 +11,19 @@ class NewGameDialog
   PLAYERS0_RADIO_BUTTON = 'players0_radio_button'
   PLAYERS1_RADIO_BUTTON = 'players1_radio_button'
   PLAYERS2_RADIO_BUTTON = 'players2_radio_button'
+
+  PLAYER1_ENTRY_BOX = 'player1_entry_box'
+  PLAYER2_ENTRY_BOX = 'player2_entry_box'
+
+  WIDTH_ENTRY_BOX = 'width_entry_box'
+  HEIGHT_ENTRY_BOX = 'height_entry_box'
+
+  OK_BUTTON = 'ok_button'
+  CANCEL_BUTTON = 'cancel_button'
+
+  COMPUTER_DIFFICULTY_EASY = 'computer_difficulty_easy'
+  COMPUTER_DIFFICULTY_HARD = 'computer_difficulty_hard'
+
 
   MAIN_WINDOW = 'main_window'
 
@@ -19,7 +35,8 @@ class NewGameDialog
     set_up_game_type
     set_up_players
     set_up_difficulty
-    setup_cancel_listener
+    connect_cancel_listener
+    connect_ok_listener
   end
 
   def start
@@ -33,16 +50,57 @@ class NewGameDialog
   end
 
   def setup_ok_listener (&block)
-
+    @okListener = block
   end
 
   private
 
-  def setup_cancel_listener
-    cancel_button = @builder.get_object('cancel_button')
+  def connect_cancel_listener
+    cancel_button = @builder.get_object(CANCEL_BUTTON)
     cancel_button.signal_connect('released') do
       kill
     end
+  end
+
+  def connect_ok_listener
+    ok_button = @builder.get_object(OK_BUTTON)
+    ok_button.signal_connect('released') do
+      ok_listener
+    end
+  end
+
+  def ok_listener
+    if validate_fields
+      @okListener.call(get_config)
+      kill
+    end
+  end
+
+  def get_fields
+    @player1_name = NameEntry.new @builder.get_object(PLAYER1_ENTRY_BOX), PLAYER1_ENTRY_BOX
+    @player2_name = NameEntry.new @builder.get_object(PLAYER2_ENTRY_BOX), PLAYER2_ENTRY_BOX
+
+    @width = SizeEntry.new @builder.get_object(WIDTH_ENTRY_BOX), WIDTH_ENTRY_BOX
+    @height = SizeEntry.new @builder.get_object(HEIGHT_ENTRY_BOX), HEIGHT_ENTRY_BOX
+  end
+
+  def get_config
+    #TODO need rows and columns
+    GameConfig.new(@gametype, @player1, @player2, @player1_name.text,
+                   @player2_name.text, @difficulty, @width.value, @height.value)
+  end
+
+  def validate_fields
+    get_fields
+    if @player1 == :human
+      return FALSE unless @player1_name.valid?
+    end
+
+    if @player2 == :human
+      return FALSE unless @player2_name.valid?
+    end
+
+    return @width.valid? && @height.valid?
   end
 
   def set_up_game_type
@@ -51,12 +109,12 @@ class NewGameDialog
 
     c4Button.group = tootButton
 
-    @gametype = :toot
+    @gametype = :otto
     tootButton.group.each do |groupItem|
       groupItem.signal_connect('toggled') do |button|
         if button.active?
           #todo could be extracted into class if have time
-          @gametype = :toot if button == tootButton
+          @gametype = :otto if button == tootButton
           @gametype = :connect4 if button == c4Button
         end
       end
@@ -71,10 +129,10 @@ class NewGameDialog
     oneButton.group =  zeroButton
     twoButton.group = zeroButton
 
-    player2Name = @builder.get_object('player2_entry_box')
+    player2Name = @builder.get_object(PLAYER2_ENTRY_BOX)
     player2Name.set_sensitive FALSE
 
-    player1Name = @builder.get_object('player1_entry_box')
+    player1Name = @builder.get_object(PLAYER1_ENTRY_BOX)
     player1Name.set_sensitive FALSE
 
     @player1 = :computer
@@ -95,7 +153,7 @@ class NewGameDialog
             player2Name.set_sensitive FALSE
           elsif button == twoButton
             @player1 = :human
-            @player2 = :computer
+            @player2 = :human
             player1Name.set_sensitive TRUE
             player2Name.set_sensitive TRUE
           end
@@ -106,8 +164,8 @@ class NewGameDialog
   end
 
   def set_up_difficulty
-    easyButton = @builder.get_object('computer_difficulty_easy')
-    hardButton = @builder.get_object('computer_difficulty_hard')
+    easyButton = @builder.get_object(COMPUTER_DIFFICULTY_EASY)
+    hardButton = @builder.get_object(COMPUTER_DIFFICULTY_HARD)
 
     hardButton.group = easyButton
     @difficulty = :easy
