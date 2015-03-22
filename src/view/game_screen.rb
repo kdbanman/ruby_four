@@ -3,6 +3,7 @@ require_relative './game_screen_contracts.rb'
 require_relative './game_board'
 require_relative './game_board_contracts.rb'
 require_relative '../util/common_contracts.rb'
+require_relative './/token_selector.rb'
 require 'gtk2'
 
 class GameScreen
@@ -23,9 +24,12 @@ class GameScreen
     @builder.add_from_file('../resources/game_screen.glade')
     @screen = @builder.get_object('game_screen')
     @boardContainer = @builder.get_object('board_container')
+    @mainLayout = @builder.get_object('main_layout')
     #TODO CHANGE THIS TO USE GAMETYPE
     @gameBoard = GameBoard.new(nil,15,15)
     @boardContainer.add(@gameBoard.boardView)
+    #todo if gametype == :toot add_token_selector
+    add_token_selector
     @screen.show_all()
     set_up_game_board_events
 	end
@@ -59,6 +63,15 @@ class GameScreen
 
   def set_up_game_board_events
     @gameBoard.connect_event_handlers
+  end
+
+  def insert_sepparator
+
+  end
+
+  def add_token_selector
+    tokenSelector = TokenSelector.new(0, 30, 'Select Token:')
+    @mainLayout.put(tokenSelector.topView, tokenSelector.posX, tokenSelector.posY)
   end
 
 end

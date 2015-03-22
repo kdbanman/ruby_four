@@ -8,6 +8,7 @@ class BoardView < Gtk::HBox
   end
 
   def addColumn(columnViews)
+    pack_start(Gtk::VSeparator.new, true, true, 0)
     columnViews.each do |view|
       pack_start(view, true, true, 0)
     end
