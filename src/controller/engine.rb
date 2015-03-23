@@ -100,3 +100,5 @@ class Engine
   end
 
 end
+
+Engine.new

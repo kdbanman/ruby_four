@@ -1,5 +1,5 @@
-#! /bin/ruby
+#! ruby
 
-require_relative 'src/model/engine'
+require './src/controller/engine.rb'
 
 Engine.new

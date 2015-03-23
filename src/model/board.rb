@@ -27,8 +27,8 @@ class Board
     @token_count = 0
 
     player_token_count = (config.num_rows * config.num_cols / 2.0).ceil
-    @player1 = Player.new(config.name1, game_type.make_initial_tokens(1, player_token_count))
-    @player2 = Player.new(config.name2, game_type.make_initial_tokens(2, player_token_count))
+    @player1 = Player.new(config.name1, game_type.make_initial_tokens(1, player_token_count), 1)
+    @player2 = Player.new(config.name2, game_type.make_initial_tokens(2, player_token_count), 2)
 
     @current_player_id = 1
   end

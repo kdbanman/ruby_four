@@ -90,9 +90,10 @@ class GameScreen
 	end
 
   # @param [Datasource] datasource
-	def update(datasource)
-		input_is_data_source(datasource)
+	def update(board)
+		#input_is_data_source(datasource)
     #TODO iterate over ds and draw tokens
+    @gameBoard.update board
   end
 
   private
@@ -114,8 +115,8 @@ class GameScreen
   end
 end
 
-h = GameScreen.new(1,2,3)
-h.set_column_selected_listener {|col| puts "column click listener: clicked in col: #{col}"}
-h.set_close_listener {puts 'game closed listener called'}
-h.set_new_game_listener {puts 'NEW GAME'}
-h.start
+# h = GameScreen.new(1,2,3)
+# h.set_column_selected_listener {|col| puts "column click listener: clicked in col: #{col}"}
+# h.set_close_listener {puts 'game closed listener called'}
+# h.set_new_game_listener {puts 'NEW GAME'}
+# h.start

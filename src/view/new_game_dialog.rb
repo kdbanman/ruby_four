@@ -32,7 +32,7 @@ class NewGameDialog
   def initialize(parent = nil)
     Gtk.init
     @builder = Gtk::Builder.new
-    @builder.add_from_file('../resources/new_game_dialogue.glade')
+    @builder.add_from_file(File.dirname(__FILE__) + '/../resources/new_game_dialogue.glade')
     @mainWindow = @builder.get_object(MAIN_WINDOW)
     set_up_game_type
     set_up_players

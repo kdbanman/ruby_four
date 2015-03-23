@@ -4,21 +4,23 @@ class Player
 
   include PlayerContracts
 
-  attr_reader :name, :remaining_tokens
+  attr_reader :name, :remaining_tokens, :id
 
   private
 
   @name
   @remaining_tokens
+  @id
 
   public
 
   # @param [String] name
   # @param [Array<Symbol> or Array<Integer>]
-  def initialize(name, initial_tokens)
+  # @param [Integer] id
+  def initialize(name, initial_tokens, id)
     @name = name
     @remaining_tokens = initial_tokens
-
+    @id = id
     verify_invariants
   end
 
