@@ -17,10 +17,8 @@ module  OttoGameType
   def OttoGameType.make_initial_tokens(player, count)
     # preconditions
     #TODO player is either 1 or 2
-    #TODO count is >= 8 (half of min 4x4 game)
-    t_tokens = (1..(count/2.0).ceil).map { :T }
-    o_tokens = t_tokens.map { :O }
-    t_tokens.concat o_tokens
+    #TODO count is >= 0
+    (1..count).map { player == 1 ? :T : :O }
   end
 
   # @param [Coord] coord
@@ -42,8 +40,6 @@ module  OttoGameType
   # @return [Integer or nil] nil for no winner, 1 or 2 for player winner
   def OttoGameType.get_winner(board)
     board.each_colinear(board.most_recent_token.coord) do |line|
-      puts line.to_s
-
       return 1 if line == WIN_PATTERN_1
       return 2 if line == WIN_PATTERN_2
     end
