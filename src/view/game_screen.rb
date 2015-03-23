@@ -58,7 +58,7 @@ class GameScreen
 
     closeWindow = Proc.new do
       @closeListener.call
-      exit 0
+      Gtk.main_quit
     end
 
     @screen.signal_connect('destroy') do
@@ -75,9 +75,11 @@ class GameScreen
     @newGameButton = @builder.get_object('new_game_menu_item')
     @newGameListener = block
     @newGameButton.signal_connect('activate') do
-      newGameDialog = NewGameDialog.new
-      newGameDialog.setup_ok_listener &block
-      newGameDialog.start
+      unless NewGameDialog.opened
+        newGameDialog = NewGameDialog.new(@screen)
+        newGameDialog.setup_ok_listener &block
+        newGameDialog.start
+      end
     end
 	end
 

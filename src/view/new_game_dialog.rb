@@ -29,28 +29,32 @@ class NewGameDialog
 
   MAIN_WINDOW = 'main_window'
 
-  def initialize
-    unless @@opened
-      Gtk.init
-      @builder = Gtk::Builder.new
-      @builder.add_from_file('../resources/new_game_dialogue.glade')
-      @mainWindow = @builder.get_object(MAIN_WINDOW)
-      set_up_game_type
-      set_up_players
-      set_up_difficulty
-      connect_cancel_listener
-      connect_ok_listener
-      get_fields
+  def initialize(parent = nil)
+    Gtk.init
+    @builder = Gtk::Builder.new
+    @builder.add_from_file('../resources/new_game_dialogue.glade')
+    @mainWindow = @builder.get_object(MAIN_WINDOW)
+    set_up_game_type
+    set_up_players
+    set_up_difficulty
+    connect_cancel_listener
+    connect_ok_listener
+    get_fields
+    if parent != nil
+      @mainWindow.transient_for = parent
+      @mainWindow.destroy_with_parent = true
     end
   end
 
+  def NewGameDialog.opened
+    @@opened
+  end
+
   def start
-    unless @@opened
-      @@opened = true
-      @mainWindow.show_all
-      @mainWindow.signal_connect('destroy') { kill }
-      Gtk.main
-    end
+    @@opened = true
+    @mainWindow.show_all
+    @mainWindow.signal_connect('destroy') { kill }
+    Gtk.main
   end
 
   def kill
