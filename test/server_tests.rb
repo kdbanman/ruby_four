@@ -15,11 +15,11 @@ class ServerTests < Minitest::Test
 
   include NetProtocol
 
-  def wrapped_server
-    port = 1024 + Random.rand(60000)
+  def wrapped_server(default_port = nil)
+    port = default_port || 1024 + Random.rand(60000)
     pid = nil
     GameServer.new(port) do
-      sock = TCPSocket.new('localhost', port)
+      sock = TCPSocket.new('localhost', port) if default_port.nil?
       pid = fork do
         yield sock
       end
@@ -81,7 +81,7 @@ class ServerTests < Minitest::Test
   end
 
 
-  def test_all_the_ts
+  def test_all_the_tokens
     wrapped_server do |sock|
       config_str = Marshal.dump(GameConfig.new(:otto, :human, :human, 'steve', 'john', :easy, 8, 8))
       send_str(config_str, sock)
@@ -90,15 +90,16 @@ class ServerTests < Minitest::Test
 
       500.times do
         # send token command
-        send_str("token #{model.current_player_id} #{Random.rand(8)} T", sock)
+        send_str("token #{model.current_player_id} #{Random.rand(8)} #{model.current_player_id == 1 ? 'T' : 'O'}", sock)
 
         # receive new model
-        model = Marshal.load(recv_str(sock))
+        msg = recv_str(sock)
+        msg = recv_str(sock) if msg =~ /win \d/
+        model = Marshal.load(msg)
       end
 
       assert(model.player1.remaining_tokens.all? { |type| type == :O})
-      assert(model.player2.remaining_tokens.all? { |type| type == :O})
-      assert(model.token_count == 32)
+      assert(model.player2.remaining_tokens.all? { |type| type == :T})
 
       puts model.tokens
 
@@ -107,6 +108,24 @@ class ServerTests < Minitest::Test
 
       assert_equal('exit 2', recv_str(sock))
       sock.close
+    end
+  end
+
+
+  def test_datasource
+    config = GameConfig.new(:otto, :human, :human, 'steve', 'john', :easy, 8, 8)
+    wrapped_server(config.port) do
+      ds = DataSource.new config
+      50.times do
+        ds.place_token(ds.board.current_player_id, Random.rand(8), Random.rand(2) == 0? :T : :O)
+        puts(ds.board.tokens)
+      end
+
+      assert(ds.board.player1.remaining_tokens.all? { |type| type == :O})
+      assert(ds.board.player2.remaining_tokens.all? { |type| type == :T})
+
+      # exit current player
+      ds.exit_game 2
     end
   end
 
