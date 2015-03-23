@@ -29,7 +29,6 @@ class GameScreen
     @screen = @builder.get_object('game_screen')
     @boardContainer = @builder.get_object('board_container')
     @mainLayout = @builder.get_object('main_layout')
-    @newGameButton = @builder.get_object('new_game_menu_item')
     #TODO CHANGE THIS TO USE GAMETYPE
     @gameBoard = GameBoard.new(nil,15,15)
     @boardContainer.add(@gameBoard.boardView)
@@ -54,18 +53,29 @@ class GameScreen
 
 	def set_close_listener(&block)
 		CommonContracts.block_callable(block)
+    @quitButton = @builder.get_object('quit_menu_item')
     @closeListener = block
-    @screen.signal_connect('destroy') do
+
+    closeWindow = Proc.new do
       @closeListener.call
       exit 0
+    end
+
+    @screen.signal_connect('destroy') do
+      closeWindow.call
+    end
+
+    @quitButton.signal_connect('activate') do
+      closeWindow.call
     end
 	end
 
 	def set_new_game_listener(&block)
 		CommonContracts.block_callable(block)
+    @newGameButton = @builder.get_object('new_game_menu_item')
     @newGameListener = block
     @newGameButton.signal_connect('activate') do
-      newGameDialog = NewGameDialog.instance
+      newGameDialog = NewGameDialog.new
       newGameDialog.setup_ok_listener &block
       newGameDialog.start
     end

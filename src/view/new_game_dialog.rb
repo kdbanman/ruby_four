@@ -2,12 +2,10 @@ require_relative '../model/game_config.rb'
 require_relative '../util/name_entry.rb'
 require_relative '../util/size_entry.rb'
 require 'gtk2'
-require 'singleton'
 
 #TODO this file could use some major refactoring
 class NewGameDialog
-
-  include Singleton
+  @@opened = FALSE
 
   TOOT_RADIO_BUTTON = 'toot_radio_button'
   CONNECT4_RADIO_BUTTON = 'connect4_radio_button'
@@ -32,25 +30,31 @@ class NewGameDialog
   MAIN_WINDOW = 'main_window'
 
   def initialize
-    Gtk.init
-    @builder = Gtk::Builder.new
-    @builder.add_from_file('../resources/new_game_dialogue.glade')
-    @mainWindow = @builder.get_object(MAIN_WINDOW)
-    set_up_game_type
-    set_up_players
-    set_up_difficulty
-    connect_cancel_listener
-    connect_ok_listener
-    get_fields
+    unless @@opened
+      Gtk.init
+      @builder = Gtk::Builder.new
+      @builder.add_from_file('../resources/new_game_dialogue.glade')
+      @mainWindow = @builder.get_object(MAIN_WINDOW)
+      set_up_game_type
+      set_up_players
+      set_up_difficulty
+      connect_cancel_listener
+      connect_ok_listener
+      get_fields
+    end
   end
 
   def start
-    @mainWindow.show_all
-    @mainWindow.signal_connect('destroy') { kill }
-    Gtk.main
+    unless @@opened
+      @@opened = true
+      @mainWindow.show_all
+      @mainWindow.signal_connect('destroy') { kill }
+      Gtk.main
+    end
   end
 
   def kill
+    @@opened = false
     @mainWindow.destroy
     Gtk.main_quit
   end
