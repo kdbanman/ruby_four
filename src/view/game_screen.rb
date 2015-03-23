@@ -5,6 +5,7 @@ require_relative './game_board_contracts.rb'
 require_relative '../util/common_contracts.rb'
 require_relative './/token_selector.rb'
 require_relative '../view/new_game_dialog.rb'
+require_relative '../resources/about_screen.rb'
 require 'gtk2'
 
 class GameScreen
@@ -36,6 +37,7 @@ class GameScreen
     add_token_selector
     @screen.show_all()
     set_up_game_board_events
+    set_about_handler
 	end
 
 	def start
@@ -93,6 +95,13 @@ class GameScreen
 
   def set_up_game_board_events
     @gameBoard.connect_event_handlers
+  end
+
+  def set_about_handler
+    @aboutButton = @builder.get_object('about_menu_button')
+    @aboutButton.signal_connect('activate') do
+      AboutScreen.new('Rules: \n')
+    end
   end
 
   def add_token_selector
