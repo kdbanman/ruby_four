@@ -48,14 +48,13 @@ class DataSource
     command = "token #{player_id} #{column}"
     command += " #{token_type}" unless token_type.nil?
 
-    puts 'DATASOURCE: ' + command
     send_str command, @server_socket
-
     wait_for_response @server_socket
   end
 
   def exit_game(player_id)
     send_str "exit #{player_id}", @server_socket
+    wait_for_response @server_socket
   end
 
   private
@@ -69,6 +68,7 @@ class DataSource
       msg = recv_str server_socket # will be model this time
     elsif msg =~ EXIT_PATTERN
       puts msg
+      @server_socket.close
       return
     end
 

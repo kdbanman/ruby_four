@@ -98,8 +98,8 @@ class ServerTests < Minitest::Test
         model = Marshal.load(msg)
       end
 
-      assert(model.player1.remaining_tokens.all? { |type| type == :O})
-      assert(model.player2.remaining_tokens.all? { |type| type == :T})
+      assert(model.player1.remaining_tokens.all? { |type| type == :T})
+      assert(model.player2.remaining_tokens.all? { |type| type == :O})
 
       puts model.tokens
 
@@ -118,11 +118,10 @@ class ServerTests < Minitest::Test
       ds = DataSource.new config
       50.times do
         ds.place_token(ds.board.current_player_id, Random.rand(8), Random.rand(2) == 0? :T : :O)
-        puts(ds.board.tokens)
       end
 
-      assert(ds.board.player1.remaining_tokens.all? { |type| type == :O})
-      assert(ds.board.player2.remaining_tokens.all? { |type| type == :T})
+      assert(ds.board.player1.remaining_tokens.all? { |type| type == :T})
+      assert(ds.board.player2.remaining_tokens.all? { |type| type == :O})
 
       # exit current player
       ds.exit_game 2
