@@ -1,3 +1,7 @@
+require 'thread'
+
+require_relative '../game_server'
+
 require_relative '../util/common_contracts'
 
 require_relative '../view/new_game_dialog'
@@ -20,13 +24,33 @@ class Engine
   public
 
   def initialize
+
     new_game = NewGameDialog.new
     new_game.setup_ok_listener do |game_config|
-      set_game_model game_config
-      start_game_screen game_config
+      new_server_sync do
+        set_game_model game_config
+        start_game_screen game_config
+      end
     end
     new_game.start
+  end
 
+  def new_server_sync
+    server_ready_signal = ConditionVariable.new
+    server_ready_mutex = Mutex.new
+
+    Thread.new do
+      GameServer.new game_config.port do
+        # signal server started
+        server_ready_mutex.synchronize { server_ready_signal.signal }
+      end
+    end
+
+    # wait on server start signal
+    server_ready_mutex.synchronize do
+      server_ready_signal.wait server_ready_mutex
+      yield
+    end
   end
 
   # @param [GameConfig] game_config
@@ -48,7 +72,11 @@ class Engine
 
     @game_screen.set_new_game_listener do |game_config|
       @game_screen.kill
-      # TODO restart the game (server)
+      # restart the game (server)
+      new_server_sync do
+        set_game_model game_config
+        start_game_screen game_config
+      end
     end
   end
 
