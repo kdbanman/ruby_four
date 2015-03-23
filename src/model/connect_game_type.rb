@@ -46,6 +46,17 @@ module  ConnectGameType
     nil
   end
 
+  # @param [Integer] either 1 or 2
+  def ConnectGameType.get_token_image_path(token_type)
+    File.dirname(__FILE__) + '/../resources/tPiece.png' if token_type == 1
+    File.dirname(__FILE__) + '/../resources/oPiece.png' if token_type == 2
+  end
+
+  # @param [Integer] player_id
+  def ConnectGameType.get_player_token_type(player_id)
+    player_id
+  end
+
   private
 
   def ConnectGameType.method_missing(m, *args, &block)

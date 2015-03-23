@@ -104,6 +104,8 @@ class GameServer
 
       process_message(message)
     end
+
+    @out.puts 'Server shutting down...'
   end
 
   # @param [String] message

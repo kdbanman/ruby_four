@@ -27,7 +27,6 @@ class DataSource
   public
 
   # @param [GameConfig] config
-  # TODO should be initialized with Engine?  see WinSequence?
   def initialize(config)
 
     # connect with server and send serialized game config

@@ -17,7 +17,8 @@ class GameScreen
 	public
   # @param [GameType] gametype
   # @param [DataSource] datasource
-	def initialize(gametype, datasource)
+  # @param [GameConfig] gameconfig
+	def initialize(gametype, datasource, gameconfig)
 		#pre
     #todo uncomment after connecting with backend
 		# game_type_generates_tokens(gametype)
@@ -30,8 +31,7 @@ class GameScreen
     @screen = @builder.get_object('game_screen')
     @boardContainer = @builder.get_object('board_container')
     @mainLayout = @builder.get_object('main_layout')
-    #TODO CHANGE THIS TO USE GAMETYPE
-    @gameBoard = GameBoard.new(nil,15,15)
+    @gameBoard = GameBoard.new(nil,gameconfig.num_cols,gameconfig.num_rows)
     @boardContainer.add(@gameBoard.boardView)
     #todo if gametype == :toot add_token_selector
     add_token_selector
@@ -45,7 +45,12 @@ class GameScreen
     verify_game_closed_listener @closeListener
     verify_new_game_listener @newGameListener
     Gtk.main()
-	end
+  end
+
+  def kill
+    @closeListener.call
+    Gtk.main_quit
+  end
 
 	def set_column_selected_listener(&block)
 		CommonContracts.block_callable(block)
@@ -59,8 +64,7 @@ class GameScreen
     @closeListener = block
 
     closeWindow = Proc.new do
-      @closeListener.call
-      Gtk.main_quit
+      kill
     end
 
     @screen.signal_connect('destroy') do
