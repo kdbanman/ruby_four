@@ -2,8 +2,12 @@ require_relative '../model/game_config.rb'
 require_relative '../util/name_entry.rb'
 require_relative '../util/size_entry.rb'
 require 'gtk2'
+require 'singleton'
+
 #TODO this file could use some major refactoring
 class NewGameDialog
+
+  include Singleton
 
   TOOT_RADIO_BUTTON = 'toot_radio_button'
   CONNECT4_RADIO_BUTTON = 'connect4_radio_button'
@@ -47,6 +51,7 @@ class NewGameDialog
   end
 
   def kill
+    @mainWindow.destroy
     Gtk.main_quit
   end
 
@@ -180,5 +185,5 @@ class NewGameDialog
 
 end
 
-h = NewGameDialog.new
-h.start
+# h = NewGameDialog.new
+# h.start

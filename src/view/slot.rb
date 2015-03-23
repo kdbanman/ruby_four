@@ -15,20 +15,23 @@ class Slot
 
 	include SlotContracts
 
+
   def Slot.initializeTokens(p1, p2)
     #TODO replace with pixbufs
     @@player1Token = p1
     @@player2Token = p2
+
     @@ghost = Gdk::Pixbuf.new  File.dirname(__FILE__) + '/../resources/ghostSlot.png'
     @@empty = Gdk::Pixbuf.new File.dirname(__FILE__) + '/../resources/emptySlot.png'
-    @filled = FALSE
-    @ghosted = FALSE
+
   end
 
 	def initialize
     #pre
-    class_variables_not_null @@player1Token, @@player2Token
+    class_variables_not_null @@player1Token, @@player2Token, @@ghost, @@empty
     @slotView = SlotView.new(@@empty)
+    @filled = FALSE
+    @ghosted = FALSE
   end
 
 	def fill

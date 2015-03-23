@@ -10,7 +10,7 @@ class SizeEntry < TextEntry
 
   def valid?
     if text.match(/^\d+$/)
-      if text.to_i > MINSIZE and text.to_i <= MAXSIZE
+      if text.to_i >= MINSIZE and text.to_i <= MAXSIZE
         return true
       end
     end

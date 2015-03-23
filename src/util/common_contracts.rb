@@ -48,6 +48,6 @@ module CommonContracts
   end
 
   def CommonContracts.block_callable(block)
-    raise ContractFailure, "Block not callable" unless block.respond_to? :call
+    raise ContractFailure, 'Block not callable' unless block.respond_to? :call
   end
 end

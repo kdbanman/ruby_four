@@ -4,6 +4,7 @@ require_relative './game_board'
 require_relative './game_board_contracts.rb'
 require_relative '../util/common_contracts.rb'
 require_relative './/token_selector.rb'
+require_relative '../view/new_game_dialog.rb'
 require 'gtk2'
 
 class GameScreen
@@ -17,16 +18,18 @@ class GameScreen
   # @param [DataSource] datasource
 	def initialize(gametype, datasource)
 		#pre
+    #todo uncomment after connecting with backend
 		# game_type_generates_tokens(gametype)
 		# data_source_observable(datasource)
 		# input_is_data_source(datasource)
-
+    #TODO add self to datasource observers
     Gtk.init
     @builder = Gtk::Builder.new
     @builder.add_from_file('../resources/game_screen.glade')
     @screen = @builder.get_object('game_screen')
     @boardContainer = @builder.get_object('board_container')
     @mainLayout = @builder.get_object('main_layout')
+    @newGameButton = @builder.get_object('new_game_menu_item')
     #TODO CHANGE THIS TO USE GAMETYPE
     @gameBoard = GameBoard.new(nil,15,15)
     @boardContainer.add(@gameBoard.boardView)
@@ -37,29 +40,41 @@ class GameScreen
 	end
 
 	def start
-    #TODO move this into set_close_listener and connect to passed block
-    @screen.signal_connect('destroy') { Gtk.main_quit }
+    verify_column_selected @columnSelectedListener
+    verify_game_closed_listener @closeListener
+    verify_new_game_listener @newGameListener
     Gtk.main()
 	end
 
 	def set_column_selected_listener(&block)
 		CommonContracts.block_callable(block)
+    @columnSelectedListener = block
     @gameBoard.set_column_click_listener &block
 	end
 
 	def set_close_listener(&block)
 		CommonContracts.block_callable(block)
     @closeListener = block
+    @screen.signal_connect('destroy') do
+      @closeListener.call
+      exit 0
+    end
 	end
 
 	def set_new_game_listener(&block)
 		CommonContracts.block_callable(block)
     @newGameListener = block
+    @newGameButton.signal_connect('activate') do
+      newGameDialog = NewGameDialog.instance
+      newGameDialog.setup_ok_listener &block
+      newGameDialog.start
+    end
 	end
 
   # @param [Datasource] datasource
 	def update(datasource)
 		input_is_data_source(datasource)
+    #TODO iterate over ds and draw tokens
   end
 
   private
@@ -76,5 +91,7 @@ class GameScreen
 end
 
 h = GameScreen.new(1,2)
-h.set_column_selected_listener {|col| puts "clicked in col: #{col}"}
+h.set_column_selected_listener {|col| puts "column click listener: clicked in col: #{col}"}
+h.set_close_listener {puts 'game closed listener called'}
+h.set_new_game_listener {puts 'NEW GAME'}
 h.start

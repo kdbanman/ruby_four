@@ -6,6 +6,6 @@ module SlotContracts
   end
 
   def class_variables_not_null(*input)
-    input.each {|x| raise ContractFailure, 'must initalize player tokens before creating slot objects' if x.nil?}
+    input.each {|x| raise ContractFailure, 'MUST call Slot.initializeTokens before creating slot objects' if x.nil?}
   end
 end

@@ -16,8 +16,10 @@ class GameBoard
 	def initialize(gametype, width, height)
     #TODO uncomment this contract
 		#game_type_generates_tokens(gametype)
+    CommonContracts.positive_integers width, height
     #TODO change this to use gametype
     Slot.initializeTokens 'a', 'b'
+    @gameType = gametype
     @columns = []
     width.times {@columns << Column.new(height)}
     @boardView = BoardView.new
@@ -34,6 +36,7 @@ class GameBoard
 	end
 
   def connect_event_handlers
+    #views must be "shown" before we call this
     @columns.each {|col| col.connect_events}
   end
 
@@ -50,6 +53,9 @@ class GameBoard
 
   # @param [Integer] colNumber
 	def handle_column_click (colNumber)
+    #pre
+    listener_not_nil @columnClickListener
+
     @columnClickListener.call colNumber
 	end
 
