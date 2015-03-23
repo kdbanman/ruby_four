@@ -38,9 +38,6 @@ class DataSource
     @board = Marshal.load(recv_str(@server_socket))
     update_observers
 
-    # enter server listen loop
-    listen_loop @server_socket
-
     verify_invariants
   end
 
@@ -50,7 +47,11 @@ class DataSource
   def place_token(player_id, column, token_type = nil)
     command = "token #{player_id} #{column}"
     command += " #{token_type}" unless token_type.nil?
+
+    puts 'DATASOURCE: ' + command
     send_str command, @server_socket
+
+    wait_for_response @server_socket
   end
 
   def exit_game(player_id)
@@ -60,24 +61,27 @@ class DataSource
   private
 
   # @param [TCPSocket] server_socket
-  def listen_loop server_socket
-    Thread.new do
-      loop do
-        msg = recv_str server_socket # may be win or model
+  def wait_for_response server_socket
+    msg = recv_str server_socket # may be win or model
 
-        if msg =~ WIN_PATTERN
-          win_game msg[WIN_PATTERN, 1].to_i
-          msg = recv_str server_socket # will be model this time
-        elsif msg =~ EXIT_PATTERN
-          puts msg
-          return
-        end
+    if msg =~ WIN_PATTERN
+      win_game msg[WIN_PATTERN, 1].to_i
+      msg = recv_str server_socket # will be model this time
+    elsif msg =~ EXIT_PATTERN
+      puts msg
+      return
+    end
 
-        @board = Marshal.load msg
-        update_observers
+    @board = set_board msg
+    update_observers
+  end
 
-        # TODO current player get column place token call if not nil
-      end
+  def set_board(serialized)
+    begin
+      Marshal.load serialized
+    rescue ArgumentError
+      warn 'ERROR: Model not received from server!'
+      exit 1
     end
   end
 
