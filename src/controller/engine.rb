@@ -38,38 +38,12 @@ class Engine
 
     new_game = NewGameDialog.new
     new_game.setup_ok_listener do |game_config|
-      new_server_sync game_config do
-        puts "HERE"
+      wrapped_server game_config.port do
         set_game_model game_config
         start_game_screen game_config
       end
     end
     new_game.start
-  end
-
-  def new_server_sync(game_config)
-    server_ready_mutex = Mutex.new
-    server_ready_signal = ConditionVariable.new
-
-    fork do
-      server_ready_mutex.synchronize do
-        GameServer.new game_config.port do
-          # signal server started
-          puts server_ready_signal
-          server_ready_signal.signal
-          puts 'SNTEHSNTHEOSUNTEHOUSNTEUHOEOUSN'
-        end
-      end
-    end
-
-    # wait on server start signal
-    server_ready_mutex.synchronize do
-      puts 'Waiting on signal.'
-      puts server_ready_signal
-      server_ready_signal.wait server_ready_mutex
-      puts 'Server signalled ready.'
-      yield
-    end
   end
 
   # @param [GameConfig] game_config
