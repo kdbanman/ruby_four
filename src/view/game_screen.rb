@@ -31,10 +31,10 @@ class GameScreen
     @screen = @builder.get_object('game_screen')
     @boardContainer = @builder.get_object('board_container')
     @mainLayout = @builder.get_object('main_layout')
-    @gameBoard = GameBoard.new(nil,gameconfig.num_cols,gameconfig.num_rows)
+    @gameBoard = GameBoard.new(nil,gameconfig.num_cols, gameconfig.num_rows)
     @boardContainer.add(@gameBoard.boardView)
     #todo if gametype == :toot add_token_selector
-    add_token_selector
+    #add_token_selector
     @screen.show_all()
     set_up_game_board_events
     set_about_handler
@@ -112,10 +112,9 @@ class GameScreen
     tokenSelector = TokenSelector.new(0, 30, 'Select Token:')
     @mainLayout.put(tokenSelector.topView, tokenSelector.posX, tokenSelector.posY)
   end
-
 end
 
-h = GameScreen.new(1,2)
+h = GameScreen.new(1,2,3)
 h.set_column_selected_listener {|col| puts "column click listener: clicked in col: #{col}"}
 h.set_close_listener {puts 'game closed listener called'}
 h.set_new_game_listener {puts 'NEW GAME'}
