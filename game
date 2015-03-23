@@ -1,32 +1,5 @@
 #! /bin/ruby
 
-require_relative 'src/util/net_protocol'
-require_relative 'src/game_server'
-require_relative 'src/model/game_config'
+require_relative 'src/model/engine'
 
-include NetProtocol
-
-PORT = 1024 + Random.rand(60000)
-
-# Wait for game server to open server socket, then fork a client process
-# to connect to the server.
-GameServer.new(PORT) do
-
-  fork do
-    sock = TCPSocket.new('localhost', PORT)
-
-    # TODO start engine
-
-    # TODO start new game dialog, send config with code like below
-
-    puts "CLIENT: connected to server at #{sock}"
-    config_str = Marshal.dump(GameConfig.new(:connect4, :human, :human, 'steve', 'john', :easy, 6, 7))
-    send_str(config_str, sock)
-
-    # TODO the rest
-
-
-
-  end
-
-end
+Engine.new
