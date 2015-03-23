@@ -11,6 +11,17 @@ require_relative '../model/game_config'
 require_relative '../model/game_type_factory'
 require_relative '../model/data_source'
 
+def wrapped_server(default_port = nil)
+  port = default_port || 1024 + Random.rand(60000)
+  pid = nil
+  GameServer.new(port) do
+    sock = TCPSocket.new('localhost', port) if default_port.nil?
+    pid = fork do
+      yield sock
+    end
+  end
+  Process.waitpid pid
+end
 
 class Engine
 
@@ -27,7 +38,8 @@ class Engine
 
     new_game = NewGameDialog.new
     new_game.setup_ok_listener do |game_config|
-      new_server_sync do
+      new_server_sync game_config do
+        puts "HERE"
         set_game_model game_config
         start_game_screen game_config
       end
@@ -35,26 +47,34 @@ class Engine
     new_game.start
   end
 
-  def new_server_sync
-    server_ready_signal = ConditionVariable.new
+  def new_server_sync(game_config)
     server_ready_mutex = Mutex.new
+    server_ready_signal = ConditionVariable.new
 
-    Thread.new do
-      GameServer.new game_config.port do
-        # signal server started
-        server_ready_mutex.synchronize { server_ready_signal.signal }
+    fork do
+      server_ready_mutex.synchronize do
+        GameServer.new game_config.port do
+          # signal server started
+          puts server_ready_signal
+          server_ready_signal.signal
+          puts 'SNTEHSNTHEOSUNTEHOUSNTEUHOEOUSN'
+        end
       end
     end
 
     # wait on server start signal
     server_ready_mutex.synchronize do
+      puts 'Waiting on signal.'
+      puts server_ready_signal
       server_ready_signal.wait server_ready_mutex
+      puts 'Server signalled ready.'
       yield
     end
   end
 
   # @param [GameConfig] game_config
   def set_game_model(game_config)
+    puts "Creating game with config: #{game_config}"
     @game_type = GameTypeFactory.get_game_type game_config
     @data_source = DataSource.new game_config
   end
