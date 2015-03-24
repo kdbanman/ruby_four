@@ -86,6 +86,7 @@ class NewGameDialog
   def ok_listener
     if validate_fields
       @okListener.call(get_config)
+      puts 'killed'
       kill
     end
   end
@@ -192,6 +193,3 @@ class NewGameDialog
   end
 
 end
-
-# h = NewGameDialog.new
-# h.start

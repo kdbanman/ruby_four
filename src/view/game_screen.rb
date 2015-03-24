@@ -116,8 +116,3 @@ class GameScreen
   end
 end
 
-# h = GameScreen.new(1,2,3)
-# h.set_column_selected_listener {|col| puts "column click listener: clicked in col: #{col}"}
-# h.set_close_listener {puts 'game closed listener called'}
-# h.set_new_game_listener {puts 'NEW GAME'}
-# h.start
