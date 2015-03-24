@@ -108,10 +108,9 @@ class GameScreen
     playerID = board.current_player_id
     player = board.player1 if (board.player1.id == playerID)
     player = board.player2 if (board.player2.id == playerID)
-
-    @playerTurnLabel.set_text(player.name)
+    
     setWinner(board.winner.name) if board.winner
-
+    @playerTurnLabel.set_text(player.name)
   end
 
   def setWinner(player)
@@ -119,6 +118,7 @@ class GameScreen
       Gtk::MessageDialog::WARNING, Gtk::MessageDialog::BUTTONS_OK, "Winner: #{player}")
     dialog.run
     dialog.destroy
+    kill
   end
 
   private
