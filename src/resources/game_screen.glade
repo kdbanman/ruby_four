@@ -1,23 +1,20 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0"?>
 <interface>
   <requires lib="gtk+" version="2.24"/>
   <!-- interface-naming-policy project-wide -->
   <object class="GtkWindow" id="game_screen">
-    <property name="can_focus">False</property>
     <property name="extension_events">cursor</property>
     <property name="resizable">False</property>
     <property name="window_position">center</property>
     <child>
       <object class="GtkFixed" id="main_layout">
         <property name="visible">True</property>
-        <property name="can_focus">False</property>
         <property name="border_width">10</property>
         <child>
           <object class="GtkLabel" id="player_name_label">
             <property name="width_request">85</property>
             <property name="height_request">20</property>
             <property name="visible">True</property>
-            <property name="can_focus">False</property>
             <property name="label" translatable="yes">Player Name</property>
             <property name="wrap">True</property>
             <property name="wrap_mode">char</property>
@@ -29,7 +26,6 @@
         <child>
           <object class="GtkFixed" id="board_container">
             <property name="visible">True</property>
-            <property name="can_focus">False</property>
             <property name="border_width">1</property>
           </object>
           <packing>
@@ -41,44 +37,21 @@
             <property name="width_request">100</property>
             <property name="height_request">40</property>
             <property name="visible">True</property>
-            <property name="can_focus">False</property>
             <child>
               <object class="GtkMenuBar" id="menubar1">
                 <property name="visible">True</property>
-                <property name="can_focus">False</property>
                 <child>
                   <object class="GtkMenuItem" id="menuitem1">
                     <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="use_action_appearance">False</property>
                     <property name="label" translatable="yes">_File</property>
                     <property name="use_underline">True</property>
                     <child type="submenu">
                       <object class="GtkMenu" id="menu1">
                         <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <child>
-                          <object class="GtkImageMenuItem" id="new_game_menu_item">
-                            <property name="label">New Game</property>
-                            <property name="visible">True</property>
-                            <property name="can_focus">False</property>
-                            <property name="use_action_appearance">False</property>
-                            <property name="image">image1</property>
-                            <property name="use_stock">False</property>
-                          </object>
-                        </child>
-                        <child>
-                          <object class="GtkSeparatorMenuItem" id="separatormenuitem1">
-                            <property name="visible">True</property>
-                            <property name="can_focus">False</property>
-                          </object>
-                        </child>
                         <child>
                           <object class="GtkImageMenuItem" id="quit_menu_item">
                             <property name="label">gtk-quit</property>
                             <property name="visible">True</property>
-                            <property name="can_focus">False</property>
-                            <property name="use_action_appearance">False</property>
                             <property name="use_underline">True</property>
                             <property name="use_stock">True</property>
                           </object>
@@ -90,20 +63,15 @@
                 <child>
                   <object class="GtkMenuItem" id="menuitem4">
                     <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="use_action_appearance">False</property>
                     <property name="label" translatable="yes">_Help</property>
                     <property name="use_underline">True</property>
                     <child type="submenu">
                       <object class="GtkMenu" id="menu3">
                         <property name="visible">True</property>
-                        <property name="can_focus">False</property>
                         <child>
                           <object class="GtkImageMenuItem" id="about_menu_button">
                             <property name="label">gtk-about</property>
                             <property name="visible">True</property>
-                            <property name="can_focus">False</property>
-                            <property name="use_action_appearance">False</property>
                             <property name="use_underline">True</property>
                             <property name="use_stock">True</property>
                           </object>
@@ -115,7 +83,6 @@
               </object>
               <packing>
                 <property name="expand">False</property>
-                <property name="fill">True</property>
                 <property name="position">0</property>
               </packing>
             </child>
@@ -126,7 +93,6 @@
             <property name="width_request">79</property>
             <property name="height_request">22</property>
             <property name="visible">True</property>
-            <property name="can_focus">False</property>
             <property name="label" translatable="yes">Player Turn:</property>
           </object>
           <packing>
@@ -135,10 +101,5 @@
         </child>
       </object>
     </child>
-  </object>
-  <object class="GtkImage" id="image1">
-    <property name="visible">True</property>
-    <property name="can_focus">False</property>
-    <property name="stock">gtk-new</property>
   </object>
 </interface>

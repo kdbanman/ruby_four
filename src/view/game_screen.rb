@@ -47,7 +47,7 @@ class GameScreen
 	def start
     verify_column_selected @columnSelectedListener
     verify_game_closed_listener @closeListener
-    verify_new_game_listener @newGameListener
+    #verify_new_game_listener @newGameListener
     Gtk.main()
   end
 
@@ -81,21 +81,21 @@ class GameScreen
 	end
 
 	def set_new_game_listener(&block)
-		CommonContracts.block_callable(block)
-    @newGameButton = @builder.get_object('new_game_menu_item')
-    @newGameListener = block
-    @newGameButton.signal_connect('activate') do
-      unless NewGameDialog.opened
-        newGameDialog = NewGameDialog.new(@screen)
-        newGameDialog.setup_ok_listener do
-          @okay_pressed = true
-          @screen.destroy
-          block.call
-          kill
-        end
-        newGameDialog.start
-      end
-    end
+		# CommonContracts.block_callable(block)
+  #   @newGameButton = @builder.get_object('new_game_menu_item')
+  #   @newGameListener = block
+  #   @newGameButton.signal_connect('activate') do
+  #     unless NewGameDialog.opened
+  #       newGameDialog = NewGameDialog.new(@screen)
+  #       newGameDialog.setup_ok_listener do
+  #         @okay_pressed = true
+  #         @screen.destroy
+  #         block.call
+  #         kill
+  #       end
+  #       newGameDialog.start
+  #     end
+  #   end
 	end
 
   # @param [Datasource] datasource
