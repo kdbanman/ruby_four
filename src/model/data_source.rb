@@ -93,8 +93,6 @@ class DataSource
 
   def win_game(player)
     puts "DATASOURCE: win message received for player #{player}"
-    #TODO remove this
-    GameScreen.setWinner player
   end
 
   def verify_invariants
