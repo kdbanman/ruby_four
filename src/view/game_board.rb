@@ -44,6 +44,7 @@ class GameBoard
     board.tokens.each do |coord, token| 
       currSlot = @columns[coord.x].slots[coord.y]
       currSlot.fill(@gameType.get_token_image_path(token.type)) unless currSlot.filled?
+    end
   end
 
 	private

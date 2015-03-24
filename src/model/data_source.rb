@@ -30,6 +30,7 @@ class DataSource
   def initialize(config)
 
     # connect with server and send serialized game config
+    puts "DATASOURCE: connecting to server at #{config.ip}:#{config.port}"
     @server_socket = TCPSocket.new(config.ip, config.port)
     send_str(Marshal.dump(config), @server_socket)
 
@@ -37,6 +38,7 @@ class DataSource
     @board = Marshal.load(recv_str(@server_socket))
     update_observers
 
+    puts 'DATASOURCE: Model received.'
     verify_invariants
   end
 

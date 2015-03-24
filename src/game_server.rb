@@ -48,8 +48,10 @@ class GameServer
   # @param [String] err_file
   # @return [TCPServer]
   def init_io(listen_port, out_file, err_file)
-    @out = out_file == nil ? $stdout : File.open(out_file, 'w')
-    @err = err_file == nil ? @out : File.open(err_file, 'w')
+    #@out = out_file == nil ? $stdout : File.open(out_file, 'w')
+    #@err = err_file == nil ? @out : File.open(err_file, 'w')
+    @out = $stdout
+    @err = $stderr
 
     TCPServer.new listen_port
   end
