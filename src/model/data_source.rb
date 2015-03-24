@@ -38,6 +38,7 @@ class DataSource
     @board = Marshal.load(recv_str(@server_socket))
     update_observers
 
+    puts 'DATASOURCE: Model received.'
     verify_invariants
   end
 

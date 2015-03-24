@@ -29,7 +29,7 @@ class Slot
 
 	def initialize
     #pre
-    class_variables_not_null @@player1Token, @@player2Token, @@ghost, @@empty
+    class_variables_not_null @@ghost, @@empty
     @slotView = SlotView.new(@@empty)
     @filled = FALSE
     @ghosted = FALSE
