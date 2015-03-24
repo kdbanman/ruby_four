@@ -85,20 +85,22 @@ class GameScreen
     player = board.player1 if (board.player1.id == playerID)
     player = board.player2 if (board.player2.id == playerID)
     
-    setWinner(board.winner.name) if board.winner
+    raiseDialog("Winner: #{board.winner.name}") if board.winner
+    raiseDialog('No Winner.') if board.full?
+    
     @playerTurnLabel.set_text(player.name)
   end
 
-  def setWinner(player)
+  def raiseDialog(message)
     dialog = Gtk::MessageDialog.new(nil, Gtk::Dialog::DESTROY_WITH_PARENT, 
-      Gtk::MessageDialog::INFO, Gtk::MessageDialog::BUTTONS_OK, "Winner: #{player}")
+      Gtk::MessageDialog::INFO, Gtk::MessageDialog::BUTTONS_OK, message)
     dialog.run
     dialog.destroy
     kill
   end
 
   def set_new_game_listener
-    
+
   end
 
   private
