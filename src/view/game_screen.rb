@@ -54,7 +54,9 @@ class GameScreen
 
   def kill
     @closeListener.call
+    puts 'RETURNED FROM CLOSE LISTENER'
     Gtk.main_quit #unless @okay_pressed
+    puts 'killed game_screen loop'
   end
 
 	def set_column_selected_listener(&block)
@@ -115,7 +117,7 @@ class GameScreen
 
   def setWinner(player)
     dialog = Gtk::MessageDialog.new(nil, Gtk::Dialog::DESTROY_WITH_PARENT, 
-      Gtk::MessageDialog::WARNING, Gtk::MessageDialog::BUTTONS_OK, "Winner: #{player}")
+      Gtk::MessageDialog::INFO, Gtk::MessageDialog::BUTTONS_OK, "Winner: #{player}")
     dialog.run
     dialog.destroy
     kill
