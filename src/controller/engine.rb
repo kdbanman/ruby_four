@@ -28,6 +28,8 @@ class Engine
       game_config.port = port
       set_game_model game_config
       start_game_screen game_config
+
+      attempt_ai_player @data_source.board
     end
     new_game.start
   end
@@ -37,6 +39,7 @@ class Engine
     puts "Creating game with config: #{game_config}"
     @game_type = GameTypeFactory.get_game_type game_config
     @data_source = DataSource.new game_config
+    @data_source.add_observer self
   end
 
   # @param [GameConfig] game_config
@@ -66,6 +69,31 @@ class Engine
 
   def new_token_command(coordinate)
     CommonContracts.valid_coordinate(coordinate)
+  end
+
+  # @param [Board] board
+  def update(board)
+    #TODO is a board
+    attempt_ai_player board
+  end
+
+  # @param [Board] board
+  def attempt_ai_player(board)
+    unless board.winner
+      current_player_id = @data_source.board.current_player_id
+      opponent_id = 1 + current_player_id % 2
+      ai_player = @data_source.board.get_player(current_player_id)
+      ai_column = ai_player.get_column(@data_source.board,
+                                       @game_type.get_win_pattern(current_player_id),
+                                       @game_type.get_win_pattern(opponent_id))
+      unless ai_column.nil?
+        @game_screen.update board
+        puts "ENGINE: AI player #{current_player_id} placing in column #{ai_column}"
+        @data_source.place_token(current_player_id,
+                                 ai_column,
+                                 @game_type.get_player_token_type(current_player_id))
+      end
+    end
   end
 
   def setupColumnClickListener

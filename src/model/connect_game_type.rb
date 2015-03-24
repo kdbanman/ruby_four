@@ -57,6 +57,12 @@ module  ConnectGameType
     player_id
   end
 
+  # @param [Integer] player_id
+  def ConnectGameType.get_win_pattern(player_id)
+    return WIN_PATTERN_1 if player_id == 1
+    return WIN_PATTERN_2 if player_id == 2
+  end
+
   private
 
   def ConnectGameType.method_missing(m, *args, &block)

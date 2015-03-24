@@ -58,6 +58,12 @@ module  OttoGameType
     return :O if player_id == 2
   end
 
+  # @param [Integer] player_id
+  def OttoGameType.get_win_pattern(player_id)
+    return WIN_PATTERN_1 if player_id == 1
+    return WIN_PATTERN_2 if player_id == 2
+  end
+
   private
 
   def OttoGameType.method_missing(m, *args, &block)
