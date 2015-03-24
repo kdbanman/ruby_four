@@ -92,7 +92,7 @@ class DataSource
   end
 
   def win_game(player)
-    puts "WINNER #{player}"
+    puts "DATASOURCE: win message received for player #{player}"
     #TODO remove this
     GameScreen.setWinner player
   end
