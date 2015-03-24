@@ -59,7 +59,9 @@ class Engine
 
     @game_screen.set_column_selected_listener do |col|
       current_player_id = @data_source.board.current_player_id
-      @data_source.place_token(current_player_id, col, @game_type.get_player_token(current_player_id))
+      @data_source.place_token(current_player_id,
+                               col,
+                               @game_type.get_player_token_type(current_player_id))
     end
 
     @game_screen.set_close_listener { @data_source.exit_game(@data_source.board.current_player_id) }
@@ -72,6 +74,8 @@ class Engine
         start_game_screen game_config
       end
     end
+
+    @game_screen.start
   end
 
   def new_token_command(coordinate)

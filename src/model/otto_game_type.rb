@@ -54,8 +54,8 @@ module  OttoGameType
 
   # @param [Integer] player_id
   def OttoGameType.get_player_token_type(player_id)
-    :T if player_id == 1
-    :O if player_id == 2
+    return :T if player_id == 1
+    return :O if player_id == 2
   end
 
   private
