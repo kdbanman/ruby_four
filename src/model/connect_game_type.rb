@@ -48,8 +48,8 @@ module  ConnectGameType
 
   # @param [Integer] either 1 or 2
   def ConnectGameType.get_token_image_path(token_type)
-    return File.dirname(__FILE__) + '/../resources/tPiece.png' if token_type == 1
-    return File.dirname(__FILE__) + '/../resources/oPiece.png' if token_type == 2
+    return File.dirname(__FILE__) + '/../resources/blackPiece.png' if token_type == 1
+    return File.dirname(__FILE__) + '/../resources/redPiece.png' if token_type == 2
   end
 
   # @param [Integer] player_id
