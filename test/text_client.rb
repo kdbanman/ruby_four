@@ -9,7 +9,7 @@ PORT = 1024 + Random.rand(60000)
 
 # Wait for game server to open server socket, then fork a client process
 # to connect to the server.
-GameServer.new(PORT, 'out.txt') do
+GameServer.new(PORT) do
 
   fork do
     sock = TCPSocket.new('localhost', PORT)

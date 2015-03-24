@@ -87,7 +87,7 @@ class GameScreen
     
     raiseDialog("Winner: #{board.winner.name}") if board.winner
     raiseDialog('No Winner.') if board.full?
-    
+
     @playerTurnLabel.set_text(player.name)
   end
 
