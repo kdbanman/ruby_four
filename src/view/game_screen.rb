@@ -47,6 +47,7 @@ class GameScreen
 	def start
     verify_column_selected @columnSelectedListener
     verify_game_closed_listener @closeListener
+    #TODO leave in for part 5
     #verify_new_game_listener @newGameListener
     Gtk.main()
   end
@@ -81,6 +82,7 @@ class GameScreen
 	end
 
 	def set_new_game_listener(&block)
+    #TODO may need this code for Part 5
 		# CommonContracts.block_callable(block)
   #   @newGameButton = @builder.get_object('new_game_menu_item')
   #   @newGameListener = block
