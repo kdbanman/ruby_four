@@ -6,11 +6,12 @@ class GameConfig
 
   include GameConfigContracts
 
-  attr_reader :type, :player1, :player2, :name1, :name2, :difficulty, :num_cols, :num_rows, :port, :ip
+  attr_accessor :port
+  attr_reader :type, :player1, :player2, :name1, :name2, :difficulty, :num_cols, :num_rows, :ip
 
   public
 
-  def initialize(type, player1, player2, name1, name2, difficulty, cols, rows)
+  def initialize(type, player1, player2, name1, name2, difficulty, cols, rows, port = 1024 + Random.rand(60000), ip = 'localhost')
     @type = type
     @player1 = player1
     @player2 = player2
@@ -21,8 +22,8 @@ class GameConfig
     @num_cols = cols
     @num_rows = rows
 
-    @port = 1024 + Random.rand(60000)
-    @ip = 'localhost'
+    @port = port
+    @ip = ip
 
     verify_invariants
   end

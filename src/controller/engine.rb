@@ -11,18 +11,6 @@ require_relative '../model/game_config'
 require_relative '../model/game_type_factory'
 require_relative '../model/data_source'
 
-def wrapped_server(default_port = nil)
-  port = default_port || 1024 + Random.rand(60000)
-  pid = nil
-  GameServer.new(port) do
-    sock = TCPSocket.new('localhost', port) if default_port.nil?
-    pid = fork do
-      yield sock
-    end
-  end
-  Process.waitpid pid
-end
-
 class Engine
 
   private
@@ -34,14 +22,12 @@ class Engine
 
   public
 
-  def initialize
-
+  def initialize(port)
     new_game = NewGameDialog.new
     new_game.setup_ok_listener do |game_config|
-      wrapped_server game_config.port do
-        set_game_model game_config
-        start_game_screen game_config
-      end
+      game_config.port = port
+      set_game_model game_config
+      start_game_screen game_config
     end
     new_game.start
   end
