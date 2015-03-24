@@ -26,6 +26,7 @@ class GameScreen
 		# input_is_data_source(datasource)
     #TODO add self to datasource observers
     Gtk.init
+    datasource.add_observer(this)
     @builder = Gtk::Builder.new
     @builder.add_from_file(File.dirname(__FILE__) + '/../resources/game_screen.glade')
     @screen = @builder.get_object('game_screen')
