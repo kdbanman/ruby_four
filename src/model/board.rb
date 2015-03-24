@@ -25,13 +25,6 @@ class Board
 
   public
 
-  def dup
-    copy = Board.new(@config, @game_type)
-
-
-    copy
-  end
-
   # @param [GameConfig] config
   # @param [GameType] game_type
   def initialize(config, game_type)
@@ -61,8 +54,7 @@ class Board
     return HumanPlayer.new(name, game_type.make_initial_tokens(id, token_count), id) if (type == :human)
 
     return EasyComputerPlayer.new(name, game_type.make_initial_tokens(id, token_count), id) if (difficulty == :easy)
-    EasyComputerPlayer.new(name, game_type.make_initial_tokens(id, token_count), id)
-    #HardComputerPlayer.new(name, game_type.make_initial_tokens(id, token_count), id)
+    HardComputerPlayer.new(name, game_type.make_initial_tokens(id, token_count), id, game_type)
   end
 
   # @param [Token] token
