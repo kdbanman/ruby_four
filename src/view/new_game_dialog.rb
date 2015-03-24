@@ -30,10 +30,10 @@ class NewGameDialog
   MAIN_WINDOW = 'main_window'
 
   def initialize(parent = nil)
-    Gtk.init
     @builder = Gtk::Builder.new
     @builder.add_from_file(File.dirname(__FILE__) + '/../resources/new_game_dialogue.glade')
     @mainWindow = @builder.get_object(MAIN_WINDOW)
+    @okay_presed = false
     set_up_game_type
     set_up_players
     set_up_difficulty
@@ -60,7 +60,7 @@ class NewGameDialog
   def kill
     @@opened = false
     @mainWindow.destroy
-    Gtk.main_quit
+    Gtk.main_quit unless @okay_pressed
   end
 
   def setup_ok_listener (&block)
@@ -85,7 +85,10 @@ class NewGameDialog
 
   def ok_listener
     if validate_fields
-      @okListener.call(get_config)
+      @okay_pressed = true
+      gameconfig = get_config
+      @mainWindow.destroy
+      @okListener.call(gameconfig)
       puts 'killed'
       kill
     end

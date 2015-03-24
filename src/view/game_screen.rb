@@ -34,11 +34,14 @@ class GameScreen
     @mainLayout = @builder.get_object('main_layout')
     @gameBoard = GameBoard.new(gametype,gameconfig.num_cols, gameconfig.num_rows)
     @boardContainer.add(@gameBoard.boardView)
+    @playerTurnLabel = @builder.get_object('player_name_label')
     #todo if gametype == :toot add_token_selector
     #add_token_selector
     @screen.show_all()
     set_up_game_board_events
     set_about_handler
+    @okay_pressed = false
+    update(datasource.board)
 	end
 
 	def start
@@ -50,7 +53,7 @@ class GameScreen
 
   def kill
     @closeListener.call
-    Gtk.main_quit
+    Gtk.main_quit unless @okay_pressed
   end
 
 	def set_column_selected_listener(&block)
@@ -84,7 +87,12 @@ class GameScreen
     @newGameButton.signal_connect('activate') do
       unless NewGameDialog.opened
         newGameDialog = NewGameDialog.new(@screen)
-        newGameDialog.setup_ok_listener &block
+        newGameDialog.setup_ok_listener do
+          @okay_pressed = true
+          @screen.destroy
+          block.call
+          kill
+        end
         newGameDialog.start
       end
     end
@@ -95,6 +103,12 @@ class GameScreen
 		#input_is_data_source(datasource)
     #TODO iterate over ds and draw tokens
     @gameBoard.update board
+    playerID = board.current_player_id
+    player = board.player1 if (board.player1.id == playerID)
+    player = board.player2 if (board.player2.id == playerID)
+
+    @playerTurnLabel.set_text(player.name)
+
   end
 
   private

@@ -53,7 +53,7 @@ class Engine
     @game_screen.set_close_listener { @data_source.exit_game(@data_source.board.current_player_id) }
 
     @game_screen.set_new_game_listener do |game_config|
-      @game_screen.kill
+      #@game_screen.kill
       # restart the game (server)
       new_server_sync do
         set_game_model game_config
