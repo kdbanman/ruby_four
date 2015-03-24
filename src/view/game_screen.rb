@@ -40,7 +40,7 @@ class GameScreen
     @screen.show_all()
     set_up_game_board_events
     set_about_handler
-    @okay_pressed = false
+    #@okay_pressed = false
     update(datasource.board)
 	end
 
@@ -54,7 +54,7 @@ class GameScreen
 
   def kill
     @closeListener.call
-    Gtk.main_quit unless @okay_pressed
+    Gtk.main_quit #unless @okay_pressed
   end
 
 	def set_column_selected_listener(&block)
