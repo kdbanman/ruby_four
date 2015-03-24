@@ -94,8 +94,9 @@ class NewGameDialog
       gameconfig = get_config
       @mainWindow.destroy
       @okListener.call(gameconfig)
-      puts 'killed'
+      puts 'killing new game dialog loop'
       force_kill
+      puts "loops left #{Gtk.main_level}"
     end
   end
 
