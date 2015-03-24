@@ -1,7 +1,11 @@
-require_relative '../model/board'
+require_relative '../model/abstract_board'
 
 # Intended for use using only the iterators and add_token from Board.  Other functionality not supported.
-class TokenProxy < Board
+class TokenProxy < AbstractBoard
+
+  private
+
+  public
 
   # @param [Hash<Coord, Token>] tokens
   # @param [BoardDimensions] dims

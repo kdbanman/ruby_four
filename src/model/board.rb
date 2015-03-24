@@ -1,12 +1,13 @@
+require_relative '../model/abstract_board'
 require_relative '../controller/human_player'
 require_relative '../controller/easy_computer_player'
 require_relative '../controller/hard_computer_player'
 require_relative '../model/board_dimensions'
 require_relative '../model/game_config'
 
-class Board
+class Board < AbstractBoard
 
-  attr_reader :board, :tokens, :token_count, :most_recent_token, :player1, :player2, :current_player_id, :winner
+  attr_reader :player1, :player2, :current_player_id, :winner
 
   private
 
@@ -57,6 +58,7 @@ class Board
     HardComputerPlayer.new(name, game_type.make_initial_tokens(id, token_count), id, game_type)
   end
 
+=begin
   # @param [Token] token
   def add_token(token)
     # preconditions
@@ -67,6 +69,7 @@ class Board
     @token_count += 1
     @most_recent_token = tokens[token.coord] = token
   end
+=end
 
   # @return [Player] player 1 or player 2
   def get_player(id)
@@ -93,6 +96,7 @@ class Board
     id == @current_player_id
   end
 
+=begin
   # @param [Integer] column
   def get_col_height(column)
     height = -1
@@ -134,6 +138,7 @@ class Board
       yield line
     end
   end
+=end
 
   # @param [Integer] player_id either 1 or 2
   def set_winner(player_id)
