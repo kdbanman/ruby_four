@@ -22,3 +22,8 @@
             1. send message 
             2. receive response
             3. receive model
+    - if NetProtocol were aware of message patterns for steps 1 and 2 (from a gametype), then it could run that whole cycle in a pair:
+        - `client_send(message: String): [response:String, model: Board]`
+            - returns a response and a model (not in a block - may recurse indefinitely
+        - `server_receive(): Block |message: String| : [response: String, model: Board]
+            - calls a block with the message, block returns response and model to send
