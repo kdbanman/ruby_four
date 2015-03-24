@@ -4,7 +4,7 @@ require_relative '../model/game_config'
 
 class Board
 
-  attr_reader :board, :tokens, :token_count, :most_recent_token, :player1, :player2, :current_player_id
+  attr_reader :board, :tokens, :token_count, :most_recent_token, :player1, :player2, :current_player_id, :winner
 
   private
 
@@ -16,6 +16,7 @@ class Board
   @player1
   @player2
   @current_player_id
+  @winner
 
   public
 
@@ -105,6 +106,11 @@ class Board
       end
       yield line
     end
+  end
+
+  def set_winner(player)
+    @winner = player1.name if player == 1
+    @winner = player2.name if player == 2
   end
 
 end

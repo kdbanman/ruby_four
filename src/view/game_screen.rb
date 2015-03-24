@@ -111,6 +111,12 @@ class GameScreen
 
   end
 
+  def GameScreen.setWinner(player)
+    dialog = Gtk::MessageDialog.new(nil, Gtk::Dialog::DESTROY_WITH_PARENT, Gtk::MessageDialog::WARNING, Gtk::MessageDialog::BUTTONS_OK, 'WINNER')
+    dialog.run
+    dialog.destroy
+  end
+
   private
 
   def set_up_game_board_events
