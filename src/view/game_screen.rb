@@ -26,13 +26,13 @@ class GameScreen
 		# input_is_data_source(datasource)
     #TODO add self to datasource observers
     Gtk.init
-    datasource.add_observer(this)
+    datasource.add_observer(self)
     @builder = Gtk::Builder.new
     @builder.add_from_file(File.dirname(__FILE__) + '/../resources/game_screen.glade')
     @screen = @builder.get_object('game_screen')
     @boardContainer = @builder.get_object('board_container')
     @mainLayout = @builder.get_object('main_layout')
-    @gameBoard = GameBoard.new(nil,gameconfig.num_cols, gameconfig.num_rows)
+    @gameBoard = GameBoard.new(gametype,gameconfig.num_cols, gameconfig.num_rows)
     @boardContainer.add(@gameBoard.boardView)
     #todo if gametype == :toot add_token_selector
     #add_token_selector
