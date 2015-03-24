@@ -16,8 +16,6 @@ module  ConnectGameType
   # @param board [Integer] count
   def ConnectGameType.make_initial_tokens(player, count)
     # preconditions
-    #TODO player is either 1 or 2
-    #TODO count is >= 16 (min 4x4 game)
     (1..count).map { player }
   end
 
@@ -25,14 +23,12 @@ module  ConnectGameType
   # @param [Integer] player 1 for player 1, 2 for player 2
   def ConnectGameType.new_token(coord, player)
     # preconditions
-    # TODO player is 1 or 2
     Token.new(coord, player)
   end
 
   # @param [String] message
   def ConnectGameType.get_token_type(message)
     #precondition
-    #TODO matches token pattern
     message[TOKEN_PATTERN, 1].to_i
   end
 

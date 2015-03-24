@@ -10,21 +10,17 @@ module GameType
 
   def GameType.get_exiter(message)
     #preconditions
-    #TODO matches pattern
     message[EXIT_PATTERN, 1].to_i
   end
 
   def GameType.get_player(message)
     #preconditions
-    #TODO matches pattern
     message[PLAYER_PATTERN, 1].to_i
   end
 
   def GameType.get_column(message)
     #preconditions
-    #TODO matches pattern
     message[COLUMN_PATTERN, 1].to_i
   end
 
-  # TODO win condition helpers
 end

@@ -14,10 +14,7 @@ class GameBoard
 
 	public
 	def initialize(gametype, width, height)
-    #TODO uncomment this contract
-		#game_type_generates_tokens(gametype)
     CommonContracts.positive_integers width, height
-    #TODO change this to use gametype
     Slot.initializeTokens 'a', 'b'
     @gameType = gametype
     @columns = []

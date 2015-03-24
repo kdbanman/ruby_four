@@ -20,11 +20,6 @@ class GameScreen
   # @param [GameConfig] gameconfig
 	def initialize(gametype, datasource, gameconfig)
 		#pre
-    #todo uncomment after connecting with backend
-		# game_type_generates_tokens(gametype)
-		# data_source_observable(datasource)
-		# input_is_data_source(datasource)
-    #TODO add self to datasource observers
     Gtk.init
     datasource.add_observer(self)
     @builder = Gtk::Builder.new
@@ -35,8 +30,6 @@ class GameScreen
     @gameBoard = GameBoard.new(gametype,gameconfig.num_cols, gameconfig.num_rows)
     @boardContainer.add(@gameBoard.boardView)
     @playerTurnLabel = @builder.get_object('player_name_label')
-    #todo if gametype == :toot add_token_selector
-    #add_token_selector
     @screen.show_all()
     set_up_game_board_events
     set_about_handler
@@ -83,25 +76,6 @@ class GameScreen
     end
 	end
 
-	def set_new_game_listener(&block)
-    #TODO may need this code for Part 5
-		# CommonContracts.block_callable(block)
-  #   @newGameButton = @builder.get_object('new_game_menu_item')
-  #   @newGameListener = block
-  #   @newGameButton.signal_connect('activate') do
-  #     unless NewGameDialog.opened
-  #       newGameDialog = NewGameDialog.new(@screen)
-  #       newGameDialog.setup_ok_listener do
-  #         @okay_pressed = true
-  #         @screen.destroy
-  #         block.call
-  #         kill
-  #       end
-  #       newGameDialog.start
-  #     end
-  #   end
-	end
-
   # @param [Datasource] datasource
 	def update(board)
 		#input_is_data_source(datasource)
@@ -121,6 +95,10 @@ class GameScreen
     dialog.run
     dialog.destroy
     kill
+  end
+
+  def set_new_game_listener
+    
   end
 
   private

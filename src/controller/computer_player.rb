@@ -20,8 +20,6 @@ class ComputerPlayer < Player
 
   # @param [Board] board
   def choose_random_column(board)
-    # TODO is a board.
-    # TODO board is not full
     height = board.board.col_height
     column = -1
     until height < board.board.col_height - 1

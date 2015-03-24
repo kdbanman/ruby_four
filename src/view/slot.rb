@@ -5,9 +5,6 @@ require 'gtk2'
 
 class Slot
   public
-  #TODO could use to cache 
-  #@@player1Token
-  #@@player2Token
   @@ghost
   @@empty
   attr_reader :slotView
@@ -18,9 +15,6 @@ class Slot
 
 
   def Slot.initializeTokens(p1, p2)
-    #TODO replace with pixbufs
-    # @@player1Token = p1
-    # @@player2Token = p2
 
     @@ghost = Gdk::Pixbuf.new  File.dirname(__FILE__) + '/../resources/ghostSlot.png'
     @@empty = Gdk::Pixbuf.new File.dirname(__FILE__) + '/../resources/emptySlot.png'

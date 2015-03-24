@@ -16,8 +16,6 @@ module  OttoGameType
   # @param board [Integer] count
   def OttoGameType.make_initial_tokens(player, count)
     # preconditions
-    #TODO player is either 1 or 2
-    #TODO count is >= 0
     (1..count).map { player == 1 ? :T : :O }
   end
 
@@ -25,14 +23,12 @@ module  OttoGameType
   # @param [Symbol] letter either :T or :O
   def OttoGameType.new_token(coord, letter)
     # preconditions
-    #TODO letter is :T or :O
     Token.new(coord, letter)
   end
 
   # @param [String] message
   def OttoGameType.get_token_type(message)
     #precondition
-    #TODO matches token pattern
     message[TOKEN_PATTERN, 3].to_sym
   end
 

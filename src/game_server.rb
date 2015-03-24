@@ -129,7 +129,6 @@ class GameServer
 
   # @param [Integer] playerID
   def exit_game(playerID)
-    # TODO part 5, save game, broadcast exit to both clients, close both sockets
     send_str("exit #{playerID}", @client_socket, @err)
     @client_socket.close
   end

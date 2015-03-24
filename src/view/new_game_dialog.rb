@@ -135,7 +135,6 @@ class NewGameDialog
     tootButton.group.each do |groupItem|
       groupItem.signal_connect('toggled') do |button|
         if button.active?
-          #todo could be extracted into class if have time
           @gametype = :otto if button == tootButton
           @gametype = :connect4 if button == c4Button
         end

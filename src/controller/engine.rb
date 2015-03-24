@@ -71,7 +71,6 @@ class Engine
 
   # @param [Board] board
   def update(board)
-    #TODO is a board
     attempt_ai_player board
   end
 

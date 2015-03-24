@@ -4,10 +4,6 @@ class AbstractBoard
 
   # @param [Token] token
   def add_token(token)
-    # preconditions
-    #TODO token is a token
-    #TODO token is in bounds
-    #TODO token coord is not filled
 
     @token_count += 1
     @most_recent_token = tokens[token.coord] = token

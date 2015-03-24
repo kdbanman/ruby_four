@@ -20,8 +20,6 @@ class PlaceTokenCommand
   # @param [GameType] game_type
   def initialize(message, game_type)
     #preconditions
-    #TODO param types
-    #TODO message matches game type token pattern
 
     @game_type = game_type
     @column = game_type.get_column(message)
@@ -33,7 +31,6 @@ class PlaceTokenCommand
   # @return [Boolean] whether or not token was placed
   def run(board)
     #preconditions
-    #TODO input is a board
 
     return false unless is_valid_command(board) && board.get_player(@player_id).pop_token(@token_type)
 
