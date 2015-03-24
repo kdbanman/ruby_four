@@ -28,8 +28,6 @@ class Engine
       game_config.port = port
       set_game_model game_config
       start_game_screen game_config
-
-      attempt_ai_player @data_source.board
     end
     new_game.start
   end
@@ -57,12 +55,12 @@ class Engine
 
     @game_screen.set_new_game_listener do |game_config|
       #@game_screen.kill
-      # restart the game (server)
-      new_server_sync do
-        set_game_model game_config
-        start_game_screen game_config
-      end
+      puts "ENGINE: creating new game with config: #{game_config}"
+      set_game_model game_config
+      start_game_screen game_config
     end
+
+    attempt_ai_player @data_source.board
 
     @game_screen.start
   end
