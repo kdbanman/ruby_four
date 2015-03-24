@@ -20,16 +20,16 @@ class Token
     verify_invariants
   end
 
+  def to_s
+    str = "col: #{@coord.column} height: #{@coord.height}"
+    str + " type: #{@type.to_s}"
+  end
+
   private
 
   def verify_invariants
     valid_coord @coord
     verify_side @type
-  end
-
-  def to_s
-    str = "col: #{coord.column} height: #{coord.height}"
-    str + " type: #{@type.to_s}"
   end
 
 end

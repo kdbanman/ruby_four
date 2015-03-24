@@ -48,8 +48,8 @@ module  OttoGameType
 
   # @param [Symbol] either :T or :O
   def OttoGameType.get_token_image_path(token_type)
-    File.dirname(__FILE__) + '/../resources/tPiece.png' if token_type == :T
-    File.dirname(__FILE__) + '/../resources/oPiece.png' if token_type == :O
+    return File.dirname(__FILE__) + '/../resources/tPiece.png' if token_type == :T
+    return File.dirname(__FILE__) + '/../resources/oPiece.png' if token_type == :O
   end
 
   # @param [Integer] player_id

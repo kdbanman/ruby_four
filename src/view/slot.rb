@@ -37,7 +37,7 @@ class Slot
 
 	def fill(imgpath)
     clear_ghost
-    slotView.fill(Gtk::Pixbuf.new imgpath)
+    slotView.fill(Gdk::Pixbuf.new imgpath)
     @filled = true
 		#post
 		filled?(@filled)

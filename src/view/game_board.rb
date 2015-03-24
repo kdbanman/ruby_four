@@ -43,7 +43,8 @@ class GameBoard
   def update(board)
     board.tokens.each do |coord, token| 
       currSlot = @columns[coord.x].slots[coord.y]
-      currSlot.fill(@gameType.get_token_image_path(token.type)) unless currSlot.is_filled?
+      image_path = @gameType.get_token_image_path(token.type)
+      currSlot.fill(image_path) unless currSlot.is_filled?
     end
   end
 
