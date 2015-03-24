@@ -1,5 +1,11 @@
 ### Part 5 TODO
 
+#### Ryan
+
+- add server IP and port to new game dialogue
+
+#### Kirby
+
 - NetProtocol maybe should be a class
     - @err, @log, @socket?
     - mutex lock? probably not - each socket will be owned by a GameServer process
