@@ -1,4 +1,6 @@
-require_relative '../model/player'
+require_relative '../controller/human_player'
+require_relative '../controller/easy_computer_player'
+require_relative '../controller/hard_computer_player'
 require_relative '../model/board_dimensions'
 require_relative '../model/game_config'
 
@@ -28,10 +30,25 @@ class Board
     @token_count = 0
 
     player_token_count = (config.num_rows * config.num_cols / 2.0).ceil
-    @player1 = Player.new(config.name1, game_type.make_initial_tokens(1, player_token_count), 1)
-    @player2 = Player.new(config.name2, game_type.make_initial_tokens(2, player_token_count), 2)
+
+    # TODO this should use a player factory initialized with token count, game type.
+    @player1 = build_player(player_token_count, game_type, config.player1, config.name1, 1, config.difficulty)
+    @player2 = build_player(player_token_count, game_type, config.player2, config.name2, 2, config.difficulty)
 
     @current_player_id = 1
+  end
+
+  # @param [Integer] token_count
+  # @param [GameType] game_type
+  # @param [Symbol] type either :human or :computer
+  # @param [String] name
+  # @param [Integer] id either 1 or 2
+  # @param [Symbol] difficulty either :easy or :hard
+  def build_player(token_count, game_type, type, name, id, difficulty = :easy)
+    return HumanPlayer.new(name, game_type.make_initial_tokens(id, token_count), id) if (type == :human)
+
+    return EasyComputerPlayer.new(name, game_type.make_initial_tokens(id, token_count), id) if (difficulty == :easy)
+    HardComputerPlayer.new(name, game_type.make_initial_tokens(id, token_count), id)
   end
 
   # @param [Token] token
@@ -75,6 +92,10 @@ class Board
     height = -1
     @tokens.each_key { |coord| height = [height, coord.height].max if coord.column == column }
     height
+  end
+
+  def full?
+    @tokens.length == @board.col_count * @board.col_height
   end
 
   # @param [Coord] coord

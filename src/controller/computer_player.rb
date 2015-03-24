@@ -9,20 +9,20 @@ class ComputerPlayer < Player
 
   public
 
-  def initialize
-
+  # @param [String] name
+  # @param [Array<Symbol> or Array<Integer>]
+  # @param [Integer] id
+  def initialize(name, initial_tokens, id)
+    super name, initial_tokens, id
   end
 
-  def get_column(other_player_tokens)
-    # preconditions
-    token_array other_player_tokens
+  private
 
-    column = 1
-
-    # postconditions
-    integer_result column
-
-    column
+  # @param [Board] board
+  def choose_random_column(board)
+    # TODO is a board.
+    column = -1
+    column = Random.rand(board.board.col_count) while board.get_col_height(column) < board.board.col_height - 1
   end
 
 end
