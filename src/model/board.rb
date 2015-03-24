@@ -108,9 +108,13 @@ class Board
     end
   end
 
-  def set_winner(player)
-    @winner = player1.name if player == 1
-    @winner = player2.name if player == 2
+  # @param [Integer] player_id either 1 or 2
+  def set_winner(player_id)
+    # make sure winner is only set once
+    if @winner.nil?
+      @winner = player1 if player_id == 1
+      @winner = player2 if player_id == 2
+    end
   end
 
 end

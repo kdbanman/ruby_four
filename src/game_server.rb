@@ -139,6 +139,7 @@ class GameServer
 
     if (winner = @game_type.get_winner(@board))
       @out.puts "Player #{winner} wins"
+      @board.set_winner(winner)
       send_str("win #{winner}", @client_socket, @err)
     end
   end
