@@ -76,11 +76,17 @@ module CommonContracts
   end
 
   def CommonContracts.is_username(name)
-    unless name.is_a?(String) && name.length > 0 && name =~ /^[a-zA-Z0-9]*$/
-      failure 'Name must be a string with at least one character.'
+    unless name.is_a?(String) && name.length > 0 && name.length <= 50
+      failure 'Name must be a string with at least one character, less than 50.'
     end
     unless name =~ /^[a-zA-Z0-9]*$/
       failure 'Name must contain only alphanumeric characters.'
+    end
+  end
+
+  def CommonContracts.is_passwd(pass)
+    unless pass.is_a?(String) && pass.length > 0 && pass.length <= 50
+      failure 'Password must be a string with at least one character, less than 50.'
     end
   end
 

@@ -1,21 +1,55 @@
+require_relative '../src/master_server_contracts'
+require_relative '../src/SQL/db_helper'
+
 class MasterServer
 
+  private
+
+  @db
+
+  @waiting
+  @in_progress
+
+
+  include MasterServerContracts
+
   def initialize(listen_port)
+    # preconditions
+    is_positive_int listen_port
+
+    @db = DbHelper.new
+
+    @waiting = Hash.new
+    @in_progress = Hash.new
 
   end
 
   def create_user(username, password)
+    # preconditions
+    is_username username
+    is_passwd password
 
+    # postconditions
+    is_int @db.get_user(username, password)
   end
 
   def auth_user(username, password)
+    # preconditions
+    is_username username
+    is_passwd password
 
   end
 
+  # @param [GameConfig] config
   def create_game(config, username)
     # preconditions
-    # TODO config must have at least 1 non nil player
-    # TODO human user name(s) must be in users db
+    # config must have at least 1 non nil player
+    at_least_one_player config
+    # human user name(s) must be in users db
+    is_true @db.user_exists(config.name1) if config.player1 == :human
+    is_true @db.user_exists(config.name2) if config.player2 == :human
+    # one human config name must match username
+    one_matches config.name1, config.name2, username
 
     # initialize game server
     # add handlers to save game or clean resources on certain client actions
@@ -29,7 +63,6 @@ class MasterServer
     # start an XMLRPC servlet with the game server handler and mount it at the game id path returned from save
 
     # postconditions
-    # TODO servlet started
 
     # return the game id
   end
@@ -42,8 +75,7 @@ class MasterServer
   # method just readies the server-side game object with the second player.
   def join_game(game_id, username)
     # preconditions
-    # TODO game in waiting list
-    # TODO game config has a nil player slot
+    is_true !@waiting[game_id].nil?
 
     # fill in game config
     # call server start_from config and put the game in progress, remove from waiting
@@ -51,9 +83,8 @@ class MasterServer
     # save game
 
     # postconditions
-    # TODO no longer in waiting
-    # TODO in progress
-    # TODO servelet still exists
+    is_true @waiting[game_id].nil?
+    is_true !@in_progress[game_id].nil?
   end
 
   def add_handlers(game_server)
@@ -65,9 +96,6 @@ class MasterServer
     # preconditions
 
     # serialize and save to the database (at game_id row if not nil), store local save_id for postcondition
-
-    # postconditions
-    # TODO save_id must equal game_id if not nil
 
     # return save_id
   end

@@ -50,6 +50,13 @@ class DbHelper
     CommonContracts.strings username, password
   end
 
+  # @param [String] username
+  # @return [Boolean] exists
+  def user_exists(username)
+    #pre
+    CommonContracts.strings username
+  end
+
   # @param [Integer] id
   def get_saved_game(id)
     #pre
