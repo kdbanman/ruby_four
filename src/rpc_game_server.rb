@@ -1,10 +1,13 @@
 require 'xmlrpc/utils'
+require_relative '../src/rpc_game_server_contracts'
 require_relative '../src/controller/place_token_command'
 require_relative '../src/model/game_config'
 require_relative '../src/model/board'
 require_relative '../src/model/game_type_factory'
 
 class RPCGameServer
+
+  include RPCGameServerContracts
 
   attr_accessor :game_id
 
@@ -24,8 +27,8 @@ class RPCGameServer
   # @return [Board] the constructed board ready for moves
   def start_from_config(config, game_id)
     # preconditions
-    # TODO must only be called once.
-    # TODO must be a complete config, @config, @board must be nil
+    is_true @config.nil?, 'start_from_config must only be called once'
+    is_int game_id
 
     puts "Starting from config:\n#{config}"
     @config = config
@@ -46,8 +49,8 @@ class RPCGameServer
     # send board to registered clients
 
     # postconditions
-    # TODO board tokens per player delta of 1 or 0
-
+    token_delta_one @board
+    
     @board
   end
 

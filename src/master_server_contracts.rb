@@ -29,8 +29,8 @@ module MasterServerContracts
     end
   end
 
-  def is_true(bool)
-    failure 'Must be true' unless bool
+  def is_true(bool, msg = 'Must be true')
+    failure msg unless bool
   end
 
   def one_matches(first, second, tomatch)
