@@ -63,6 +63,11 @@ class NewGameDialog
     Gtk.main_quit unless @okay_pressed
   end
 
+  def force_kill
+    @@opened = false
+    Gtk.main_quit
+  end
+
   def setup_ok_listener (&block)
     @okListener = block
   end
@@ -89,8 +94,9 @@ class NewGameDialog
       gameconfig = get_config
       @mainWindow.destroy
       @okListener.call(gameconfig)
-      puts 'killed'
-      kill
+      puts 'killing new game dialog loop'
+      force_kill
+      puts "loops left #{Gtk.main_level}"
     end
   end
 

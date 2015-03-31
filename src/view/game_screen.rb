@@ -40,20 +40,23 @@ class GameScreen
     @screen.show_all()
     set_up_game_board_events
     set_about_handler
-    @okay_pressed = false
+    #@okay_pressed = false
     update(datasource.board)
 	end
 
 	def start
     verify_column_selected @columnSelectedListener
     verify_game_closed_listener @closeListener
-    verify_new_game_listener @newGameListener
+    #TODO leave in for part 5
+    #verify_new_game_listener @newGameListener
     Gtk.main()
   end
 
   def kill
     @closeListener.call
-    Gtk.main_quit unless @okay_pressed
+    puts 'RETURNED FROM CLOSE LISTENER'
+    Gtk.main_quit #unless @okay_pressed
+    puts 'killed game_screen loop'
   end
 
 	def set_column_selected_listener(&block)
@@ -81,21 +84,22 @@ class GameScreen
 	end
 
 	def set_new_game_listener(&block)
-		CommonContracts.block_callable(block)
-    @newGameButton = @builder.get_object('new_game_menu_item')
-    @newGameListener = block
-    @newGameButton.signal_connect('activate') do
-      unless NewGameDialog.opened
-        newGameDialog = NewGameDialog.new(@screen)
-        newGameDialog.setup_ok_listener do
-          @okay_pressed = true
-          @screen.destroy
-          block.call
-          kill
-        end
-        newGameDialog.start
-      end
-    end
+    #TODO may need this code for Part 5
+		# CommonContracts.block_callable(block)
+  #   @newGameButton = @builder.get_object('new_game_menu_item')
+  #   @newGameListener = block
+  #   @newGameButton.signal_connect('activate') do
+  #     unless NewGameDialog.opened
+  #       newGameDialog = NewGameDialog.new(@screen)
+  #       newGameDialog.setup_ok_listener do
+  #         @okay_pressed = true
+  #         @screen.destroy
+  #         block.call
+  #         kill
+  #       end
+  #       newGameDialog.start
+  #     end
+  #   end
 	end
 
   # @param [Datasource] datasource
@@ -107,14 +111,17 @@ class GameScreen
     player = board.player1 if (board.player1.id == playerID)
     player = board.player2 if (board.player2.id == playerID)
 
+    raise_dialog("Winner: #{board.winner.name}") if board.winner
+    raise_dialog('No Winner.') if board.full?
     @playerTurnLabel.set_text(player.name)
-
   end
 
-  def GameScreen.setWinner(player)
-    dialog = Gtk::MessageDialog.new(nil, Gtk::Dialog::DESTROY_WITH_PARENT, Gtk::MessageDialog::WARNING, Gtk::MessageDialog::BUTTONS_OK, 'WINNER')
+  def raise_dialog(msg)
+    dialog = Gtk::MessageDialog.new(nil, Gtk::Dialog::DESTROY_WITH_PARENT, 
+      Gtk::MessageDialog::INFO, Gtk::MessageDialog::BUTTONS_OK, msg)
     dialog.run
     dialog.destroy
+    kill
   end
 
   private
