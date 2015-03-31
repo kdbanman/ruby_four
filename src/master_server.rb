@@ -34,6 +34,10 @@ class MasterServer
     # return the game id
   end
 
+  def wait_on_game(game_id, username)
+
+  end
+
   # note: a client *connects* with an in progress game by making RPC calls to the servlet at the game_id path, this
   # method just readies the server-side game object with the second player.
   def join_game(game_id, username)
