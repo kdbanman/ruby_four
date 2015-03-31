@@ -1,8 +1,10 @@
 require 'xmlrpc/utils'
+require_relative '../model/game_stats_contracts'
 
 class GameStats
 
   include XMLRPC::Marshallable
+  include GameStatsContracts
 
   private
 
@@ -19,12 +21,52 @@ class GameStats
   # @param [Symbol] outcome either :wins, :losses, or :draws
   # @param [Integer] number the number of passed outcomes for the passed gametype and user
   def add_stat(username, gametype, outcome, number)
+    # preconditions
+    is_username username
+    is_type gametype
+    is_outcome outcome
+    is_positive_int number
+
     init_username username if @by_username[username].nil?
 
-    @by_username[username][gametype][outcome] = number
+    insert_outcome username, gametype, outcome, number
+  end
+
+  # yields each |username, gametype, outcome, number|
+  def each_stat
+    @by_username.each_key do |username|
+      [:connect4, :otto].each do |gametype|
+        [:wins, :losses, :draws].each do |outcome|
+          yield_stat(username,
+                gametype,
+                outcome,
+                @by_username[username][gametype][outcome]) if block_given?
+        end
+      end
+    end
   end
 
   private
+
+  def yield_stat(username, gametype, outcome, number)
+    # preconditions
+    is_username username
+    is_type gametype
+    is_outcome outcome
+    is_positive_int number
+
+    yield username, gametype, outcome, number
+  end
+
+  def insert_outcome(username, gametype, outcome, number)
+    # preconditions
+    is_hash @by_username
+    is_hash @by_username[username]
+    is_hash @by_username[username][gametype]
+    is_hash @by_username[username][gametype][outcome]
+
+    @by_username[username][gametype][outcome] = number
+  end
 
   def init_username(username)
     @by_username[username] = Hash.new

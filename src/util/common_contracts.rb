@@ -74,4 +74,19 @@ module CommonContracts
       failure 'Param must be an ip address'
     end
   end
+
+  def CommonContracts.is_username(name)
+    unless name.is_a?(String) && name.length > 0 && name =~ /^[a-zA-Z0-9]*$/
+      failure 'Name must be a string with at least one character.'
+    end
+    unless name =~ /^[a-zA-Z0-9]*$/
+      failure 'Name must contain only alphanumeric characters.'
+    end
+  end
+
+  def CommonContracts.is_hash(obj)
+    unless obj.is_a?(Hash)
+      failure 'Parameter must be a Hash'
+    end
+  end
 end

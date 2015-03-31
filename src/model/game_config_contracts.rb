@@ -14,12 +14,7 @@ module GameConfigContracts
   end
 
   def verify_name(name)
-    unless name.is_a?(String) && name.length > 0 && name =~ /^[a-zA-Z0-9]*$/
-      failure 'Name must be a string with at least one character.'
-    end
-    unless name =~ /^[a-zA-Z0-9]*$/
-      failure 'Name must contain only alphanumeric characters.'
-    end
+    CommonContracts.is_username name
   end
 
   def verify_difficulty(difficulty)
