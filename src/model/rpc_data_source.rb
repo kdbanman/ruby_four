@@ -1,6 +1,6 @@
 require 'observer'
 require 'socket'
-require_relative '../model/data_source_contracts'
+require_relative '../model/rpc_data_source_contracts'
 
 # Server communication layer.
 # Knows what messages to send to the server and in what sequence
@@ -10,7 +10,7 @@ class RPCDataSource
   attr_reader :board
 
   include Observable
-  include DataSourceContracts
+  include RPCDataSourceContracts
 
   private
 
@@ -22,8 +22,7 @@ class RPCDataSource
   public
 
   # @param [GameConfig] config
-  # @param [Integer] game_id
-  def initialize(config, game_id)
+  def initialize(config)
 
     # connect with server and send serialized game config
     puts "DATASOURCE: connecting to server at #{config.ip}:#{config.port}"
@@ -44,42 +43,70 @@ class RPCDataSource
   # @param [Integer] column
   # @param [Symbol] token_type :T :O or nil
   def place_token(player_id, column, token_type = nil)
+    # preconditions
+    is_integers player_id, column
+    is_token_type token_type
+
     # call place token on server proxy
+
+    verify_invariants
   end
 
   def exit_game(player_id)
+    # preconditions
+    is_integers player_id
+
     # call ext command on server proxy
+
+    verify_invariants
   end
 
   # called by game server
   def remote_update_board(board)
     # set board and update observers
+
+    verify_invariants
   end
 
   # called by game server
   def remote_exit_game
     # kill client rpc server
 
+    verify_invariants
   end
 
   private
 
   def local_ip
-    Socket.ip_address_list.each { |a| return a.ip_address if a.ipv4? && !a.ipv4_loopback? }
+    ip = Socket.ip_address_list.each { |a| return a.ip_address if a.ipv4? && !a.ipv4_loopback? }
+
+    # postconditions
+    is_ip ip
+
+    ip
   end
 
   def unused_port
     s = Socket.new(:INET, :STREAM, 0)
     s.bind(Addrinfo.tcp('localhost', 0))
-    s.local_address.ip_port
+    port = s.local_address.ip_port
+
+    #postconditions
+    is_integers port
+    port
   end
 
   def update_observers
+    # preconditions
+    is_board @board
+
     changed
     notify_observers @board
   end
 
   def verify_invariants
+    is_rpc_server @client_rpc
+    is_rpc_proxy @server_proxy
   end
 
 end

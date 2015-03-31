@@ -1,4 +1,6 @@
 require_relative './contracted'
+require_relative '../model/coord'
+require_relative '../model/board'
 
 module CommonContracts
 
@@ -45,13 +47,31 @@ module CommonContracts
     end
   end
 
+  def CommonContracts.is_board(obj)
+    unless obj.is_a? Board
+      failure 'Parameter must be a Board'
+    end
+  end
+
   def CommonContracts.verify_type(type)
     unless type == :otto || type == :connect4
       failure 'Type must either be :otto or :connect4'
     end
   end
 
+  def CommonContracts.valid_token_type(type)
+    unless type == :O || type == :T || type == 1 || type == 2
+      failure 'Type must either be :O or :T or 1 or 2'
+    end
+  end
+
   def CommonContracts.block_callable(block)
     raise ContractFailure, 'Block not callable' unless block.respond_to? :call
+  end
+
+  def CommonContracts.is_ip_addr(ip)
+    unless ip.is_a?(String) && (ip =~ /\d*\.\d*\.\d*\.\d*/) == 0
+      failure 'Param must be an ip address'
+    end
   end
 end
