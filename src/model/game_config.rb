@@ -28,14 +28,22 @@ class GameConfig
     verify_invariants
   end
 
+  def is_incomplete
+    name1.nil? || name2.nil?
+  end
+
+  def is_complete
+    !is_complete
+  end
+
   private
 
   def verify_invariants
     verify_type type
     verify_player player1
     verify_player player2
-    verify_name name1
-    verify_name name2
+    verify_name name1 unless name1.nil?
+    verify_name name2 unless name2.nil?
     verify_difficulty difficulty
   end
 

@@ -1,6 +1,8 @@
 
 require_relative '../util/common_contracts'
 require_relative '../model/game_stats'
+
+# this could be better designed, but it's just a testing stub
 class MockDbHelper
 
   @stats

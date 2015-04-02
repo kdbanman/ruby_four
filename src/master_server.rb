@@ -1,5 +1,6 @@
 require_relative '../src/master_server_contracts'
 require_relative '../src/SQL/db_helper'
+require_relative '../src/rpc_game_server'
 
 # To start as a remote server, use as an XMLRPC Server Handler:
 #   num_clients = 100
@@ -33,6 +34,8 @@ class MasterServer
     is_username username
     is_passwd password
 
+    @db.add_user username, password
+
     # postconditions
     is_int @db.get_user(username, password)
   end
@@ -42,6 +45,9 @@ class MasterServer
     is_username username
     is_passwd password
 
+    id = @db.get_user_id username, password
+    return true unless id.nil?
+    false
   end
 
   # @param [GameConfig] config
@@ -56,15 +62,15 @@ class MasterServer
     one_matches config.name1, config.name2, username
 
     # initialize game server
-    # add handlers to save game or clean resources on certain client actions
-    # save the game
-    # set game_id using returned save id
+    game = RPCGameServer.new
+
+    # TODO add handlers to save game or clean resources on certain client actions
 
     # config may not be complete, i.e. with 1 nil player
     # if not complete, put the game in waiting games list and do not call server start_from_config
     # if complete, call server start_from_config and put the game in in progress
 
-    # start an XMLRPC servlet with the game server handler and mount it at the game id path returned from save
+    # set an XMLRPC handler with the game server mounted at the game id path returned from save
 
     # postconditions
 
@@ -84,7 +90,8 @@ class MasterServer
     # fill in game config
     # call server start_from config and put the game in progress, remove from waiting
 
-    # save game
+    # save the game
+    # set game_id using returned save id
 
     # postconditions
     is_true @waiting[game_id].nil?
