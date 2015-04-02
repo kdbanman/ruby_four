@@ -21,7 +21,7 @@ class RPCGameServer
 
   public
 
-  # not intended for clients to call.
+  # for master server to call.  not intended for clients to call.
   # @param [GameConfig] config
   # @param [Integer] game_id
   # @return [Board] the constructed board ready for moves

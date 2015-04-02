@@ -16,17 +16,19 @@ class PlaceTokenCommand
 
   public
 
-  # @param [String] message
+  # @param [Integer] player_id
+  # @param [Integer] column
+  # @param [Symbol or Integer] token_type
   # @param [GameType] game_type
-  def initialize(message, game_type)
+  def initialize(player_id, column, token_type, game_type)
     #preconditions
     #TODO param types
     #TODO message matches game type token pattern
 
     @game_type = game_type
-    @column = game_type.get_column(message)
-    @player_id = game_type.get_player(message)
-    @token_type = game_type.get_token_type(message)
+    @column = column
+    @player_id = player_id
+    @token_type = token_type
   end
 
   # @param [Board] board
