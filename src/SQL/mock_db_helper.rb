@@ -1,10 +1,15 @@
-require 'mysql'
+
 require_relative '../util/common_contracts'
-class DbHelper
-  @conn
+require_relative '../model/game_stats'
+class MockDbHelper
+
+  @stats
+  @users
 
   def initialize
-
+    @stats = GameStats.new
+    @users = Hash.new  # {<int_id>: { name: <str_name>, pass: <str_passwd>, id: <int_id>, saved_games: [<int_id>, ...] } }
+    @games = Hash.new  # {<int_id>: <marshal_string>}
   end
 
   # @param [Integer] player_id
@@ -14,7 +19,8 @@ class DbHelper
     CommonContracts.integers player_id
     CommonContracts.verify_type game_type
 
-    #TODO game type!
+    username = @users[player_id][:name]
+    @stats.increment_stat username, game_type, :wins
   end
 
   # @param [Integer] player_id
@@ -24,7 +30,8 @@ class DbHelper
     CommonContracts.integers player_id
     CommonContracts.verify_type game_type
 
-    #TODO game type!
+    username = @users[player_id][:name]
+    @stats.increment_stat username, game_type, :losses
   end
 
   # @param [Integer] player_id
@@ -34,7 +41,8 @@ class DbHelper
     CommonContracts.integers player_id
     CommonContracts.verify_type game_type
 
-    #TODO game type!
+    username = @users[player_id][:name]
+    @stats.increment_stat username, game_type, :draws
   end
 
   # @param [String] data
@@ -44,6 +52,8 @@ class DbHelper
     #pre
     CommonContracts.integers player1, player2
     CommonContracts.strings data
+
+    #TODO shouldn't saved games have an id?
   end
 
   # @param [String] username
@@ -83,30 +93,6 @@ class DbHelper
     CommonContracts.integers id
     CommonContracts.verify_type game_type
 
-    #TODO game_type
   end
-
-  private
-  def get_connection
-    begin
-      @conn = Mysql.new('mysqlsrv.ece.ualberta.ca', 'ece421usr2', 'a421Psn101', 'ece421grp2', '13020')
-    rescue Mysql::Error
-      raise ContractFailure 'Could not connect to DataBase'
-    end
-  end
-
-  def close_connection
-    @conn.close if @conn
-  end
-
-end
-
-module DBConstants
-
-  USERS = 'Users'
-  GAME_STATS = 'GameStats'
-  SAVED_GAMES = 'SavedGames'
-  USERNAME = 'admin'
-  PASSWORD = 'admin'
 
 end

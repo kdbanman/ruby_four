@@ -32,6 +32,39 @@ class GameStats
     insert_outcome username, gametype, outcome, number
   end
 
+  # @param [String] username
+  # @param [Symbol] gametype either :connect4 or :otto
+  # @param [Symbol] outcome either :wins, :losses, or :draws
+  # @return [Integer] the number of passed outcomes for the passed gametype and user
+  def get_stat(username, gametype, outcome)
+    # preconditions
+    is_username username
+    is_type gametype
+    is_outcome outcome
+
+    user = @by_username[username]
+
+    number = user.nil? ? 0 : user[gametype][outcome]
+
+    # postconditions
+    is_positive_int number
+
+    number
+  end
+
+  # @param [String] username
+  # @param [Symbol] gametype either :connect4 or :otto
+  # @param [Symbol] outcome either :wins, :losses, or :draws
+  def increment_stat(username, gametype, outcome)
+    # preconditions
+    is_username username
+    is_type gametype
+    is_outcome outcome
+
+    old = @stats.get_stat username, gametype, outcome
+    @stats.add_stat username, gametype, outcome, old + 1
+  end
+
   # yields each |username, gametype, outcome, number|
   def each_stat
     @by_username.each_key do |username|

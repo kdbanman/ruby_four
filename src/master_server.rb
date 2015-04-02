@@ -1,6 +1,10 @@
 require_relative '../src/master_server_contracts'
 require_relative '../src/SQL/db_helper'
 
+# To start as a remote server, use as an XMLRPC Server Handler:
+#   num_clients = 100
+#   master = XMLRPC::Server.new 8080, 'localhost', num_clients
+#   s.add_handler('master', MasterServer.new)
 class MasterServer
 
   private
@@ -13,11 +17,11 @@ class MasterServer
 
   include MasterServerContracts
 
-  def initialize(listen_port)
+  def initialize(listen_port, dbhelper = DbHelper.new)
     # preconditions
     is_positive_int listen_port
 
-    @db = DbHelper.new
+    @db = dbhelper
 
     @waiting = Hash.new
     @in_progress = Hash.new
