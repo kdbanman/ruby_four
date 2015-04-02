@@ -56,10 +56,17 @@ class DbHelper
 
   # @param [String] username
   # @param [String] password
-  # @return [Integer] userID
-  def get_user(username, password)
+  # @return [Integer] userID  or nil if not found
+  def get_user_id(username, password)
     #pre
     CommonContracts.strings username, password
+  end
+
+  # @param [Integer] id
+  # @return [String] the users name, or nil if not found
+  def get_user_name(id)
+    #pre
+    CommonContracts.integers id
   end
 
   # @param [String] username
@@ -77,13 +84,45 @@ class DbHelper
 
   # @param [Integer] id
   # @param [Symbol] game_type either :connect4 or :otto
-  # @return [Array] all stats
+  # @return [Array] all stats [<wins>, <lossses>, <draws>]
   def get_player_stats(id, game_type)
     #pre
     CommonContracts.integers id
     CommonContracts.verify_type game_type
 
-    #TODO game_type
+    #TODO game_type!
+
+    #return [<wins>, <lossses>, <draws>]
+  end
+
+  # @return [GameStats] all wins, losses, and draws for all players for both game types
+  def get_all_stats
+
+    # TODO ryan there is a GameStats object.  it has a method that should be good for adding row by row:
+    # @param [String] username
+    # @param [Symbol] gametype either :connect4 or :otto
+    # @param [Integer] wins the total number of wins for the passed gametype, user
+    # @param [Integer] losses the total number of losses for the passed gametype, user
+    # @param [Integer] draws the total number of draws for the passed gametype, user
+    #   def add_stat_row(username, gametype, wins, losses, draws)
+    #
+    # EX:  stats = GameStats.new
+    #      stats.add_stat('bill',  :otto,     0, 17, 1)
+    #      stats.add_stat('bill',  :connect4, 1, 93, 3)  # bill sucks
+    #      stats.add_stat('steve', :otto,     9,  0, 0)
+
+  end
+
+  # @param [Integer] id
+  def update_saved_game(id, data)
+    #pre
+    CommonContracts.integers id
+  end
+
+  # @param [Integer] id
+  def delete_saved_game(id)
+    #pre
+    CommonContracts.integers id
   end
 
   private

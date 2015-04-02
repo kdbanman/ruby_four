@@ -19,7 +19,7 @@ class GameStats
   # @param [String] username
   # @param [Symbol] gametype either :connect4 or :otto
   # @param [Symbol] outcome either :wins, :losses, or :draws
-  # @param [Integer] number the number of passed outcomes for the passed gametype and user
+  # @param [Integer] number the total number for the passed gametype, user, and outcome
   def add_stat(username, gametype, outcome, number)
     # preconditions
     is_username username
@@ -30,6 +30,17 @@ class GameStats
     init_username username if @by_username[username].nil?
 
     insert_outcome username, gametype, outcome, number
+  end
+
+  # @param [String] username
+  # @param [Symbol] gametype either :connect4 or :otto
+  # @param [Integer] wins the total number of wins for the passed gametype, user
+  # @param [Integer] losses the total number of losses for the passed gametype, user
+  # @param [Integer] draws the total number of draws for the passed gametype, user
+  def add_stat_row(username, gametype, wins, losses, draws)
+    add_stat(username, gametype, :wins, wins)
+    add_stat(username, gametype, :losses, losses)
+    add_stat(username, gametype, :draws, draws)
   end
 
   # @param [String] username
@@ -50,6 +61,27 @@ class GameStats
     is_positive_int number
 
     number
+  end
+
+  # @param [String] username
+  # @param [Symbol] gametype either :connect4 or :otto
+  # @return [Integer] the number of wins for the passed gametype and user
+  def get_wins(username, gametype)
+    get_stat(username, gametype, :wins)
+  end
+
+  # @param [String] username
+  # @param [Symbol] gametype either :connect4 or :otto
+  # @return [Integer] the number of losses for the passed gametype and user
+  def get_losses(username, gametype)
+    get_stat(username, gametype, :losses)
+  end
+
+  # @param [String] username
+  # @param [Symbol] gametype either :connect4 or :otto
+  # @return [Integer] the number of draws for the passed gametype and user
+  def get_draws(username, gametype)
+    get_stat(username, gametype, :draws)
   end
 
   # @param [String] username
