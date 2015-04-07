@@ -12,6 +12,10 @@ class WindowManager
 
   def initialize
     @windows = Hamster::Deque.empty
+  end
+
+  def start
+    puts 'GTK main starting...'
     Gtk.main
   end
 

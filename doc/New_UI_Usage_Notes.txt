@@ -4,7 +4,11 @@ General
 - Only WindowManager should use the set_on_destory method of the window classes
 - Only WindowManager should use the start of the window classes
 
+- The kill method of the window classes can and should be used by classes other than WindowManager
+
 - Engine or other controllers should only open windows using the WindowManager.open_window method
+
+- WindowManager.start is blocking, all initalization should be done and reliant on call backs after this.
 
 Game Screen Notes
 =================
