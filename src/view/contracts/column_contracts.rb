@@ -1,4 +1,4 @@
-require_relative '../util/contracted.rb'
+require_relative '../../util/contracted.rb'
 
 module ColumnContracts
 	def valid_coordinate(coordinate, col_size)

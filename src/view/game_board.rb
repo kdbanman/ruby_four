@@ -1,4 +1,4 @@
-require_relative './game_board_contracts.rb'
+require_relative './contracts/game_board_contracts.rb'
 require_relative '../util/common_contracts.rb'
 require_relative './column.rb'
 require_relative '../resources/board_view.rb'

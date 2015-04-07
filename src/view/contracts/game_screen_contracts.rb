@@ -1,5 +1,5 @@
-require_relative '../util/contracted.rb'
-require_relative '../model/data_source.rb'
+require_relative '../../util/contracted.rb'
+require_relative '../../model/data_source.rb'
 
 module GameScreenContracts
 	def data_source_observable(ds)

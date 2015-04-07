@@ -1,5 +1,5 @@
 require_relative '../util/common_contracts.rb'
-require_relative './slot_contracts.rb'
+require_relative './contracts/slot_contracts.rb'
 require_relative '../resources/slot_view.rb'
 require 'gtk2'
 

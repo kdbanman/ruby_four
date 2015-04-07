@@ -1,4 +1,4 @@
-require_relative '../util/contracted.rb'
+require_relative '../../util/contracted.rb'
 
 module SlotContracts
 	def filled?(slot)

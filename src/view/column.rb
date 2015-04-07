@@ -1,6 +1,6 @@
 require_relative '../util/common_contracts.rb'
 require_relative '../resources/column_view.rb'
-require_relative './column_contracts.rb'
+require_relative './contracts/column_contracts.rb'
 
 class Column
 	include ColumnContracts
