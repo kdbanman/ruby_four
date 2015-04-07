@@ -14,11 +14,13 @@ class SavedGame
 end
 
 class GameStat
-  attr_reader :player_name, :wins, :draws, :losses
+  attr_reader :game_type :player_name, :wins, :draws, :losses
 
-  def initialize(player, wins, draws, losses)
+  def initialize(game_type, player, wins, draws, losses)
     CommonContracts.strings player
     CommonContracts.integers wins, draws, losses
+    CommonContracts.verify_type game_type
+    @game_type = game_type
     @player_name = player
     @wins = wins
     @draws = draws
