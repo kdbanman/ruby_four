@@ -1,0 +1,14 @@
+General
+=======
+- Engine will have higher coupling with the view classes
+- Only WindowManager should use the set_on_destory method of the window classes
+- Only WindowManager should use the start of the window classes
+
+- Engine or other controllers should only open windows using the WindowManager.open_window method
+
+Game Screen Notes
+=================
+
+Listeners that should be subscribed to:
+- On Close (set_close_listener): Called before the window is destroyed
+- Column Selected (set_column_selected_listener): Called when a column on the game board is selected

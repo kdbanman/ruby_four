@@ -6,9 +6,11 @@ require_relative '../util/common_contracts.rb'
 require_relative './/token_selector.rb'
 require_relative '../view/new_game_dialog.rb'
 require_relative '../resources/about_screen.rb'
+require_relative '../view/window'
 require 'gtk2'
 
 class GameScreen
+  include Window
   attr_reader :gameBoard
 
 	include GameScreenContracts
@@ -24,9 +26,11 @@ class GameScreen
 		# game_type_generates_tokens(gametype)
 		# data_source_observable(datasource)
 		# input_is_data_source(datasource)
-    #TODO add self to datasource observers
-    Gtk.init
+
+    #Add self as observer to datasource
     datasource.add_observer(self)
+
+    #Initialise instance variables
     @builder = Gtk::Builder.new
     @builder.add_from_file(File.dirname(__FILE__) + '/../resources/game_screen.glade')
     @screen = @builder.get_object('game_screen')
@@ -35,13 +39,8 @@ class GameScreen
     @gameBoard = GameBoard.new(gametype,gameconfig.num_cols, gameconfig.num_rows)
     @boardContainer.add(@gameBoard.boardView)
     @playerTurnLabel = @builder.get_object('player_name_label')
-    #todo if gametype == :toot add_token_selector
-    #add_token_selector
-    @screen.show_all()
-    set_up_game_board_events
-    set_about_handler
-    #@okay_pressed = false
-    update(datasource.board)
+
+
 	end
 
 	def start
@@ -49,14 +48,22 @@ class GameScreen
     verify_game_closed_listener @closeListener
     #TODO leave in for part 5
     #verify_new_game_listener @newGameListener
-    Gtk.main()
+    @screen.show_all()
+    #Connect events and set up the board
+    set_up_game_board_events
+    set_about_handler
+    update(datasource.board)
   end
 
   def kill
-    @closeListener.call
-    puts 'RETURNED FROM CLOSE LISTENER'
-    Gtk.main_quit #unless @okay_pressed
-    puts 'killed game_screen loop'
+    @closeListener.call if @closeListener
+    puts 'DEBUG: returned from game screen closed listener'
+    puts 'DEBUG: destroying game screen'
+    @screen.destroy
+  end
+
+  def set_on_destroy(&block)
+    @screen.signal_connect('destroy') { block.call }
   end
 
 	def set_column_selected_listener(&block)
@@ -70,16 +77,8 @@ class GameScreen
     @quitButton = @builder.get_object('quit_menu_item')
     @closeListener = block
 
-    closeWindow = Proc.new do
-      kill
-    end
-
-    @screen.signal_connect('destroy') do
-      closeWindow.call
-    end
-
     @quitButton.signal_connect('activate') do
-      closeWindow.call
+      kill
     end
 	end
 

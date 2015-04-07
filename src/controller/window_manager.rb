@@ -56,6 +56,7 @@ class WindowManager
   end
 
   def stop_main_loop
+    puts 'DEBUG: qutting gtk main loop'
     Gtk.main_quit
   end
 
