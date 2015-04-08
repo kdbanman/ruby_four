@@ -4,6 +4,7 @@ require_relative '../model/data_source'
 require_relative '../model/game_type_factory'
 require_relative '../view/game_screen'
 require_relative '../view/stats_screen'
+require_relative '../view/load_game_screen'
 require_relative '../model/containers'
 
 
@@ -15,6 +16,19 @@ class UITestingFramework
 
   def initialize
     @window_manager = WindowManager.new
+  end
+
+  def push_load_game_screen
+    player1 = 'Bob'
+    player2 = 'Alice'
+    saved_games = []
+
+    8.times {|i| saved_games << SavedGame.new(player1, player2, i, :otto)}
+    8.times {|i| saved_games << SavedGame.new(player1, player2, i+8, :connect4)}
+
+    load_game_screen = LoadGameScreen.new(saved_games)
+    @window_manager.open_window(load_game_screen)
+    @window_manager.start
   end
 
   def push_stats_screen
@@ -53,3 +67,5 @@ framework = UITestingFramework.new
 # Test Stats Screen
 # framework.push_stats_screen
 
+# Test Load Game
+framework.push_load_game_screen

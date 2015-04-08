@@ -33,10 +33,10 @@ class LoadGameScreen
     gtk_builder.add_from_file(File.dirname(__FILE__) + '/../resources/load_game_screen.glade')
 
     @screen = gtk_builder.get_object('Load_Game')
-    build_tree
+    build_tree gtk_builder
   end
 
-  def build_tree
+  def build_tree(builder)
     tree = builder.get_object('saved_games_treeview')
     tree.model = build_list
     tree.selection.mode = Gtk::SELECTION_SINGLE
