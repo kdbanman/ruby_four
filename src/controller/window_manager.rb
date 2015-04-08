@@ -19,6 +19,14 @@ class WindowManager
     Gtk.main
   end
 
+  def push_information_dialog(msg)
+    CommonContracts.strings msg
+    dialog = Gtk::MessageDialog.new(nil, Gtk::Dialog::DESTROY_WITH_PARENT,
+                                    Gtk::MessageDialog::INFO, Gtk::MessageDialog::BUTTONS_OK, msg)
+    dialog.run
+    dialog.destroy
+  end
+
   def open_window(window)
     WindowManagerContracts.is_window(window)
     begginning = @windows.size

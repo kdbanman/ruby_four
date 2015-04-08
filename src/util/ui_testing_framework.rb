@@ -28,7 +28,7 @@ class UITestingFramework
 
     load_game_screen = LoadGameScreen.new(saved_games)
 
-    load_game_screen.set_on_ok_listener {|id| puts "Load Game Clicked on game: #{id}" }
+    load_game_screen.set_on_ok_listener {|id| @window_manager.push_information_dialog "Load Game Clicked on game: #{id}" }
     @window_manager.open_window(load_game_screen)
     @window_manager.start
   end
