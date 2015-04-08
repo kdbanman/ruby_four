@@ -4,7 +4,7 @@ require_relative '../view/window'
 class WindowManagerContracts
 
   def WindowManagerContracts.is_window (input)
-    failure 'Must pass a window' unless input.is_a? :Window
+    failure 'Must pass a window' unless input.is_a? Window
   end
 
   def WindowManagerContracts.all_windows_closed(windows)
@@ -12,7 +12,7 @@ class WindowManagerContracts
   end
 
   def WindowManagerContracts.windows_incremented(beg, after)
-    failure 'Windows did not increment' unless beg-1 == after
+    failure 'Windows did not increment' unless beg+1 == after
   end
 
   def WindowManagerContracts.windows_decremented(beg, after)

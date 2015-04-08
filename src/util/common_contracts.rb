@@ -17,7 +17,7 @@ module CommonContracts
   end
 
   def CommonContracts.strings(*args)
-    failure 'inputs should be strings' unless args.all? {|i| i.is_a? :String}
+    failure 'inputs should be strings' unless args.all? {|i| i.is_a? String}
   end
 
   def CommonContracts.positive_integers(*args)

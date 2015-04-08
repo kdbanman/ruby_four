@@ -5,6 +5,7 @@ General
 - Only WindowManager should use the start of the window classes
 
 - The kill method of the window classes can and should be used by classes other than WindowManager
+	- If a window is to be open after another closes, submit it to the window manager first and then kill the original window
 
 - Engine or other controllers should only open windows using the WindowManager.open_window method
 

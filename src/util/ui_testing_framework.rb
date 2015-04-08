@@ -3,6 +3,8 @@ require_relative '../model/game_config'
 require_relative '../model/data_source'
 require_relative '../model/game_type_factory'
 require_relative '../view/game_screen'
+require_relative '../view/stats_screen'
+require_relative '../model/containers'
 
 
 class UITestingFramework
@@ -13,6 +15,18 @@ class UITestingFramework
 
   def initialize
     @window_manager = WindowManager.new
+  end
+
+  def push_stats_screen
+    username = 'Bob'
+    stats = []
+    stats << GameStat.new(:connect4, username, 1, 2, 3)
+    stats << GameStat.new(:otto, username, 4, 5, 6)
+    stats << GameStat.new(:connect4, 'Alice', 7, 7, 7)
+
+    stats_screen = StatsScreen.new(username, stats)
+    @window_manager.open_window stats_screen
+    @window_manager.start
   end
 
   def push_game_screen
@@ -30,5 +44,10 @@ class UITestingFramework
 
 end
 
-a = UITestingFramework.new
-a.push_game_screen
+framework = UITestingFramework.new
+
+# Test Game Screen
+# framework.push_game_screen
+
+# Test Stats Screen
+framework.push_stats_screen

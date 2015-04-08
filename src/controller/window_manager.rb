@@ -23,7 +23,7 @@ class WindowManager
     WindowManagerContracts.is_window(window)
     begginning = @windows.size
     window.set_on_destroy{window_destroyed}
-    @windows.push(window)
+    @windows = @windows.push(window)
     window.start
 
     #post
