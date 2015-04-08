@@ -51,4 +51,5 @@ framework = UITestingFramework.new
 # framework.push_game_screen
 
 # Test Stats Screen
-framework.push_stats_screen
+# framework.push_stats_screen
+
