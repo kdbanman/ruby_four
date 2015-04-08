@@ -39,7 +39,7 @@ class LoadGameScreen
 
   private
   def build_screen
-    @gtk_builder = @builder = Gtk::Builder.new
+    @gtk_builder = Gtk::Builder.new
     @gtk_builder.add_from_file(File.dirname(__FILE__) + '/../resources/load_game_screen.glade')
 
     @screen = @gtk_builder.get_object('Load_Game')

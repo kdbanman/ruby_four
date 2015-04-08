@@ -4,12 +4,16 @@
   <!-- interface-naming-policy project-wide -->
   <object class="GtkWindow" id="LoginScreen">
     <property name="can_focus">False</property>
+    <property name="border_width">2</property>
+    <property name="title" translatable="yes">Login</property>
+    <property name="gravity">center</property>
+    <property name="opacity">0.98999999999999999</property>
     <child>
       <object class="GtkFixed" id="fixed1">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <child>
-          <object class="GtkEntry" id="user_name_entry">
+          <object class="GtkEntry" id="username_entry">
             <property name="width_request">197</property>
             <property name="height_request">26</property>
             <property name="visible">True</property>
@@ -21,20 +25,19 @@
             <property name="secondary_icon_sensitive">True</property>
           </object>
           <packing>
-            <property name="x">148</property>
+            <property name="x">100</property>
             <property name="y">160</property>
           </packing>
         </child>
         <child>
           <object class="GtkLabel" id="label1">
-            <property name="width_request">100</property>
+            <property name="width_request">91</property>
             <property name="height_request">23</property>
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="label" translatable="yes">Username:</property>
           </object>
           <packing>
-            <property name="x">36</property>
             <property name="y">161</property>
           </packing>
         </child>
@@ -49,10 +52,6 @@
               <attribute name="size" value="50000"/>
             </attributes>
           </object>
-          <packing>
-            <property name="x">106</property>
-            <property name="y">21</property>
-          </packing>
         </child>
         <child>
           <object class="GtkEntry" id="password_entry">
@@ -60,6 +59,7 @@
             <property name="height_request">26</property>
             <property name="visible">True</property>
             <property name="can_focus">True</property>
+            <property name="visibility">False</property>
             <property name="invisible_char">•</property>
             <property name="invisible_char_set">True</property>
             <property name="primary_icon_activatable">False</property>
@@ -68,7 +68,7 @@
             <property name="secondary_icon_sensitive">True</property>
           </object>
           <packing>
-            <property name="x">148</property>
+            <property name="x">100</property>
             <property name="y">200</property>
           </packing>
         </child>
@@ -81,7 +81,6 @@
             <property name="label" translatable="yes">Password:</property>
           </object>
           <packing>
-            <property name="x">43</property>
             <property name="y">193</property>
           </packing>
         </child>
@@ -98,20 +97,19 @@
             <property name="secondary_icon_sensitive">True</property>
           </object>
           <packing>
-            <property name="x">148</property>
+            <property name="x">100</property>
             <property name="y">240</property>
           </packing>
         </child>
         <child>
           <object class="GtkLabel" id="label4">
-            <property name="width_request">87</property>
+            <property name="width_request">81</property>
             <property name="height_request">39</property>
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="label" translatable="yes">Server IP:</property>
           </object>
           <packing>
-            <property name="x">47</property>
             <property name="y">234</property>
           </packing>
         </child>
@@ -126,7 +124,6 @@
             <property name="use_action_appearance">False</property>
           </object>
           <packing>
-            <property name="x">53</property>
             <property name="y">305</property>
           </packing>
         </child>

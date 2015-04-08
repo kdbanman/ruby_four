@@ -6,7 +6,7 @@ require_relative '../view/game_screen'
 require_relative '../view/stats_screen'
 require_relative '../view/load_game_screen'
 require_relative '../model/containers'
-
+require_relative '../view/login_screen'
 
 class UITestingFramework
   @window_manager
@@ -30,6 +30,13 @@ class UITestingFramework
 
     load_game_screen.set_on_ok_listener {|id| @window_manager.push_information_dialog "Load Game Clicked on game: #{id}" }
     @window_manager.open_window(load_game_screen)
+    @window_manager.start
+  end
+
+  def push_login_Screen
+    screen = LoginScreen.new
+    screen.set_sign_in_listener {|u, p, ip| @window_manager.push_information_dialog "Signed in with: #{u}, #{p}, #{ip}"}
+    @window_manager.open_window(screen)
     @window_manager.start
   end
 
@@ -70,4 +77,7 @@ framework = UITestingFramework.new
 # framework.push_stats_screen
 
 # Test Load Game
-framework.push_load_game_screen
+#framework.push_load_game_screen
+
+#Test Login Screen
+framework.push_login_Screen

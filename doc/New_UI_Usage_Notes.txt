@@ -11,6 +11,8 @@ General
 
 - WindowManager.start is blocking, all initalization should be done and reliant on call backs after this.
 
+- Push information messages to the user with WindowManager.push_information_dialog (msg)
+
 Game Screen Notes
 =================
 
@@ -32,3 +34,10 @@ Load Game Notes
 			- passes the game id of the selected save game to the block
 
 	- Constructed with array of SavedGame objects
+
+Login Screen Notes
+==================
+	Listeners to be subscribed:
+		- on sign in (set_sign_in_listener {block}):
+			- passes username, password and ip_address to block IF fields are non-empty
+	
