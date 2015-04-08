@@ -8,6 +8,9 @@ class LoadGameScreen
 
   @saved_games
   @screen
+  @tree
+
+  @gtk_builder
 
   def initialize(saved_games)
     CommonContracts.array saved_games
@@ -27,36 +30,43 @@ class LoadGameScreen
     @screen.destroy
   end
 
+  def set_on_ok_listener(&block)
+    @gtk_builder.get_object('load_game_button').signal_connect('released') do
+      selection = @tree.selection.selected
+      block.call(selection) if selection
+    end
+  end
+
   private
   def build_screen
-    gtk_builder = @builder = Gtk::Builder.new
-    gtk_builder.add_from_file(File.dirname(__FILE__) + '/../resources/load_game_screen.glade')
+    @gtk_builder = @builder = Gtk::Builder.new
+    @gtk_builder.add_from_file(File.dirname(__FILE__) + '/../resources/load_game_screen.glade')
 
-    @screen = gtk_builder.get_object('Load_Game')
-    build_tree gtk_builder
+    @screen = @gtk_builder.get_object('Load_Game')
+    build_tree @gtk_builder
   end
 
   def build_tree(builder)
-    tree = builder.get_object('saved_games_treeview')
-    tree.model = build_list
-    tree.selection.mode = Gtk::SELECTION_SINGLE
+    @tree = builder.get_object('saved_games_treeview')
+    @tree.model = build_list
+    @tree.selection.mode = Gtk::SELECTION_SINGLE
 
     renderer = Gtk::CellRendererText.new
 
 
     col = Gtk::TreeViewColumn.new('Game ID', renderer, :text => 0)
-    tree.append_column col
+    @tree.append_column col
 
     col = Gtk::TreeViewColumn.new('Game Type', renderer, :text => 1)
-    tree.append_column col
+    @tree.append_column col
 
     col = Gtk::TreeViewColumn.new('Player 1', renderer, :text => 2)
-    tree.append_column col
+    @tree.append_column col
 
     col = Gtk::TreeViewColumn.new('Player 2', renderer, :text => 3)
-    tree.append_column col
+    @tree.append_column col
 
-    tree
+    @tree
   end
 
   def build_list

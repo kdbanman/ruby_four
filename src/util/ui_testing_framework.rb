@@ -27,6 +27,8 @@ class UITestingFramework
     8.times {|i| saved_games << SavedGame.new(player1, player2, i+8, :connect4)}
 
     load_game_screen = LoadGameScreen.new(saved_games)
+
+    load_game_screen.set_on_ok_listener {|id| puts "Load Game Clicked on game: #{id}" }
     @window_manager.open_window(load_game_screen)
     @window_manager.start
   end

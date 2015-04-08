@@ -17,3 +17,18 @@ Game Screen Notes
 Listeners that should be subscribed to:
 - On Close (set_close_listener): Called before the window is destroyed
 - Column Selected (set_column_selected_listener): Called when a column on the game board is selected
+
+Game Stats Notes
+================
+	Listeners to be subscribed:
+		- NONE
+
+	- Constructed with current player name, array of GameStat objects
+
+Load Game Notes
+===============
+	Listeners to be subscribedL
+		- on OK (set_on_ok_listener {block}) :
+			- passes the game id of the selected save game to the block
+
+	- Constructed with array of SavedGame objects
