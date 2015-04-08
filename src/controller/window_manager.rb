@@ -30,6 +30,14 @@ class WindowManager
     WindowManagerContracts.windows_incremented begginning, @windows.size
   end
 
+  def set_head_and_kill_rest(window)
+    WindowManagerContracts.is_window(window)
+    @windows = @windows.unshift(window)
+    while @windows.size > 1
+      @windows.last.kill
+    end
+  end
+
   def close_all_windows
     #TODO needs exception handling
     @windows.each {|window| window.kill}
