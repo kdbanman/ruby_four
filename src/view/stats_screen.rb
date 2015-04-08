@@ -39,8 +39,8 @@ class StatsScreen
   end
 
   def build_personal_tab(builder)
-    c4_stat = find_c4_game_stat
-    otto_stat = find_otto_game_stat
+    c4_stat = find_game_stat(:connect4)
+    otto_stat = find_game_stat(:otto)
 
     builder.get_object('connect4_wins_label').set_text(c4_stat.wins.to_s)
     builder.get_object('connect4_losses_label').set_text(c4_stat.losses.to_s)
@@ -52,19 +52,9 @@ class StatsScreen
 
   end
 
-  def find_c4_game_stat
+  def find_game_stat(game_type)
     @stats.each do |stat|
-      if stat.player_name == @player_name and stat.game_type == :connect4
-        return stat
-      end
-    end
-  end
-
-  def find_otto_game_stat
-    @stats.each do |stat|
-      if stat.player_name == @player_name and stat.game_type == :otto
-        return stat
-      end
+      return stat if stat.player_name == @player_name and stat.game_type == game_type
     end
   end
 end
