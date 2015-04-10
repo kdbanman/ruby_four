@@ -76,20 +76,32 @@ class UITestingFramework
   end
 
   def push_game_screen
-    set_up_game_config
-    @window_manager.open_window GameScreen.new @game_type, @data_source, @game_config
+    @game_config = GameConfig.new(:connect4, :human, :human, 'player1', 'player2', :hard, 10, 10) unless @game_config
+    set_up_game_config unless @game_type
+
+    game_screen = GameScreen.new @game_type, @data_source, @game_config
+    game_screen.set_column_selected_listener { |num| puts "Column Selected: #{num}" }
+    game_screen.set_close_listener {push_main_screen}
+    @window_manager.set_head_and_kill_rest game_screen
     @window_manager.start unless @window_manager.started
   end
 
   def set_up_game_config()
-    @game_config = GameConfig.new(:connect4, :human, :human, 'player1', 'player2', :hard, 10, 10)
+    #@game_config = GameConfig.new(:connect4, :human, :human, 'player1', 'player2', :hard, 10, 10)
     @game_type = GameTypeFactory.get_game_type @game_config
     #TODO talk to kirby about how to start a game server
-    @data_source = DataSource.new @game_config
+    #@data_source = DataSource.new @game_config
   end
 
   def push_new_game_dialog
-    @window_manager.open_window NewGameDialog.new
+    new_game_dialog = NewGameDialog.new
+    new_game_dialog.set_ok_listener do |gameconfig|
+      @game_config = gameconfig
+      set_up_game_config
+      push_game_screen
+    end
+
+    @window_manager.open_window new_game_dialog
     @window_manager.start unless @window_manager.started
   end
 

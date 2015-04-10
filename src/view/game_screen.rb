@@ -27,8 +27,9 @@ class GameScreen
 		# data_source_observable(datasource)
 		# input_is_data_source(datasource)
 
+    #TODO uncomment after connecting with backend
     #Add self as observer to datasource
-    datasource.add_observer(self)
+    #datasource.add_observer(self)
 
     #Initialise instance variables
     @builder = Gtk::Builder.new
@@ -40,7 +41,8 @@ class GameScreen
     @boardContainer.add(@gameBoard.boardView)
     @playerTurnLabel = @builder.get_object('player_name_label')
 
-
+    #TODO uncomment after connection with backend
+    #update datasource.board
 	end
 
 	def start
@@ -52,14 +54,14 @@ class GameScreen
     #Connect events and set up the board
     set_up_game_board_events
     set_about_handler
-    update(datasource.board)
   end
 
   def kill
-    @closeListener.call if @closeListener
-    puts 'DEBUG: returned from game screen closed listener'
-    puts 'DEBUG: destroying game screen'
     @screen.destroy
+  end
+
+  def close
+    @closeListener.call if @closeListener
   end
 
   def set_on_destroy(&block)
@@ -78,27 +80,8 @@ class GameScreen
     @closeListener = block
 
     @quitButton.signal_connect('activate') do
-      kill
+      close
     end
-	end
-
-	def set_new_game_listener(&block)
-    #TODO may need this code for Part 5
-		# CommonContracts.block_callable(block)
-  #   @newGameButton = @builder.get_object('new_game_menu_item')
-  #   @newGameListener = block
-  #   @newGameButton.signal_connect('activate') do
-  #     unless NewGameDialog.opened
-  #       newGameDialog = NewGameDialog.new(@screen)
-  #       newGameDialog.setup_ok_listener do
-  #         @okay_pressed = true
-  #         @screen.destroy
-  #         block.call
-  #         kill
-  #       end
-  #       newGameDialog.start
-  #     end
-  #   end
 	end
 
   # @param [Datasource] datasource

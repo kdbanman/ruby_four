@@ -60,6 +60,7 @@ class NewGameDialog
     CommonContracts.block_callable block
     @screen.signal_connect('destroy') {block.call}
   end
+
   private
 
   def connect_cancel_listener
