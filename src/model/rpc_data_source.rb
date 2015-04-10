@@ -2,8 +2,9 @@ require 'observer'
 require 'socket'
 require_relative '../model/rpc_data_source_contracts'
 
-# Server communication layer.
-# Knows what messages to send to the server and in what sequence
+# GameServer communication layer.
+# Knows what messages to send to the game server and in what sequence
+# Does not know about game stats or game lists, just game instances
 # Allows command sending to the server with RPC method calls.
 class RPCDataSource
 
@@ -69,7 +70,7 @@ class RPCDataSource
   end
 
   # called by game server
-  def remote_exit_game
+  def remote_exit_game(playerid)
     # kill client rpc server
 
     verify_invariants
