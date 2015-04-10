@@ -48,6 +48,7 @@ class WindowManager
     while @windows.size > 1
       @windows.last.kill
     end
+    window.start
   end
 
   def close_all_windows

@@ -32,7 +32,7 @@ class UITestingFramework
     main_screen.set_new_game_listener{@window_manager.push_information_dialog 'Requested new game screen'}
     main_screen.set_join_game_listener{ |game_id| @window_manager.push_information_dialog "Requested to join game #{game_id}"}
 
-    @window_manager.open_window main_screen
+    @window_manager.set_head_and_kill_rest main_screen
     @window_manager.start unless @window_manager.started
   end
 
@@ -53,7 +53,10 @@ class UITestingFramework
 
   def push_login_Screen
     screen = LoginScreen.new
-    screen.set_sign_in_listener {|u, p, ip| @window_manager.push_information_dialog "Signed in with: #{u}, #{p}, #{ip}"}
+    screen.set_sign_in_listener do |u, p, ip|
+      puts "Signed in with: #{u}, #{p}, #{ip}"
+      push_main_screen
+    end
     @window_manager.open_window(screen)
     @window_manager.start unless @window_manager.started
   end
@@ -123,7 +126,7 @@ framework = UITestingFramework.new
 #framework.push_load_game_screen
 
 #Test Login Screen
-#framework.push_login_Screen
+framework.push_login_Screen
 
 #Test Main Screen
-framework.push_main_screen
+#framework.push_main_screen
