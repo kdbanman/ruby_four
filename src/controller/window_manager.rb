@@ -57,6 +57,7 @@ class WindowManager
   def set_head_and_kill_rest(window)
     WindowManagerContracts.is_window(window)
     @windows = @windows.unshift(window)
+    window.set_on_destroy {window_destroyed}
     while @windows.size > 1
       @windows.last.kill
     end
