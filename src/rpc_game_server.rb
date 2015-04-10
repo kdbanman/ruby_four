@@ -1,4 +1,5 @@
 require 'xmlrpc/utils'
+require 'observer'
 require_relative '../src/rpc_game_server_contracts'
 require_relative '../src/controller/place_token_command'
 require_relative '../src/model/game_config'
@@ -8,8 +9,9 @@ require_relative '../src/model/game_type_factory'
 class RPCGameServer
 
   include RPCGameServerContracts
+  include Observable
 
-  attr_accessor :game_id
+  attr_accessor :game_id, :board
 
   private
 
@@ -20,13 +22,11 @@ class RPCGameServer
   @game_id
 
   @clients
-  @exit_listeners
 
   public
 
   def initialize
     @clients = Array.new
-    @exit_listeners = Array.new
 
     verify_invariants
   end
@@ -77,7 +77,11 @@ class RPCGameServer
   # @return [Board] the board after tho token placement has been attempted, winner evaluated, etc.
   def place_token(player_id, column, token_type)
     check_winner if PlaceTokenCommand.new(player_id, column, token_type, @game_type).run(@board)
+
     #TODO check_playable (no winner possible)
+
+    changed
+    notify_observers @game_id, @board
 
     # TODO wrap exception XMLRPC::FaultException
     # send board to registered clients
@@ -93,10 +97,6 @@ class RPCGameServer
 
   # @param [Integer] playerID
   def exit_game(playerID)
-
-    # TODO save game
-    # master server will save game with listener callback
-    @exit_listeners.each { |listener| listener.call(playerID) }
 
     # TODO wrap exception XMLRPC::FaultException
     @clients.each { |client| client.call("#{@game_id}.remote_exit_game", playerID)}
@@ -133,18 +133,10 @@ class RPCGameServer
     verify_invariants
   end
 
-  def register_exit_listener(&callback)
-    @exit_listeners.push(callback)
-
-    verify_invariants
-  end
-
   private
 
   def verify_invariants
     is_true @clients.length >= 0 && @clients.length <= 2
-
-    @exit_listeners.all? { |listener| CommonContracts.block_callable listener }
   end
 
 end
