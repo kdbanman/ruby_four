@@ -10,7 +10,7 @@ class Board < AbstractBoard
 
   include XMLRPC::Marshallable
 
-  attr_reader :player1, :player2, :current_player_id, :winner, :game_id
+  attr_reader :player1, :player2, :current_player_id, :winner, :game_id, :config
 
   private
 
