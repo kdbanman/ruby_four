@@ -1,6 +1,7 @@
 require_relative '../view/contracts/main_screen_contracts'
 require_relative '../util/common_contracts'
 require_relative '../view/window'
+require_relative '../resources/about_screen'
 
 require 'gtk2'
 
@@ -63,6 +64,7 @@ class MainScreen
     @builder.get_object('load_game_menuitem').signal_connect('activate') {@load_game_listener.call}
     @builder.get_object('stats_menuitem').signal_connect('activate') {@stats_listener}
     @builder.get_object('quit_menuitem').signal_connect('activate') {kill}
+    @builder.get_object('about_menuitem').signal_connect('activate') {AboutScreen.new}
 
     renderer = Gtk::CellRendererText.new
 
