@@ -1,3 +1,4 @@
+require_relative '../view/contracts/main_screen_contracts'
 require_relative '../util/common_contracts'
 require_relative '../view/window'
 
@@ -30,6 +31,11 @@ class MainScreen
   end
 
   def start
+    MainScreenContracts.listener_not_null @load_game_listener, 'Load Game'
+    MainScreenContracts.listener_not_null @new_game_listener, 'New Game'
+    MainScreenContracts.listener_not_null @stats_listener, 'Stats'
+    MainScreenContracts.listener_not_null @refresh_listener, 'Refresh'
+    MainScreenContracts.listener_not_null @join_game_listener, 'Join Game'
     @screen.show_all
   end
 
@@ -47,7 +53,7 @@ class MainScreen
     @builder.get_object('refresh_button').signal_connect('released') {@refresh_listener.call}
     @builder.get_object('stats_button').signal_connect('released') {@stats_listener.call}
     @builder.get_object('load_game_button').signal_connect('released') {@load_game_listener.call}
-    @builder.get_object('new_game_button').signal_connect('released') {@new_game_listener}
+    @builder.get_object('new_game_button').signal_connect('released') {@new_game_listener.call}
     @builder.get_object('join_game_button').signal_connect('released') do
       selection = @treeview.selection.selected
       @join_game_listener.call(selection) if selection

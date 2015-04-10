@@ -23,6 +23,15 @@ class UITestingFramework
     ds = FakeDS.new
 
     main_screen = MainScreen.new ds
+
+    main_screen.set_load_game_listener {push_load_game_screen}
+    main_screen.set_refresh_listener {main_screen.update}
+    main_screen.set_stats_listener {push_stats_screen}
+
+    #TODO replace with real screens
+    main_screen.set_new_game_listener{@window_manager.push_information_dialog 'Requested new game screen'}
+    main_screen.set_join_game_listener{ |game_id| @window_manager.push_information_dialog "Requested to join game #{game_id}"}
+
     @window_manager.open_window main_screen
     @window_manager.start unless @window_manager.started
   end
