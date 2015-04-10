@@ -8,13 +8,13 @@ module GameConfigContracts
   end
 
   def verify_player(player)
-    unless player == :human || player == :computer
+    unless player == :human || player == :computer || player == :remote
       failure 'Player must either be :human or :computer'
     end
   end
 
   def verify_name(name)
-    CommonContracts.is_username name
+    CommonContracts.is_username name unless name.nil?
   end
 
   def verify_difficulty(difficulty)

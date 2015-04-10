@@ -74,6 +74,8 @@ class MockDbHelper
     user[:pass] = password
     user[:id] = new_id
     user[:saved_games] = Array.new
+
+    new_id
   end
 
   # @param [String] username
