@@ -35,7 +35,7 @@
                       </object>
                     </child>
                     <child>
-                      <object class="GtkImageMenuItem" id="stats_menu_item">
+                      <object class="GtkImageMenuItem" id="stats_menuitem">
                         <property name="label" translatable="yes">Stats</property>
                         <property name="visible">True</property>
                         <property name="image">image1</property>

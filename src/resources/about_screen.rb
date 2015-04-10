@@ -1,6 +1,9 @@
+require_relative '../view/window'
+
 require 'gtk2'
 
 class AboutScreen
+  include window
   attr_reader :view
 
   def initialize (msg)
@@ -19,5 +22,6 @@ EOF
     @view.run
     @view.destroy
   end
+
 
 end
