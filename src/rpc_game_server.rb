@@ -11,7 +11,7 @@ class RPCGameServer
   include RPCGameServerContracts
   include Observable
 
-  attr_accessor :game_id, :board
+  attr_accessor :game_id, :board, :config
 
   private
 
@@ -25,8 +25,9 @@ class RPCGameServer
 
   public
 
-  def initialize
+  def initialize(config = nil)
     @clients = Array.new
+    @config = config
 
     verify_invariants
   end
@@ -35,9 +36,9 @@ class RPCGameServer
   # @param [GameConfig] config
   # @param [String] game_id a uuid
   # @return [Board] the constructed board ready for moves
-  def start_from_config(config, game_id)
+  def start_from_config(game_id)
     # preconditions
-    is_true @config.nil?, 'start_from_config must only be called once'
+    is_true @board.nil?, 'start_from_* must only be called once'
     is_gameid game_id
 
     puts "Starting from config:\n#{config}"
@@ -56,7 +57,8 @@ class RPCGameServer
   # @param [Board] saved_game
   def start_from_existing(saved_game)
     # preconditions
-    is_true @config.nil?, 'start_from_config must only be called once'
+    is_true @config.nil?, 'start_from_existing must only be called after nil config construction'
+    is_true @board.nil?, 'start_from_* must only be called once'
     is_board saved_game
 
     puts "Starting from board:\n#{saved_game}"
