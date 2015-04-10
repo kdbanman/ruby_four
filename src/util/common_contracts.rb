@@ -95,4 +95,10 @@ module CommonContracts
       failure 'Parameter must be a Hash'
     end
   end
+
+  def CommonContracts.is_gameid(id)
+    unless obj.is_a?(String) && obj.length == 36
+      fail 'Game id must be a UUID stirng'
+    end
+  end
 end

@@ -1,3 +1,4 @@
+require 'securerandom'
 require_relative '../src/master_server_contracts'
 require_relative '../src/SQL/db_helper'
 require_relative '../src/rpc_game_server'
@@ -6,15 +7,17 @@ require_relative '../src/rpc_game_server'
 #   num_clients = 100
 #   master = XMLRPC::Server.new 8080, 'localhost', num_clients
 #   s.add_handler('master', MasterServer.new)
+# Valid ports: 50500 50550
 class MasterServer
 
   private
 
   @db
 
-  @waiting
-  @in_progress
+  @waiting      # Hash from game id (UUID string) to RPCGameServer
+  @in_progress  # Same as above
 
+  @game_server_listener # XMLRPC server with mounted handlers
 
   include MasterServerContracts
 
@@ -27,7 +30,14 @@ class MasterServer
     @waiting = Hash.new
     @in_progress = Hash.new
 
+    # set an XMLRPC handler with the game server mounted at the game id path returned from save
+    @game_server_listener = XMLRPC::Server.new listen_port, 'localhost', 100
+
   end
+
+  ####
+  # METHODS FOR CALL BY CLIENT MASTER DATA SOURCE OVER RPC
+  ####
 
   def create_user(username, password)
     # preconditions
@@ -62,63 +72,91 @@ class MasterServer
     one_matches config.name1, config.name2, username
 
     # initialize game server
-    game = RPCGameServer.new
-
-    # TODO add handlers to save game or clean resources on certain client actions
+    game = RPCGameServer.new config
+    new_id = SecureRandom.uuid
 
     # config may not be complete, i.e. with 1 nil player
-    # if not complete, put the game in waiting games list and do not call server start_from_config
-    # if complete, call server start_from_config and put the game in in progress
+    if config.player2.nil?
+      # if not complete, put the game in waiting games list and do not call server start_from_config
+      @waiting[new_id] = game
+    else
+      initialize_game(game, new_id)
+    end
 
-    # set an XMLRPC handler with the game server mounted at the game id path returned from save
+    @game_server_listener.add_handler(new_id, game)
 
     # postconditions
 
-    # return the game id
-  end
-
-  def wait_on_game(game_id, username)
-
+    new_id
   end
 
   # note: a client *connects* with an in progress game by making RPC calls to the servlet at the game_id path, this
   # method just readies the server-side game object with the second player.
-  def join_game(game_id, username)
+  # @param [Integer] wait_id the waiting game id.  not equal to the game id.
+  def join_game(wait_id, username)
     # preconditions
-    is_true !@waiting[game_id].nil?
+    is_true !@waiting[wait_id].nil?
 
-    # fill in game config
     # call server start_from config and put the game in progress, remove from waiting
-
-    # save the game
-    # set game_id using returned save id
+    game = @waiting[wait_id]
+    initialize_game game, wait_id
+    @waiting.delete wait_id
+    @in_progress[wait_id] = game
 
     # postconditions
-    is_true @waiting[game_id].nil?
-    is_true !@in_progress[game_id].nil?
-  end
-
-  def add_handlers(game_server)
-    # add token placement and exit handlers to save game, clean up rpc servlets, etc
-  end
-
-  # saves an in progress game to the database
-  def save_game(game_server, username, game_id = nil)
-    # preconditions
-
-    # serialize and save to the database (at game_id row if not nil), store local save_id for postcondition
-
-    # return save_id
+    is_true @waiting[wait_id].nil?
+    is_true !@in_progress[wait_id].nil?
   end
 
   # Intended to be called from clients, who may use the list to choose a game and later call join_game(id, username)
   # @return [Array<GameServer>]
   def get_waiting_games(username)
-
+    #TODO
   end
 
   def get_game_stats(username)
     # return game stats object populated from database query results
+    #TODO
+  end
+
+  ####
+  #  METHODS FOR CALL BY GAME SERVER
+  ####
+
+  # saves an in progress game to the database
+  # @param [String] game_id uuid
+  # @param [Board] board
+  def save_game(game_id, board)
+    # preconditions
+    CommonContracts.is_gameid game_id
+    CommonContracts.is_board board
+
+    @db.update_saved_game(game_id, Marshal.dump(board)) #TODO wrap serialization exception
+  end
+
+  def win_game(game_id)
+    # win handler should delete saved and *should* unmount rpc handler, but is impossible with ruby's XMLRPC
+    @db.delete_saved_game(game_id)
+  end
+
+  def exit_game(game_id)
+    # exit handler should remove from in progress, waiting, unmount rpc handler (last thing is impossible)
+    @in_progress.delete game_id
+    @waiting.delete game_id
+  end
+
+  private
+
+  # @param [RPCGameServer] game
+  # @param [GameConfig] config
+  # @param [String] new_id
+  def initialize_game(game, new_id)
+    # if complete, call server start_from_config and put the game in in progress
+    game.start_from_config new_id
+
+    # save game, and add handler to save game on change
+    @db.add_saved_game(new_id, Marshal.dump(game.board))
+    game.add_observer self, :save_game
   end
 
 end
