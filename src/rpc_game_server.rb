@@ -9,11 +9,12 @@ require_relative '../src/model/game_type_factory'
 class RPCGameServer
 
   include RPCGameServerContracts
-  include Observable
 
   attr_accessor :game_id, :board, :config
 
   private
+
+  @master
 
   @config
   @board
@@ -25,12 +26,19 @@ class RPCGameServer
 
   public
 
-  def initialize(config = nil)
+  # @param [MasterServer] master_server
+  # @param [GameConfig] config
+  def initialize(master_server, config = nil)
+    @master = master_server
     @clients = Array.new
     @config = config
 
     verify_invariants
   end
+
+  ####
+  # METHODS FOR CALL BY MASTER SERVER
+  ####
 
   # for master server to call.  not intended for clients to call.
   # @param [GameConfig] config
@@ -73,6 +81,28 @@ class RPCGameServer
     @board
   end
 
+
+  ####
+  # METHODS FOR CALL BY CLIENT OVER RPC
+  ####
+
+  def register_client(ip, port)
+    #preconditions
+    is_ip ip
+    CommonContracts.positive_integers port
+
+    # start new rpc client at ip, port
+    # methods will be called with '<game id>.<method>'
+    begin
+      client = XMLRPC::Client.new(ip, '/', port)
+      @clients.push(client)
+    rescue Errno::ECONNREFUSED => e
+      warn "Could not connect to client at #{ip}:#{port}"
+    end
+
+    verify_invariants
+  end
+
   # @param [Integer] player_id
   # @param [Integer] column
   # @param [Symbol or Integer] token_type
@@ -82,8 +112,7 @@ class RPCGameServer
 
     #TODO check_playable (no winner possible)
 
-    changed
-    notify_observers @game_id, @board
+    @master.save_game(@game_id, @board) # TODO wrap db exception: client error
 
     # TODO wrap exception XMLRPC::FaultException
     # send board to registered clients
@@ -103,8 +132,14 @@ class RPCGameServer
     # TODO wrap exception XMLRPC::FaultException
     @clients.each { |client| client.call("#{@game_id}.remote_exit_game", playerID)}
 
+    @master.exit_game(@game_id);
+
     verify_invariants
   end
+
+
+
+  private
 
   def check_winner
     puts @board.most_recent_token
@@ -115,27 +150,12 @@ class RPCGameServer
       @board.set_winner(winner)
     end
 
-    verify_invariants
-  end
+    @master.win_game(@game_id)
 
-  def register_client(ip, port)
-    #preconditions
-    is_ip ip
-    CommonContracts.positive_integers port
-
-    # start new rpc client at ip, port
-    # methods will be called with '<game id>.<method>'
-    begin
-      client = XMLRPC::Client.new(ip, '/', port)
-      @clients.push(client)
-    rescue Errno::ECONNREFUSED => e
-      warn "Could not connect to client at #{ip}:#{port}"
-    end
+    #no need to tell clients - they'll see it in the board update
 
     verify_invariants
   end
-
-  private
 
   def verify_invariants
     is_true @clients.length >= 0 && @clients.length <= 2

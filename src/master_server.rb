@@ -35,6 +35,10 @@ class MasterServer
 
   end
 
+  ####
+  # METHODS FOR CALL BY CLIENT MASTER DATA SOURCE OVER RPC
+  ####
+
   def create_user(username, password)
     # preconditions
     is_username username
@@ -79,15 +83,11 @@ class MasterServer
       initialize_game(game, new_id)
     end
 
-    @game_server_listener.add_hhandler(new_id, game)
+    @game_server_listener.add_handler(new_id, game)
 
     # postconditions
 
     new_id
-  end
-
-  def wait_on_game(game_id, username)
-
   end
 
   # note: a client *connects* with an in progress game by making RPC calls to the servlet at the game_id path, this
@@ -108,9 +108,20 @@ class MasterServer
     is_true !@in_progress[wait_id].nil?
   end
 
-  def add_handlers(game_server)
-    # add token placement and exit handlers to save game, clean up rpc servlets, etc
+  # Intended to be called from clients, who may use the list to choose a game and later call join_game(id, username)
+  # @return [Array<GameServer>]
+  def get_waiting_games(username)
+    #TODO
   end
+
+  def get_game_stats(username)
+    # return game stats object populated from database query results
+    #TODO
+  end
+
+  ####
+  #  METHODS FOR CALL BY GAME SERVER
+  ####
 
   # saves an in progress game to the database
   # @param [String] game_id uuid
@@ -123,15 +134,15 @@ class MasterServer
     @db.update_saved_game(game_id, Marshal.dump(board)) #TODO wrap serialization exception
   end
 
-  # Intended to be called from clients, who may use the list to choose a game and later call join_game(id, username)
-  # @return [Array<GameServer>]
-  def get_waiting_games(username)
-    #TODO
+  def win_game(game_id)
+    # win handler should delete saved and *should* unmount rpc handler, but is impossible with ruby's XMLRPC
+    @db.delete_saved_game(game_id)
   end
 
-  def get_game_stats(username)
-    # return game stats object populated from database query results
-    #TODO
+  def exit_game(game_id)
+    # exit handler should remove from in progress, waiting, unmount rpc handler (last thing is impossible)
+    @in_progress.delete game_id
+    @waiting.delete game_id
   end
 
   private
