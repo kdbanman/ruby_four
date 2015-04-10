@@ -24,6 +24,7 @@ class LoginScreen
   end
 
   def set_on_destroy(&block)
+    CommonContracts.block_callable block
     @screen.signal_connect('destroy') { block.call }
   end
 

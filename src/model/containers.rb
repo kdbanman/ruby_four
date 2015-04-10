@@ -29,3 +29,15 @@ class GameStat
     @losses = losses
   end
 end
+
+class OpenGame
+  attr_reader :game_id, :player_name, :game_type
+
+  def initialize(game_id, player_name, game_type)
+    CommonContracts.strings player_name
+    CommonContracts.integers game_id
+    @game_id = game_id
+    @player_name = player_name
+    @game_type = game_type
+  end
+end

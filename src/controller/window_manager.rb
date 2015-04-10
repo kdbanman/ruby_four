@@ -6,16 +6,20 @@ require_relative '../controller/window_manager_contracts'
 
 class WindowManager
 
+  attr_reader :started
+
   @windows
   @on_quit_listener
 
 
   def initialize
     @windows = Hamster::Deque.empty
+    @started = false
   end
 
   def start
     puts 'GTK main starting...'
+    @started = true
     Gtk.main
   end
 

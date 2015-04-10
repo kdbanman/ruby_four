@@ -2,10 +2,10 @@ General
 =======
 - Engine will have higher coupling with the view classes
 - Only WindowManager should use the set_on_destory method of the window classes
-- Only WindowManager should use the start of the window classes
+- Only WindowManager should use the start method of the window classes
 
 - The kill method of the window classes can and should be used by classes other than WindowManager
-	- If a window is to be open after another closes, submit it to the window manager first and then kill the original window
+	- If a window is to be open after another closes, submit it to the window manager first and then kill the original window reversing this order of this operation is undefined
 
 - Engine or other controllers should only open windows using the WindowManager.open_window method
 
@@ -40,4 +40,21 @@ Login Screen Notes
 	Listeners to be subscribed:
 		- on sign in (set_sign_in_listener {block}):
 			- passes username, password and ip_address to block IF fields are non-empty
-	
+
+Main Screen Notes
+=================
+	Listeners to be subscribed:
+		- on load game (set_load_game_listener)
+			- Called when the user has selected any button that should bring up the load game screen
+
+		- on new game (set_new_game_listener)
+			- Called when the user haas selected any button that should bring up the new game screen
+
+		- on stats (set_stats_listener)
+			- Called when the user has requested the stats screen to be shown 
+
+		- on refresh (set_refresh_listener)
+			- Called when the user has requested a refresh of the games list
+
+		- on join game (set_join_game_listener:
+			- passes the game id of the requested game to join

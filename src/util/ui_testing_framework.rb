@@ -7,6 +7,7 @@ require_relative '../view/stats_screen'
 require_relative '../view/load_game_screen'
 require_relative '../model/containers'
 require_relative '../view/login_screen'
+require_relative '../view/main_screen'
 
 class UITestingFramework
   @window_manager
@@ -16,6 +17,14 @@ class UITestingFramework
 
   def initialize
     @window_manager = WindowManager.new
+  end
+
+  def push_main_screen
+    ds = FakeDS.new
+
+    main_screen = MainScreen.new ds
+    @window_manager.open_window main_screen
+    @window_manager.start unless @window_manager.started
   end
 
   def push_load_game_screen
@@ -30,14 +39,14 @@ class UITestingFramework
 
     load_game_screen.set_on_ok_listener {|id| @window_manager.push_information_dialog "Load Game Clicked on game: #{id}" }
     @window_manager.open_window(load_game_screen)
-    @window_manager.start
+    @window_manager.start unless @window_manager.started
   end
 
   def push_login_Screen
     screen = LoginScreen.new
     screen.set_sign_in_listener {|u, p, ip| @window_manager.push_information_dialog "Signed in with: #{u}, #{p}, #{ip}"}
     @window_manager.open_window(screen)
-    @window_manager.start
+    @window_manager.start unless @window_manager.started
   end
 
   def push_stats_screen
@@ -50,13 +59,13 @@ class UITestingFramework
 
     stats_screen = StatsScreen.new(username, stats)
     @window_manager.open_window stats_screen
-    @window_manager.start
+    @window_manager.start unless @window_manager.started
   end
 
   def push_game_screen
     set_up_game_config
     @window_manager.open_window GameScreen.new @game_type, @data_source, @game_config
-    @window_manager.start
+    @window_manager.start unless @window_manager.started
   end
 
   def set_up_game_config()
@@ -66,6 +75,31 @@ class UITestingFramework
     @data_source = DataSource.new @game_config
   end
 
+end
+
+class FakeDS
+  @rnd
+  @observers
+
+  def initialize
+    @rnd = Random.new
+    @observers = []
+  end
+
+  def add_observer(window)
+    @observers << window
+  end
+
+  def open_games
+    list = []
+    @rnd.rand(15).times do |i|
+      gametype = :otto if i % 2 == 0
+      gametype = :connect4 if i % 2 == 1
+
+      list << OpenGame.new(i, "Player-#{i}", gametype)
+    end
+    list
+  end
 end
 
 framework = UITestingFramework.new
@@ -80,4 +114,7 @@ framework = UITestingFramework.new
 #framework.push_load_game_screen
 
 #Test Login Screen
-framework.push_login_Screen
+#framework.push_login_Screen
+
+#Test Main Screen
+framework.push_main_screen
