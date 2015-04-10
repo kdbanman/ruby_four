@@ -42,6 +42,18 @@ class WindowManager
     WindowManagerContracts.windows_incremented begginning, @windows.size
   end
 
+  def replace_current_window(window)
+    WindowManagerContracts.is_window window
+    current_window = @windows.last
+    beggining = @windows.size
+
+    window.set_on_destroy {window_destroyed}
+    @windows = @windows.pop.push(window).push(current_window)
+    @windows.last.kill
+
+    window.start
+  end
+
   def set_head_and_kill_rest(window)
     WindowManagerContracts.is_window(window)
     @windows = @windows.unshift(window)
