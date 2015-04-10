@@ -8,6 +8,7 @@ require_relative '../view/load_game_screen'
 require_relative '../model/containers'
 require_relative '../view/login_screen'
 require_relative '../view/main_screen'
+require_relative '../view/new_game_dialog'
 
 class UITestingFramework
   @window_manager
@@ -27,9 +28,9 @@ class UITestingFramework
     main_screen.set_load_game_listener {push_load_game_screen}
     main_screen.set_refresh_listener {main_screen.update}
     main_screen.set_stats_listener {push_stats_screen}
+    main_screen.set_new_game_listener{push_new_game_dialog}
 
     #TODO replace with real screens
-    main_screen.set_new_game_listener{@window_manager.push_information_dialog 'Requested new game screen'}
     main_screen.set_join_game_listener{ |game_id| @window_manager.push_information_dialog "Requested to join game #{game_id}"}
 
     @window_manager.set_head_and_kill_rest main_screen
@@ -85,6 +86,11 @@ class UITestingFramework
     @game_type = GameTypeFactory.get_game_type @game_config
     #TODO talk to kirby about how to start a game server
     @data_source = DataSource.new @game_config
+  end
+
+  def push_new_game_dialog
+    @window_manager.open_window NewGameDialog.new
+    @window_manager.start unless @window_manager.started
   end
 
 end

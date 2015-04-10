@@ -1,11 +1,13 @@
 require_relative '../model/game_config.rb'
 require_relative '../util/name_entry.rb'
 require_relative '../util/size_entry.rb'
+require_relative '../view/window'
+
 require 'gtk2'
 
 #TODO this file could use some major refactoring
 class NewGameDialog
-  @@opened = FALSE
+  include Window
 
   TOOT_RADIO_BUTTON = 'toot_radio_button'
   CONNECT4_RADIO_BUTTON = 'connect4_radio_button'
@@ -29,49 +31,35 @@ class NewGameDialog
 
   MAIN_WINDOW = 'main_window'
 
-  def initialize(parent = nil)
+  def initialize
     @builder = Gtk::Builder.new
     @builder.add_from_file(File.dirname(__FILE__) + '/../resources/new_game_dialogue.glade')
-    @mainWindow = @builder.get_object(MAIN_WINDOW)
-    @okay_presed = false
+    @screen = @builder.get_object(MAIN_WINDOW)
     set_up_game_type
     set_up_players
     set_up_difficulty
     connect_cancel_listener
     connect_ok_listener
     get_fields
-    if parent != nil
-      @mainWindow.transient_for = parent
-      @mainWindow.destroy_with_parent = true
-    end
-  end
-
-  def NewGameDialog.opened
-    @@opened
   end
 
   def start
-    @@opened = true
-    @mainWindow.show_all
-    @mainWindow.signal_connect('destroy') { kill }
-    Gtk.main
+    @screen.show_all
   end
 
   def kill
-    @@opened = false
-    @mainWindow.destroy
-    Gtk.main_quit unless @okay_pressed
-  end
-
-  def force_kill
-    @@opened = false
-    Gtk.main_quit
+   @screen.destroy
   end
 
   def setup_ok_listener (&block)
+    CommonContracts.block_callable block
     @okListener = block
   end
 
+  def set_on_destroy(&block)
+    CommonContracts.block_callable block
+    @screen.signal_connect('destroy') {block.call}
+  end
   private
 
   def connect_cancel_listener
@@ -89,15 +77,7 @@ class NewGameDialog
   end
 
   def ok_listener
-    if validate_fields
-      @okay_pressed = true
-      gameconfig = get_config
-      @mainWindow.destroy
-      @okListener.call(gameconfig)
-      puts 'killing new game dialog loop'
-      force_kill
-      puts "loops left #{Gtk.main_level}"
-    end
+    @okListener.call(get_config) if validate_fields
   end
 
   def get_fields

@@ -59,6 +59,8 @@ class MainScreen
       @join_game_listener.call(selection) if selection
     end
 
+    #TODO connect menu buttons
+
     renderer = Gtk::CellRendererText.new
 
     col = Gtk::TreeViewColumn.new('Game ID', renderer, :text=> 0)
