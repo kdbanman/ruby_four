@@ -3,10 +3,9 @@ require_relative '../view/window'
 require 'gtk2'
 
 class AboutScreen
-  include window
   attr_reader :view
 
-  def initialize (msg)
+  def initialize
     @view = Gtk::AboutDialog.new
     @view.name = 'Ruby 4'
     @view.program_name = 'Ruby 4'
@@ -19,9 +18,8 @@ Rules:
 1.) Click on a column to place a token
 2.) Win by connecting 4 of your type of token
 EOF
+
     @view.run
     @view.destroy
   end
-
-
 end
