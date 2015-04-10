@@ -56,3 +56,11 @@ Main Screen Notes
 
 		- on join game (set_join_game_listener:
 			- passes the game id of the requested game to join
+
+	- Constructed with a datasource that has a open_games method which returns a list of OpenGame objects (Container.rb)
+
+New Game Dialog Notes
+=====================
+	Listeners to be subscribed:
+		- on ok (set_ok_listener):
+			- Called when ok is pressed and fields are non-empty

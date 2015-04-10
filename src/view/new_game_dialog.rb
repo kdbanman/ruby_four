@@ -51,7 +51,7 @@ class NewGameDialog
    @screen.destroy
   end
 
-  def setup_ok_listener (&block)
+  def set_ok_listener (&block)
     CommonContracts.block_callable block
     @okListener = block
   end
@@ -71,9 +71,7 @@ class NewGameDialog
 
   def connect_ok_listener
     ok_button = @builder.get_object(OK_BUTTON)
-    ok_button.signal_connect('released') do
-      ok_listener
-    end
+    ok_button.signal_connect('released') {ok_listener}
   end
 
   def ok_listener
