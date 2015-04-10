@@ -47,17 +47,15 @@ class MockDbHelper
     @stats.increment_stat username, game_type, :draws
   end
 
+  # @param [String] game_id
   # @param [String] data
-  # @param [Integer] player1
-  # @param [Integer] player2
-  def add_saved_game(data, player1, player2)
+  def add_saved_game(game_id, data)
     #pre
-    CommonContracts.integers player1, player2
+    CommonContracts.is_gameid game_id
     CommonContracts.strings data
-    new_id = @games.length
-    @games[new_id] = data
-    @users[player1][:saved_games].push(new_id)
-    @users[player2][:saved_games].push(new_id)
+    @games[game_id] = data
+    @users[player1][:saved_games].push(game_id)
+    @users[player2][:saved_games].push(game_id)
   end
 
   # @param [String] username
@@ -132,10 +130,10 @@ class MockDbHelper
     @stats
   end
 
-  # @param [Integer] id
+  # @param [String] id
   def update_saved_game(id, data)
     #pre
-    CommonContracts.integers id
+    CommonContracts.is_gameid id
 
     @games[id] = data
   end
