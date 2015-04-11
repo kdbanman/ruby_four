@@ -1,8 +1,10 @@
 require 'securerandom'
 require 'xmlrpc/server'
+require 'xmlrpc/marshal'
 require_relative '../src/master_server_contracts'
 require_relative '../src/SQL/db_helper'
 require_relative '../src/rpc_game_server'
+require_relative '../src/model/containers'
 
 # To start as a remote server, use as an XMLRPC Server Handler:
 #   num_clients = 100
@@ -24,10 +26,7 @@ class MasterServer
 
   public
 
-  def initialize(listen_port = 50543, dbhelper = DbHelper.new)
-    # preconditions
-    is_positive_int listen_port
-
+  def initialize(dbhelper = DbHelper.new)
     @db = dbhelper
 
     @waiting = Hash.new
@@ -56,8 +55,12 @@ class MasterServer
     is_username username
     is_passwd password
 
-    return false if @db.user_exists username
+    if @db.user_exists username
+      puts "User #{username} #{password} exists!"
+      return false
+    end
 
+    puts "Creating#{username} #{password}";
     @db.add_user username, password
 
     # postconditions
@@ -72,7 +75,12 @@ class MasterServer
     is_passwd password
 
     id = @db.get_user_id username, password
-    return true unless id.nil?
+    unless id.nil?
+      puts "#{username} #{password} valid"
+      return true
+    end
+
+    puts "#{username} #{password} invalid!"
     false
   end
 
@@ -93,6 +101,7 @@ class MasterServer
 
     # config may not be complete, i.e. with 1 nil player
     if config.player2.nil?
+      puts "Inserting new game #{new_id} into waiting."
       # if not complete, put the game in waiting games list and do not call server start_from_config
       @waiting[new_id] = game
     else
@@ -125,9 +134,11 @@ class MasterServer
   end
 
   # Intended to be called from clients, who may use the list to choose a game and later call join_game(id, username)
-  # @return [Array<GameServer>]
+  # @return [Serialized Array<OpenGame>]
   def get_waiting_games(username)
-    #TODO
+    waiting_list = @waiting.each_pair.collect {|game_id, board| OpenGame.new(game_id, board.player1.name, board.config.type)}
+
+    Marshal.dump(waiting_list)
   end
 
   def get_game_stats(username)
@@ -170,26 +181,31 @@ class MasterServer
   # @param [GameConfig] config
   # @param [String] new_id
   def initialize_game(game, new_id)
+
+    puts "Starting game #{new_id}: #{game}"
     # if complete, call server start_from_config and put the game in in progress
     game.start_from_config new_id
 
+    puts "Adding saved game #{new_id}"
     # save game, and add handler to save game on change
     @db.add_saved_game(new_id, Marshal.dump(game.board))
   end
 
   def create_game_server_listener(new_id, game)
 
+    puts "forking game listener for #{new_id}"
     pid = fork do
       # TODO try until no EADDRINUSE
-      server = XMLRPC::Server.new(50500 + Random.rand(50), 'localhost', 2)
+      port = 50500 + Random.rand(50)
+      puts "Starting game #{new_id} server listener on port #{port}"
+      server = XMLRPC::Server.new(port, 'localhost', 2)
       server.add_handler("#{new_id}", game)
       Signal.trap('INT') { server.shutdown }
       server.serve
     end
 
+    puts "registering pid #{pid} with game #{new_id}"
     @game_server_listeners[new_id] = pid
-
-
   end
 
   def destroy_game_server_listener(game_id)
