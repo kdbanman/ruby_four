@@ -21,6 +21,7 @@ class LoginScreen
     @username = @builder.get_object('username_entry')
     @password = @builder.get_object('password_entry')
     @ip_address = @builder.get_object('ip_entry')
+    
   end
 
   def set_on_destroy(&block)
@@ -30,6 +31,9 @@ class LoginScreen
 
   def start
     @screen.show_all
+
+    #post
+    CommonContracts.is_visible @screen
   end
 
   def kill
@@ -37,6 +41,7 @@ class LoginScreen
   end
 
   def set_sign_in_listener(&block)
+    CommonContracts.block_callable block
     @builder.get_object('sign_in_button').signal_connect('released') do
       block.call(@username.text, @password.text, @ip_address.text) if non_empty_fields?
     end

@@ -21,6 +21,7 @@ class MainScreen
 
 
   def initialize(datasource)
+    MainScreenContracts.datasource_correct datasource
     @builder = Gtk::Builder.new
     @builder.add_from_file File.dirname(__FILE__) + '/../resources/main_screen.glade'
     @screen = @builder.get_object('main_screen')
@@ -38,6 +39,9 @@ class MainScreen
     MainScreenContracts.listener_not_null @refresh_listener, 'Refresh'
     MainScreenContracts.listener_not_null @join_game_listener, 'Join Game'
     @screen.show_all
+
+    #post
+    CommonContracts.is_visible @screen
   end
 
   def kill
@@ -62,9 +66,10 @@ class MainScreen
 
     @builder.get_object('new_game_menuitem').signal_connect('activate') {@new_game_listener.call}
     @builder.get_object('load_game_menuitem').signal_connect('activate') {@load_game_listener.call}
-    @builder.get_object('stats_menuitem').signal_connect('activate') {@stats_listener}
+    @builder.get_object('stats_menuitem').signal_connect('activate') {@stats_listener.call}
     @builder.get_object('quit_menuitem').signal_connect('activate') {kill}
     @builder.get_object('about_menuitem').signal_connect('activate') {AboutScreen.new}
+
 
     renderer = Gtk::CellRendererText.new
 

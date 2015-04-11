@@ -38,9 +38,9 @@ class GameStats
   # @param [Integer] losses the total number of losses for the passed gametype, user
   # @param [Integer] draws the total number of draws for the passed gametype, user
   def add_stat_row(username, gametype, wins, losses, draws)
-    add_stat(username, gametype, :wins, wins)
-    add_stat(username, gametype, :losses, losses)
-    add_stat(username, gametype, :draws, draws)
+    add_stat(username, gametype, "wins", wins)
+    add_stat(username, gametype, "losses", losses)
+    add_stat(username, gametype, "draws", draws)
   end
 
   # @param [String] username
@@ -67,21 +67,21 @@ class GameStats
   # @param [Symbol] gametype either "connect4" or "otto"
   # @return [Integer] the number of wins for the passed gametype and user
   def get_wins(username, gametype)
-    get_stat(username, gametype, :wins)
+    get_stat(username, gametype, "wins")
   end
 
   # @param [String] username
   # @param [Symbol] gametype either "connect4" or "otto"
   # @return [Integer] the number of losses for the passed gametype and user
   def get_losses(username, gametype)
-    get_stat(username, gametype, :losses)
+    get_stat(username, gametype, "losses")
   end
 
   # @param [String] username
   # @param [Symbol] gametype either "connect4" or "otto"
   # @return [Integer] the number of draws for the passed gametype and user
   def get_draws(username, gametype)
-    get_stat(username, gametype, :draws)
+    get_stat(username, gametype, "draws")
   end
 
   # @param [String] username
@@ -101,7 +101,7 @@ class GameStats
   def each_stat
     @by_username.each_key do |username|
       ["connect4", "otto"].each do |gametype|
-        [:wins, :losses, :draws].each do |outcome|
+        ["wins", "losses", "draws"].each do |outcome|
           yield_stat(username,
                 gametype,
                 outcome,
@@ -136,13 +136,13 @@ class GameStats
   def init_username(username)
     @by_username[username] = Hash.new
     @by_username[username]["connect4"] = Hash.new
-    @by_username[username]["connect4"][:wins] = 0
-    @by_username[username]["connect4"][:losses] = 0
-    @by_username[username]["connect4"][:draws] = 0
+    @by_username[username]["connect4"]["wins"] = 0
+    @by_username[username]["connect4"]["losses"] = 0
+    @by_username[username]["connect4"]["draws"] = 0
     @by_username[username]["otto"] = Hash.new
-    @by_username[username]["otto"][:wins] = 0
-    @by_username[username]["otto"][:losses] = 0
-    @by_username[username]["otto"][:draws] = 0
+    @by_username[username]["otto"]["wins"] = 0
+    @by_username[username]["otto"]["losses"] = 0
+    @by_username[username]["otto"]["draws"] = 0
   end
 
 end

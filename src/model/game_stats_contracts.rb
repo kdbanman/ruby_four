@@ -14,8 +14,8 @@ module GameStatsContracts
   end
 
   def is_outcome(sym)
-    unless sym == :wins || sym == :losses || sym == :draws
-      failure 'Outcome must be :wins, :losses, or :draws'
+    unless sym == "wins" || sym == "losses" || sym == "draws"
+      failure 'Outcome must be "wins", "losses", or "draws"'
     end
   end
 

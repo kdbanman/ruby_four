@@ -82,6 +82,9 @@ class UITestingFramework
     game_screen = GameScreen.new @game_type, @data_source, @game_config
     game_screen.set_column_selected_listener { |num| puts "Column Selected: #{num}" }
     game_screen.set_close_listener {push_main_screen}
+    game_screen.set_board_full_listenener{@window_manager.push_information_dialog 'Board Full'}
+    game_screen.set_win_listener {@window_manager.push_information_dialog 'There was a winner'}
+
     @window_manager.set_head_and_kill_rest game_screen
     @window_manager.start unless @window_manager.started
   end
