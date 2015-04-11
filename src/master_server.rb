@@ -1,10 +1,10 @@
 require 'securerandom'
 require 'xmlrpc/server'
-require 'xmlrpc/marshal'
 require_relative '../src/master_server_contracts'
 require_relative '../src/SQL/db_helper'
 require_relative '../src/rpc_game_server'
 require_relative '../src/model/containers'
+require_relative '../src/model/game_config'
 
 # To start as a remote server, use as an XMLRPC Server Handler:
 #   num_clients = 100
@@ -86,6 +86,7 @@ class MasterServer
 
   # @param [GameConfig] config
   def create_game(config, username)
+    config = Marshal.load(config)
     # preconditions
     # config must have at least 1 non nil player
     at_least_one_player config
@@ -105,7 +106,13 @@ class MasterServer
       # if not complete, put the game in waiting games list and do not call server start_from_config
       @waiting[new_id] = game
     else
+      # both players are defined - safe to save game
       initialize_game(game, new_id)
+
+      puts "Adding saved game #{new_id}"
+
+      @db.add_saved_game(new_id, Marshal.dump(game.board), config.name1, config.name2)
+      # TODO if both players
     end
 
     create_game_server_listener(new_id, game)
@@ -113,6 +120,10 @@ class MasterServer
     # postconditions
 
     new_id
+  end
+
+  def start_saved_game(game_id, username)
+
   end
 
   # note: a client *connects* with an in progress game by making RPC calls to the servlet at the game_id path, this
@@ -127,6 +138,8 @@ class MasterServer
     initialize_game game, wait_id
     @waiting.delete wait_id
     @in_progress[wait_id] = game
+
+    @db.add_saved_game(new_id, Marshal.dump(game.board), game.config.name1, username)
 
     # postconditions
     is_true @waiting[wait_id].nil?
@@ -181,14 +194,9 @@ class MasterServer
   # @param [GameConfig] config
   # @param [String] new_id
   def initialize_game(game, new_id)
-
     puts "Starting game #{new_id}: #{game}"
     # if complete, call server start_from_config and put the game in in progress
     game.start_from_config new_id
-
-    puts "Adding saved game #{new_id}"
-    # save game, and add handler to save game on change
-    @db.add_saved_game(new_id, Marshal.dump(game.board))
   end
 
   def create_game_server_listener(new_id, game)
