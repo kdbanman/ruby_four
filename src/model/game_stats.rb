@@ -128,7 +128,7 @@ class GameStats
     is_hash @by_username
     is_hash @by_username[username]
     is_hash @by_username[username][gametype]
-    is_hash @by_username[username][gametype][outcome]
+    is_positive_int @by_username[username][gametype][outcome]
 
     @by_username[username][gametype][outcome] = number
   end
