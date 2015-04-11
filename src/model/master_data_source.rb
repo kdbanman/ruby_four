@@ -20,22 +20,16 @@ class MasterDataSource
   # @param [String] password
   # @return [bool]
   def login(username, password)
-    begin
+    db_operation('Could not login') do
       @user_id = @db_Helper.get_user_id(username, password)
       @username = username
       return true if @user_id
       return false
-    rescue RuntimeError => e
-        puts "ERROR: Could not log in: #{e.error}"
     end
   end
 
   def open_games
-    begin
-      Marshal.load(@master_server.get_waiting_games())
-    rescue Errno::ECONNREFUSED => e
-      puts "Error Getting open games! : #{e.error}"
-    end
+    make_server_communication('couldnt get open games') {Marshal.load(@master_server.get_waiting_games())}
   end
 
   def saved_games()
@@ -55,7 +49,21 @@ class MasterDataSource
     @observers.each {|observer| observer.update}
   end
 
+  def make_server_communication(msg, &block)
+    begin
+      block.call
+    rescue Errno::ECONNREFUSED => e
+      puts "ERROR: #{msg} : #{e.error}"
+    end
+  end
 
+  def db_operation(msg)
+    begin
+      yield
+    rescue RuntimeError => e
+      puts "Error: #{msg} : #{e.error}"
+    end
+  end
 
 
 end
