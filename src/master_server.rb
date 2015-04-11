@@ -79,7 +79,7 @@ class MasterServer
     one_matches config.name1, config.name2, username
 
     # initialize game server
-    game = RPCGameServer.new config
+    game = RPCGameServer.new self, config
     new_id = SecureRandom.uuid
 
     # config may not be complete, i.e. with 1 nil player
