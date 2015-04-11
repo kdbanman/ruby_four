@@ -31,7 +31,7 @@ class MasterDataSource
   end
 
   def open_games
-    make_server_communication('couldnt get open games') {Marshal.load(@master_server.get_waiting_games())}
+    make_server_communication('couldnt get open games') {@master_server.get_waiting_games()}
   end
 
   def saved_games()
