@@ -25,7 +25,7 @@ module MasterServerContracts
   def at_least_one_player(config)
     unless config.player1 == :human || config.player1 == :computer ||
            config.player2 == :human || config.player2 == :computer
-      failure 'Config must have at least one player'
+      failure "Config must have at least one player.  has #{config.player1.class}:#{config.player1} #{config.player2.class}:#{config.player2}"
     end
   end
 
