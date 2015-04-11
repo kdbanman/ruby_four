@@ -1,6 +1,7 @@
 
 require_relative '../util/common_contracts'
 require_relative '../model/game_stats'
+require_relative '../model/board'
 
 # this could be better designed, but it's just a testing stub
 class MockDbHelper
@@ -53,9 +54,11 @@ class MockDbHelper
     #pre
     CommonContracts.is_gameid game_id
     CommonContracts.strings data
+
     @games[game_id] = data
-    @users[player1][:saved_games].push(game_id)
-    @users[player2][:saved_games].push(game_id)
+
+    @users[Marshal.load(data).player1.name][:saved_games].push(game_id)
+    @users[Marshal.load(data).player2.name][:saved_games].push(game_id)
   end
 
   # @param [String] username

@@ -96,7 +96,7 @@ module CommonContracts
     end
   end
 
-  def CommonContracts.is_gameid(id)
+  def CommonContracts.is_gameid(obj)
     unless obj.is_a?(String) && obj.length == 36
       fail 'Game id must be a UUID stirng'
     end

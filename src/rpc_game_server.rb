@@ -47,12 +47,12 @@ class RPCGameServer
   def start_from_config(game_id)
     # preconditions
     is_true @board.nil?, 'start_from_* must only be called once'
+    is_true !@config.nil?, 'start_from_config must be used with config construction'
     is_gameid game_id
 
-    puts "Starting from config:\n#{config}"
-    @config = config
-    @game_type = GameTypeFactory.get_game_type(config)
-    @board = Board.new(config, @game_type, game_id)
+    puts "Starting from config:\n#{@config}"
+    @game_type = GameTypeFactory.get_game_type(@config)
+    @board = Board.new(@config, @game_type, game_id)
 
     @game_id = game_id
 
