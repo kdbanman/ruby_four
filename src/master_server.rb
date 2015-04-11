@@ -1,4 +1,5 @@
 require 'securerandom'
+require 'xmlrpc/server'
 require_relative '../src/master_server_contracts'
 require_relative '../src/SQL/db_helper'
 require_relative '../src/rpc_game_server'
@@ -21,7 +22,9 @@ class MasterServer
 
   include MasterServerContracts
 
-  def initialize(listen_port, dbhelper = DbHelper.new)
+  public
+
+  def initialize(listen_port = 50543, dbhelper = DbHelper.new)
     # preconditions
     is_positive_int listen_port
 
@@ -44,10 +47,14 @@ class MasterServer
     is_username username
     is_passwd password
 
+    return false if @db.user_exists username
+
     @db.add_user username, password
 
     # postconditions
-    is_int @db.get_user(username, password)
+    is_int @db.get_user_id(username, password)
+
+    true
   end
 
   def auth_user(username, password)
