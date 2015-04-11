@@ -36,6 +36,10 @@ class RPCGameServer
     verify_invariants
   end
 
+  def shutdown
+    @clients.each { |client| client.call("#{@game_id}.remote_server_err", 'Server 500')}
+  end
+
   ####
   # METHODS FOR CALL BY MASTER SERVER
   ####

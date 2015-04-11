@@ -36,6 +36,7 @@ class RPCDataSource
     # start client xmlrpc server in new thread
 
     # register client_rpc (random open port on local ip) with game server
+    #  (no need to register twice, client messages ar broadcast)
 
     verify_invariants
   end
@@ -72,6 +73,11 @@ class RPCDataSource
   # called by game server
   def remote_exit_game(playerid)
     # kill client rpc server
+
+    verify_invariants
+  end
+
+  def remote_sever_err(msg)
 
     verify_invariants
   end

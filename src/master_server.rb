@@ -18,7 +18,7 @@ class MasterServer
   @waiting      # Hash from game id (UUID string) to RPCGameServer
   @in_progress  # Same as above
 
-  @game_server_listener # XMLRPC server with mounted handlers
+  @game_server_listeners # Hash from game_ids to forked pids
 
   include MasterServerContracts
 
@@ -34,8 +34,17 @@ class MasterServer
     @in_progress = Hash.new
 
     # set an XMLRPC handler with the game server mounted at the game id path returned from save
-    @game_server_listener = XMLRPC::Server.new listen_port, 'localhost', 100
+    @game_server_listeners = Hash.new
 
+  end
+
+  def shutdown
+    # for each game server in progress, in waiting, shut down
+    @waiting.each_value { |game| game.shutdown }
+    @in_progress.each_value { |game| game.shutdown }
+
+    # kill pids in game server listeners
+    @game_server_listeners.each_value { |pid| Process.kill('INT', pid) }
   end
 
   ####
@@ -90,7 +99,7 @@ class MasterServer
       initialize_game(game, new_id)
     end
 
-    @game_server_listener.add_handler(new_id, game)
+    create_game_server_listener(new_id, game)
 
     # postconditions
 
@@ -144,12 +153,15 @@ class MasterServer
   def win_game(game_id)
     # win handler should delete saved and *should* unmount rpc handler, but is impossible with ruby's XMLRPC
     @db.delete_saved_game(game_id)
+    destroy_game_server_listener game_id
   end
 
   def exit_game(game_id)
     # exit handler should remove from in progress, waiting, unmount rpc handler (last thing is impossible)
     @in_progress.delete game_id
     @waiting.delete game_id
+
+    destroy_game_server_listener game_id
   end
 
   private
@@ -163,7 +175,25 @@ class MasterServer
 
     # save game, and add handler to save game on change
     @db.add_saved_game(new_id, Marshal.dump(game.board))
-    game.add_observer self, :save_game
+  end
+
+  def create_game_server_listener(new_id, game)
+
+    pid = fork do
+      # TODO try until no EADDRINUSE
+      server = XMLRPC::Server.new(50500 + Random.rand(50), 'localhost', 2)
+      server.add_handler("#{new_id}", game)
+      Signal.trap('INT') { server.shutdown }
+      server.serve
+    end
+
+    @game_server_listeners[new_id] = pid
+
+
+  end
+
+  def destroy_game_server_listener(game_id)
+
   end
 
 end

@@ -57,8 +57,10 @@ class MockDbHelper
 
     @games[game_id] = data
 
-    @users[Marshal.load(data).player1.name][:saved_games].push(game_id)
-    @users[Marshal.load(data).player2.name][:saved_games].push(game_id)
+    board = Marshal.load(data)
+
+    @users[_get_user_id(board.player1.name)][:saved_games].push(game_id)
+    @users[_get_user_id(board.player2.name)][:saved_games].push(game_id)
   end
 
   # @param [String] username
@@ -147,6 +149,12 @@ class MockDbHelper
     CommonContracts.integers id
 
     @games.delete id
+  end
+
+  private
+
+  def _get_user_id(username)
+    @users.each_pair { |id, user| return id if user[:name] == username }
   end
 
 end

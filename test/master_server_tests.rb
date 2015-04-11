@@ -28,6 +28,9 @@ class MasterServerTests <  Minitest::Test
 
     game_id = master.create_game(@conf_local, 'bill')
     assert_kind_of String, game_id
+
+
+    master.shutdown
   end
 
 end
