@@ -3,7 +3,7 @@ require_relative '../model/containers'
 
 class MasterDataSource
 
-  attr_reader :username
+  attr_reader :username, :user_id
 
   @db_Helper
   @master_server
