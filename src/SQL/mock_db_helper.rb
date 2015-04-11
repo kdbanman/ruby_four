@@ -23,7 +23,7 @@ class MockDbHelper
     CommonContracts.verify_type game_type
 
     username = @users[player_id][:name]
-    @stats.increment_stat username, game_type, :wins
+    @stats.increment_stat username, game_type, "wins"
   end
 
   # @param [Integer] player_id
@@ -34,7 +34,7 @@ class MockDbHelper
     CommonContracts.verify_type game_type
 
     username = @users[player_id][:name]
-    @stats.increment_stat username, game_type, :losses
+    @stats.increment_stat username, game_type, "losses"
   end
 
   # @param [Integer] player_id
@@ -45,7 +45,7 @@ class MockDbHelper
     CommonContracts.verify_type game_type
 
     username = @users[player_id][:name]
-    @stats.increment_stat username, game_type, :draws
+    @stats.increment_stat username, game_type, "draws"
   end
 
   # @param [String] game_id

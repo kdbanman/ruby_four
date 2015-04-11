@@ -74,7 +74,7 @@ class Engine
   end
 
   def push_game_screen
-    @game_config = GameConfig.new(:connect4, :human, :human, 'player1', 'player2', :hard, 10, 10) unless @game_config
+    @game_config = GameConfig.new("connect4", "human", "human", 'player1', 'player2', "hard", 10, 10) unless @game_config
     set_up_game_config unless @game_type
 
     game_screen = GameScreen.new @game_type, @data_source, @game_config
@@ -88,7 +88,7 @@ class Engine
   end
 
   def set_up_game_config()
-    #@game_config = GameConfig.new(:connect4, :human, :human, 'player1', 'player2', :hard, 10, 10)
+    #@game_config = GameConfig.new("connect4", "human", "human", 'player1', 'player2', "hard", 10, 10)
     @game_type = GameTypeFactory.get_game_type @game_config
     #TODO talk to kirby about how to start a game server
     #@data_source = DataSource.new @game_config
