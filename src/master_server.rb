@@ -86,7 +86,6 @@ class MasterServer
 
   # @param [GameConfig] config
   def create_game(config, username)
-    config = Marshal.load(config)
     # preconditions
     # config must have at least 1 non nil player
     at_least_one_player config

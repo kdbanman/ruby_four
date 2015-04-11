@@ -1,4 +1,5 @@
 require_relative '../model/game_config_contracts'
+require 'xmlrpc/marshal'
 
 # Object for game initialization.  Produced before any game model.
 # Used to create game type and game model.
@@ -40,6 +41,7 @@ require_relative '../model/game_config_contracts'
 class GameConfig
 
   include GameConfigContracts
+  include XMLRPC::Marshallable
 
   attr_accessor :port
   attr_reader :type, :player1, :player2, :name1, :name2, :difficulty, :num_cols, :num_rows, :ip
