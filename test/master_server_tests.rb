@@ -15,9 +15,9 @@ class MasterServerTests <  Minitest::Test
 
   def setup
 
-    @conf_local = GameConfig.new(:connect4, :human, :human, 'bill', 'john', :easy, 6, 7)
-    @conf_cpu = GameConfig.new(:connect4, :human, :computer, 'bill', 'john', :easy, 6, 7)
-    @conf_remote = GameConfig.new(:connect4, :human, :remote, 'bill', nil, :easy, 6, 7)
+    @conf_local = GameConfig.new("connect4", "human", "human", 'bill', 'john', "easy", 6, 7)
+    @conf_cpu = GameConfig.new("connect4", "human", "computer", 'bill', 'john', "easy", 6, 7)
+    @conf_remote = GameConfig.new("connect4", "human", "remote", 'bill', nil, "easy", 6, 7)
   end
 
   def test_client_norpc
@@ -25,6 +25,7 @@ class MasterServerTests <  Minitest::Test
     server = XMLRPC::Client.new( 'localhost', '/', PORT)
     master = server.proxy('master')
 
+    master.create_user
 
     game_id = master.create_game(@conf_local, 'bill')
 

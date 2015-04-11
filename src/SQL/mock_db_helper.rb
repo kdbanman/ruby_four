@@ -16,7 +16,7 @@ class MockDbHelper
   end
 
   # @param [Integer] player_id
-  # @param [Symbol] game_type either :connect4 or :otto
+  # @param [Symbol] game_type either "connect4" or "otto"
   def add_win(player_id, game_type)
     #pre
     CommonContracts.integers player_id
@@ -27,7 +27,7 @@ class MockDbHelper
   end
 
   # @param [Integer] player_id
-  # @param [Symbol] game_type either :connect4 or :otto
+  # @param [Symbol] game_type either "connect4" or "otto"
   def add_loss(player_id, game_type)
     #pre
     CommonContracts.integers player_id
@@ -38,7 +38,7 @@ class MockDbHelper
   end
 
   # @param [Integer] player_id
-  # @param [Symbol] game_type either :connect4 or :otto
+  # @param [Symbol] game_type either "connect4" or "otto"
   def add_draw(player_id, game_type)
     #pre
     CommonContracts.integers player_id
@@ -119,7 +119,7 @@ class MockDbHelper
   end
 
   # @param [Integer] id
-  # @param [Symbol] game_type either :connect4 or :otto
+  # @param [Symbol] game_type either "connect4" or "otto"
   # @return [Array] all stats [<wins>, <losses>, <draws>]
   def get_player_stats(id, game_type)
     #pre

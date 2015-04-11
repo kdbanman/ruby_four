@@ -42,8 +42,8 @@ class UITestingFramework
     player2 = 'Alice'
     saved_games = []
 
-    8.times {|i| saved_games << SavedGame.new(player1, player2, i, :otto)}
-    8.times {|i| saved_games << SavedGame.new(player1, player2, i+8, :connect4)}
+    8.times {|i| saved_games << SavedGame.new(player1, player2, i, "otto")}
+    8.times {|i| saved_games << SavedGame.new(player1, player2, i+8, "connect4")}
 
     load_game_screen = LoadGameScreen.new(saved_games)
 
@@ -65,10 +65,10 @@ class UITestingFramework
   def push_stats_screen
     username = 'Bob'
     stats = []
-    stats << GameStat.new(:connect4, username, 1, 2, 3)
-    stats << GameStat.new(:otto, username, 4, 5, 6)
-    15.times {|i| stats << GameStat.new(:connect4, 'c4_player' + i.to_s, 7, 7, 7)}
-    15.times {|i| stats << GameStat.new(:otto, 'otto_player' + i.to_s, 7, 7, 7)}
+    stats << GameStat.new("connect4", username, 1, 2, 3)
+    stats << GameStat.new("otto", username, 4, 5, 6)
+    15.times {|i| stats << GameStat.new("connect4", 'c4_player' + i.to_s, 7, 7, 7)}
+    15.times {|i| stats << GameStat.new("otto", 'otto_player' + i.to_s, 7, 7, 7)}
 
     stats_screen = StatsScreen.new(username, stats)
     @window_manager.open_window stats_screen
@@ -76,7 +76,7 @@ class UITestingFramework
   end
 
   def push_game_screen
-    @game_config = GameConfig.new(:connect4, :human, :human, 'player1', 'player2', :hard, 10, 10) unless @game_config
+    @game_config = GameConfig.new("connect4", "human", "human", 'player1', 'player2', "hard", 10, 10) unless @game_config
     set_up_game_config unless @game_type
 
     game_screen = GameScreen.new @game_type, @data_source, @game_config
@@ -87,7 +87,7 @@ class UITestingFramework
   end
 
   def set_up_game_config()
-    #@game_config = GameConfig.new(:connect4, :human, :human, 'player1', 'player2', :hard, 10, 10)
+    #@game_config = GameConfig.new("connect4", "human", "human", 'player1', 'player2', "hard", 10, 10)
     @game_type = GameTypeFactory.get_game_type @game_config
     #TODO talk to kirby about how to start a game server
     #@data_source = DataSource.new @game_config
@@ -123,8 +123,8 @@ class FakeDS
   def open_games
     list = []
     @rnd.rand(15).times do |i|
-      gametype = :otto if i % 2 == 0
-      gametype = :connect4 if i % 2 == 1
+      gametype = "otto" if i % 2 == 0
+      gametype = "connect4" if i % 2 == 1
 
       list << OpenGame.new(i, "Player-#{i}", gametype)
     end

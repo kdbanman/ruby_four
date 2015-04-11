@@ -54,8 +54,8 @@ module CommonContracts
   end
 
   def CommonContracts.verify_type(type)
-    unless type == :otto || type == :connect4
-      failure 'Type must either be :otto or :connect4'
+    unless type == "otto" || type == "connect4"
+      failure 'Type must either be "otto" or "connect4"'
     end
   end
 

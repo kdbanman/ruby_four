@@ -11,8 +11,8 @@ module GameTypeFactory
   # @param [GameConfig] config
   # @return [GameType]
   def GameTypeFactory.get_game_type(config)
-    return ConnectGameType if config.type == :connect4
-    return OttoGameType if config.type == :otto
+    return ConnectGameType if config.type == "connect4"
+    return OttoGameType if config.type == "otto"
 
     puts "Invalid game type passed: #{config}"
     nil

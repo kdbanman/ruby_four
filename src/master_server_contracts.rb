@@ -23,14 +23,17 @@ module MasterServerContracts
 
   # @param [GameConfig] config
   def at_least_one_player(config)
-    unless config.player1 == :human || config.player1 == :computer ||
-           config.player2 == :human || config.player2 == :computer
+    unless config.player1 == "human" || config.player1 == "computer" ||
+           config.player2 == "human" || config.player2 == "computer"
       failure "Config must have at least one player.  has #{config.player1.class}:#{config.player1} #{config.player2.class}:#{config.player2}"
     end
   end
 
   def is_true(bool, msg = 'Must be true')
-    failure msg unless bool
+    unless bool
+      failure msg
+    end
+
   end
 
   def one_matches(first, second, tomatch)

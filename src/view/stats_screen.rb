@@ -40,8 +40,8 @@ class StatsScreen
   end
 
   def build_personal_tab(builder)
-    c4_stat = find_game_stat(:connect4)
-    otto_stat = find_game_stat(:otto)
+    c4_stat = find_game_stat("connect4")
+    otto_stat = find_game_stat("otto")
 
     builder.get_object('connect4_wins_label').set_text(c4_stat.wins.to_s)
     builder.get_object('connect4_losses_label').set_text(c4_stat.losses.to_s)
@@ -54,8 +54,8 @@ class StatsScreen
   end
 
   def build_league_tab(builder)
-    c4_tree = build_tree_view('connect4_treeview', builder, :connect4)
-    otto_tree = build_tree_view('otto_treeview', builder, :otto)
+    c4_tree = build_tree_view('connect4_treeview', builder, "connect4")
+    otto_tree = build_tree_view('otto_treeview', builder, "otto")
 
   end
 

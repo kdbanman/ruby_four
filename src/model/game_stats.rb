@@ -17,7 +17,7 @@ class GameStats
   end
 
   # @param [String] username
-  # @param [Symbol] gametype either :connect4 or :otto
+  # @param [Symbol] gametype either "connect4" or "otto"
   # @param [Symbol] outcome either :wins, :losses, or :draws
   # @param [Integer] number the total number for the passed gametype, user, and outcome
   def add_stat(username, gametype, outcome, number)
@@ -33,7 +33,7 @@ class GameStats
   end
 
   # @param [String] username
-  # @param [Symbol] gametype either :connect4 or :otto
+  # @param [Symbol] gametype either "connect4" or "otto"
   # @param [Integer] wins the total number of wins for the passed gametype, user
   # @param [Integer] losses the total number of losses for the passed gametype, user
   # @param [Integer] draws the total number of draws for the passed gametype, user
@@ -44,7 +44,7 @@ class GameStats
   end
 
   # @param [String] username
-  # @param [Symbol] gametype either :connect4 or :otto
+  # @param [Symbol] gametype either "connect4" or "otto"
   # @param [Symbol] outcome either :wins, :losses, or :draws
   # @return [Integer] the number of passed outcomes for the passed gametype and user
   def get_stat(username, gametype, outcome)
@@ -64,28 +64,28 @@ class GameStats
   end
 
   # @param [String] username
-  # @param [Symbol] gametype either :connect4 or :otto
+  # @param [Symbol] gametype either "connect4" or "otto"
   # @return [Integer] the number of wins for the passed gametype and user
   def get_wins(username, gametype)
     get_stat(username, gametype, :wins)
   end
 
   # @param [String] username
-  # @param [Symbol] gametype either :connect4 or :otto
+  # @param [Symbol] gametype either "connect4" or "otto"
   # @return [Integer] the number of losses for the passed gametype and user
   def get_losses(username, gametype)
     get_stat(username, gametype, :losses)
   end
 
   # @param [String] username
-  # @param [Symbol] gametype either :connect4 or :otto
+  # @param [Symbol] gametype either "connect4" or "otto"
   # @return [Integer] the number of draws for the passed gametype and user
   def get_draws(username, gametype)
     get_stat(username, gametype, :draws)
   end
 
   # @param [String] username
-  # @param [Symbol] gametype either :connect4 or :otto
+  # @param [Symbol] gametype either "connect4" or "otto"
   # @param [Symbol] outcome either :wins, :losses, or :draws
   def increment_stat(username, gametype, outcome)
     # preconditions
@@ -100,7 +100,7 @@ class GameStats
   # yields each |username, gametype, outcome, number|
   def each_stat
     @by_username.each_key do |username|
-      [:connect4, :otto].each do |gametype|
+      ["connect4", "otto"].each do |gametype|
         [:wins, :losses, :draws].each do |outcome|
           yield_stat(username,
                 gametype,
@@ -135,14 +135,14 @@ class GameStats
 
   def init_username(username)
     @by_username[username] = Hash.new
-    @by_username[username][:connect4] = Hash.new
-    @by_username[username][:connect4][:wins] = 0
-    @by_username[username][:connect4][:losses] = 0
-    @by_username[username][:connect4][:draws] = 0
-    @by_username[username][:otto] = Hash.new
-    @by_username[username][:otto][:wins] = 0
-    @by_username[username][:otto][:losses] = 0
-    @by_username[username][:otto][:draws] = 0
+    @by_username[username]["connect4"] = Hash.new
+    @by_username[username]["connect4"][:wins] = 0
+    @by_username[username]["connect4"][:losses] = 0
+    @by_username[username]["connect4"][:draws] = 0
+    @by_username[username]["otto"] = Hash.new
+    @by_username[username]["otto"][:wins] = 0
+    @by_username[username]["otto"][:losses] = 0
+    @by_username[username]["otto"][:draws] = 0
   end
 
 end

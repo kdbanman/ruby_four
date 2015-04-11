@@ -90,8 +90,8 @@ class MasterServer
     # config must have at least 1 non nil player
     at_least_one_player config
     # human user name(s) must be in users db
-    is_true @db.user_exists(config.name1) if config.player1 == :human
-    is_true @db.user_exists(config.name2) if config.player2 == :human
+    is_true @db.user_exists(config.name1) if config.player1 == "human"
+    is_true @db.user_exists(config.name2) if config.player2 == "human"
     # one human config name must match username
     one_matches config.name1, config.name2, username
 

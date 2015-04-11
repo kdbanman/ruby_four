@@ -12,18 +12,18 @@ require 'xmlrpc/marshal'
 # should be able to give that player a name.
 #
 # As far as the GameConfig object is concerned, Symbols GameConfig.player1 and GameConfig.player2
-# can be :human, :computer, *or :remote*.  A `nil` GameConfig.name1 or GameConfig.name2 means that
+# can be "human", "computer", *or "remote"*.  A `nil` GameConfig.name1 or GameConfig.name2 means that
 # the remote player is not yet joined.  That's how the UI should create the GameConfig object, but
 # the GameScreen, DataSource, and Engine will always *receive* a completed GameConfig object.  For
-# the creating player, the :remote player's name will be set accordingly.  For the joining player,
-# the creating player will appear as the :remote player.
+# the creating player, the "remote" player's name will be set accordingly.  For the joining player,
+# the creating player will appear as the "remote" player.
 
 # EXAMPLE LIFECYCLE:
 #
 # On client, player logged into server 192.168.1.42 creates otto game (as player 1, necessarily) with remote player 2
-#   config.type == :otto                # Won't change on any client
-#   config.player1 == :player           # Won't change on this client, will be :remote for joining client
-#   config.player2 == :remote           # Won't change on this client, will be :player for joining client
+#   config.type == "otto"                # Won't change on any client
+#   config.player1 == :player           # Won't change on this client, will be "remote" for joining client
+#   config.player2 == "remote"           # Won't change on this client, will be :player for joining client
 #   config.name1 == 'billy'             # Won't change on any client
 #   config.name2 == nil                 # Won't change on any client
 #   config.difficulty == <don't care>   # Won't change on any client

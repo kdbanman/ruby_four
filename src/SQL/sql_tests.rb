@@ -26,36 +26,36 @@ class SQLTests < Minitest::Test
   def test_add_win
     @db_helper.add_user(@user, @user)
     user_id = @db_helper.get_user_id(@user, @user)
-    @db_helper.add_win(user_id, :connect4)
-    player_stats = @db_helper.get_player_stats(user_id, :connect4)
+    @db_helper.add_win(user_id, "connect4")
+    player_stats = @db_helper.get_player_stats(user_id, "connect4")
     assert_equal(1, player_stats[0])
 
-    @db_helper.add_win(user_id, :connect4)
-    player_stats = @db_helper.get_player_stats(user_id, :connect4)
+    @db_helper.add_win(user_id, "connect4")
+    player_stats = @db_helper.get_player_stats(user_id, "connect4")
     assert_equal(2, player_stats[0])
   end
 
   def test_add_loss
     @db_helper.add_user(@user, @user)
     user_id = @db_helper.get_user_id(@user, @user)
-    @db_helper.add_loss(user_id, :connect4)
-    player_stats = @db_helper.get_player_stats(user_id, :connect4)
+    @db_helper.add_loss(user_id, "connect4")
+    player_stats = @db_helper.get_player_stats(user_id, "connect4")
     assert_equal(1, player_stats[1])
 
-    @db_helper.add_loss(user_id, :connect4)
-    player_stats = @db_helper.get_player_stats(user_id, :connect4)
+    @db_helper.add_loss(user_id, "connect4")
+    player_stats = @db_helper.get_player_stats(user_id, "connect4")
     assert_equal(2, player_stats[1])
   end
 
   def test_add_draw
     @db_helper.add_user(@user, @user)
     user_id = @db_helper.get_user_id(@user, @user)
-    @db_helper.add_draw(user_id, :connect4)
-    player_stats = @db_helper.get_player_stats(user_id, :connect4)
+    @db_helper.add_draw(user_id, "connect4")
+    player_stats = @db_helper.get_player_stats(user_id, "connect4")
     assert_equal(1, player_stats[2])
 
-    @db_helper.add_draw(user_id, :connect4)
-    player_stats = @db_helper.get_player_stats(user_id, :connect4)
+    @db_helper.add_draw(user_id, "connect4")
+    player_stats = @db_helper.get_player_stats(user_id, "connect4")
     assert_equal(2, player_stats[2])
   end
 
@@ -90,13 +90,13 @@ class SQLTests < Minitest::Test
     @db_helper.add_user(user2, user2)
     user_id2 = @db_helper.get_user_id(user2, user2)
 
-    @db_helper.add_win(user_id1, :connect4)
-    @db_helper.add_win(user_id2, :otto)
+    @db_helper.add_win(user_id1, "connect4")
+    @db_helper.add_win(user_id2, "otto")
 
     game_stat = @db_helper.get_all_stats
 
-    assert_equal(1, game_stat.get_wins(@user, :connect4))
-    assert_equal(1, game_stat.get_wins(user2, :otto))
+    assert_equal(1, game_stat.get_wins(@user, "connect4"))
+    assert_equal(1, game_stat.get_wins(user2, "otto"))
 
   end
 
