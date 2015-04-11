@@ -48,6 +48,8 @@ class GameScreen
 	def start
     verify_column_selected @columnSelectedListener
     verify_game_closed_listener @closeListener
+    not_nil(@win_listener, 'Win listener must be set before starting')
+    not_nil(@board_full_listenener, 'Board full listenener must be set before starting')
     #TODO leave in for part 5
     #verify_new_game_listener @newGameListener
     @screen.show_all()
@@ -82,7 +84,17 @@ class GameScreen
     @quitButton.signal_connect('activate') do
       close
     end
-	end
+  end
+
+  def set_win_listener(&block)
+    CommonContracts.block_callable block
+    @win_listener = block
+  end
+
+  def set_board_full_listenener(&block)
+    CommonContracts.block_callable block
+    @board_full_listenener = block
+  end
 
   # @param [Datasource] datasource
 	def update(board)
@@ -93,17 +105,9 @@ class GameScreen
     player = board.player1 if (board.player1.id == playerID)
     player = board.player2 if (board.player2.id == playerID)
 
-    raise_dialog("Winner: #{board.winner.name}") if board.winner
-    raise_dialog('No Winner.') if board.full?
+    @win_listener.call if board.winner
+    @board_full_listenener.call if board.full?
     @playerTurnLabel.set_text(player.name)
-  end
-
-  def raise_dialog(msg)
-    dialog = Gtk::MessageDialog.new(nil, Gtk::Dialog::DESTROY_WITH_PARENT, 
-      Gtk::MessageDialog::INFO, Gtk::MessageDialog::BUTTONS_OK, msg)
-    dialog.run
-    dialog.destroy
-    kill
   end
 
   private
