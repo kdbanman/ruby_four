@@ -8,8 +8,8 @@ module GameConfigContracts
   end
 
   def verify_player(player)
-    unless player == :human || player == :computer || player == :remote
-      failure 'Player must either be :human or :computer'
+    unless player == "human" || player == "computer" || player == "remote"
+      failure 'Player must either be "human" or "computer"'
     end
   end
 
@@ -18,8 +18,8 @@ module GameConfigContracts
   end
 
   def verify_difficulty(difficulty)
-    unless difficulty == :easy || difficulty == :hard
-      failure 'Difficulty must either be :easy or :hard'
+    unless difficulty == "easy" || difficulty == "hard"
+      failure 'Difficulty must either be "easy" or "hard"'
     end
   end
 

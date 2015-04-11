@@ -53,14 +53,14 @@ class Board < AbstractBoard
 
   # @param [Integer] token_count
   # @param [GameType] game_type
-  # @param [Symbol] type either :human or :computer
+  # @param [Symbol] type either "human" or "computer"
   # @param [String] name
   # @param [Integer] id either 1 or 2
-  # @param [Symbol] difficulty either :easy or :hard
-  def build_player(token_count, game_type, type, name, id, difficulty = :easy)
-    return HumanPlayer.new(name, game_type.make_initial_tokens(id, token_count), id) if (type == :human)
+  # @param [Symbol] difficulty either "easy" or "hard"
+  def build_player(token_count, game_type, type, name, id, difficulty = "easy")
+    return HumanPlayer.new(name, game_type.make_initial_tokens(id, token_count), id) if (type == "human")
 
-    return EasyComputerPlayer.new(name, game_type.make_initial_tokens(id, token_count), id) if (difficulty == :easy)
+    return EasyComputerPlayer.new(name, game_type.make_initial_tokens(id, token_count), id) if (difficulty == "easy")
     HardComputerPlayer.new(name, game_type.make_initial_tokens(id, token_count), id, game_type)
   end
 

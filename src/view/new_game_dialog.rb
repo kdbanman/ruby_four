@@ -96,11 +96,11 @@ class NewGameDialog
   end
 
   def validate_fields
-    if @player1 == :human
+    if @player1 == "human"
       return FALSE unless @player1_name.valid?
     end
 
-    if @player2 == :human
+    if @player2 == "human"
       return FALSE unless @player2_name.valid?
     end
 
@@ -113,13 +113,13 @@ class NewGameDialog
 
     c4Button.group = tootButton
 
-    @gametype = :otto
+    @gametype = "otto"
     tootButton.group.each do |groupItem|
       groupItem.signal_connect('toggled') do |button|
         if button.active?
           #todo could be extracted into class if have time
-          @gametype = :otto if button == tootButton
-          @gametype = :connect4 if button == c4Button
+          @gametype = "otto" if button == tootButton
+          @gametype = "connect4" if button == c4Button
         end
       end
     end
@@ -139,25 +139,25 @@ class NewGameDialog
     player1Name = @builder.get_object(PLAYER1_ENTRY_BOX)
     player1Name.set_sensitive FALSE
 
-    @player1 = :computer
-    @player2 = :computer
+    @player1 = "computer"
+    @player2 = "computer"
     zeroButton.group.each do |item|
       item.signal_connect('toggled') do |button|
         #todo should pll this up into anther class. This is trash.
         if button.active?
           if button == zeroButton
-            @player1 = :computer
-            @player2 = :computer
+            @player1 = "computer"
+            @player2 = "computer"
             player2Name.set_sensitive FALSE
             player1Name.set_sensitive FALSE
           elsif button == oneButton
-            @player1 = :human
-            @player2 = :computer
+            @player1 = "human"
+            @player2 = "computer"
             player1Name.set_sensitive TRUE
             player2Name.set_sensitive FALSE
           elsif button == twoButton
-            @player1 = :human
-            @player2 = :human
+            @player1 = "human"
+            @player2 = "human"
             player1Name.set_sensitive TRUE
             player2Name.set_sensitive TRUE
           end
@@ -172,12 +172,12 @@ class NewGameDialog
     hardButton = @builder.get_object(COMPUTER_DIFFICULTY_HARD)
 
     hardButton.group = easyButton
-    @difficulty = :easy
+    @difficulty = "easy"
     easyButton.group.each do |item|
       item.signal_connect('toggled') do |button|
         if button.active?
-          @difficulty = :easy if button == easyButton
-          @difficulty = :hard if button == hardButton
+          @difficulty = "easy" if button == easyButton
+          @difficulty = "hard" if button == hardButton
         end
       end
     end
