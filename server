@@ -1,5 +1,5 @@
 require 'xmlrpc/server'
-require 'xmlrpc/marshal'
+require 'xmlrpc/config'
 require './src/master_server.rb'
 
 PORT =  50543
