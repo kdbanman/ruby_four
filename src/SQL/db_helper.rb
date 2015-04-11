@@ -1,5 +1,8 @@
 require 'mysql'
+
 require_relative '../util/common_contracts'
+require_relative '../SQL/db_helper_contracts'
+
 class DbHelper
   @conn
 
@@ -151,6 +154,9 @@ class DbHelper
   def get_connection
     begin
       @conn = Mysql.new('mysqlsrv.ece.ualberta.ca', 'ece421usr2', 'a421Psn101', 'ece421grp2', 13020)
+
+      #post
+      DbHelperContracts.connection_not_null @conn
     rescue Mysql::Error
       raise ContractFailure 'Could not connect to DataBase'
     end

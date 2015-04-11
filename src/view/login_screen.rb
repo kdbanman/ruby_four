@@ -30,6 +30,9 @@ class LoginScreen
 
   def start
     @screen.show_all
+
+    #post
+    CommonContracts.is_visible @screen
   end
 
   def kill

@@ -19,11 +19,15 @@ class LoadGameScreen
   end
 
   def set_on_destroy(&block)
+    CommonContracts.block_callable block
     @screen.signal_connect('destroy') { block.call }
   end
 
   def start
     @screen.show_all
+
+    #post
+    CommonContracts.is_visible @screen
   end
 
   def kill
@@ -31,6 +35,7 @@ class LoadGameScreen
   end
 
   def set_on_ok_listener(&block)
+    CommonContracts.block_callable block
     @gtk_builder.get_object('load_game_button').signal_connect('released') do
       selection = @tree.selection.selected
       block.call(selection) if selection

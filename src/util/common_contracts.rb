@@ -101,4 +101,12 @@ module CommonContracts
       fail 'Game id must be a UUID stirng'
     end
   end
+
+  def CommonContracts.is_visible (screen)
+    fail 'Screen should be visible' unless screen.visible?
+  end
+
+  def CommonContracts.is_equal(a, b)
+    fail 'Parameters should be equal' unless a == b
+  end
 end
