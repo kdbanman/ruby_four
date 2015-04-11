@@ -64,7 +64,7 @@ class DbHelper
   def get_user_id(username, password)
     #pre
     CommonContracts.strings username, password
-    runQuery("SELECT Id FROM #{DBConstants::USERS} WHERE Username = '#{username}' AND Password = '#{password}'").each &(Proc.new {|row| return row['Id'].to_i})
+    runQuery("SELECT Id FROM #{DBConstants::USERS} WHERE Username = '#{username}' AND Password = '#{password}'").each_hash &(Proc.new {|row| return row['Id'].to_i})
   end
 
   # @param [Integer] id
@@ -72,7 +72,7 @@ class DbHelper
   def get_user_name(id)
     #pre
     CommonContracts.integers id
-    runQuery("SELECT Username FROM #{DBConstants::USERS} WHERE Id = #{id}").each_hash Proc.new {|res| return res['Username']}
+    runQuery("SELECT Username FROM #{DBConstants::USERS} WHERE Id = #{id}").each_hash &(Proc.new {|res| return res['Username']})
   end
 
   # @param [String] username
@@ -89,7 +89,7 @@ class DbHelper
   def get_saved_game(id)
     #pre
     CommonContracts.strings id
-    runQuery("SELECT data FROM #{DBConstants::SAVED_GAMES} WHERE Game_id = '#{id}'").each_hash Proc.new {|row| return row['data']}
+    runQuery("SELECT data FROM #{DBConstants::SAVED_GAMES} WHERE Game_id = '#{id}'").each_hash &(Proc.new {|row| return row['data']})
   end
 
   # @param [Integer] id
@@ -101,7 +101,7 @@ class DbHelper
     CommonContracts.verify_type game_type
 
     #TODO game_type!
-    runQuery("SELECT Wins, Losses, Draws FROM #{DBConstants::GAME_STATS} WHERE Game_type = '#{game_type.to_s} AND Id = #{id}'").each_hash Proc.new {|row| return Array.new(row['Wins'], row['Losses'], row['Draws'])}
+    runQuery("SELECT Wins, Losses, Draws FROM #{DBConstants::GAME_STATS} WHERE Game_type = '#{game_type.to_s}' AND Id = #{id}").each_hash &(Proc.new {|row| return [row['Wins'].to_i, row['Losses'].to_i, row['Draws'].to_i]})
     #return [<wins>, <lossses>, <draws>]
   end
 
@@ -124,7 +124,7 @@ class DbHelper
     runQuery("SELECT Id, Username FROM #{DBConstants::USERS}").each_hash { |row| users[row['Id']] = row['Username']}
 
     stats = GameStats.new
-    runQuery("SELECT * FROM #{DBConstants::GAME_STATS}").each_hash { |row| stats.add_stat_row(users[row['Id']], row['Game_type'], row['Wins'], row['Losses'], row['Draws'])}
+    runQuery("SELECT * FROM #{DBConstants::GAME_STATS}").each_hash { |row| stats.add_stat_row(users[row['Id']], row['Game_type'].to_sym, row['Wins'].to_i, row['Losses'].to_i, row['Draws'].to_i)}
     return stats
   end
 
@@ -140,6 +140,11 @@ class DbHelper
     #pre
     CommonContracts.strings id
     runQuery "DELETE FROM #{DBConstants::SAVED_GAMES} WHERE Game_id = '#{id}'"
+  end
+
+  def delete_user(id)
+    CommonContracts.integers id
+    runQuery "DELETE FROM #{DBConstants::USERS} WHERE Id = #{id}"
   end
 
   private
@@ -168,7 +173,7 @@ class DbHelper
   end
 
   def build_game_stats_query(id, field, game_type)
-    "INSERT INTO #{DBConstants::SAVED_GAMES}(Id, Game_type, #{field}) VALUES(#{id}, 1, '#{game_type.to_s}') ON DUPLICATE KEY " +
+    "INSERT INTO #{DBConstants::GAME_STATS}(Id, Game_type, #{field}) VALUES(#{id},'#{game_type.to_s}' ,1) ON DUPLICATE KEY " +
         "UPDATE #{field}=#{field} + 1"
   end
 
