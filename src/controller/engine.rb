@@ -1,112 +1,146 @@
-require 'thread'
-
-require_relative '../game_server'
-
-require_relative '../util/common_contracts'
-
-require_relative '../view/new_game_dialog'
-require_relative '../view/game_screen'
-
+require_relative '../controller/window_manager'
 require_relative '../model/game_config'
-require_relative '../model/game_type_factory'
 require_relative '../model/data_source'
+require_relative '../model/game_type_factory'
+require_relative '../view/game_screen'
+require_relative '../view/stats_screen'
+require_relative '../view/load_game_screen'
+require_relative '../model/containers'
+require_relative '../view/login_screen'
+require_relative '../view/main_screen'
+require_relative '../view/new_game_dialog'
+require_relative '../model/master_data_source'
+
+require 'xmlrpc/client'
 
 class Engine
 
   private
 
-  @game_type
-  @data_source
+  #Master Game Server (proxy)
+  @master
 
-  @game_screen
+  #Window Manager
+  @window_manager
 
   public
 
-  def initialize(port)
-    new_game = NewGameDialog.new
-    new_game.setup_ok_listener do |game_config|
-      game_config.port = port
-      set_game_model game_config
-      start_game_screen game_config
+  def initialize
+    @window_manager = WindowManager.new
+  end
+
+  def start
+    push_login_Screen
+  end
+
+  def push_main_screen
+    main_screen = MainScreen.new @master
+
+    main_screen.set_load_game_listener {push_load_game_screen}
+    main_screen.set_refresh_listener {main_screen.update}
+    main_screen.set_stats_listener {push_stats_screen}
+    main_screen.set_new_game_listener{push_new_game_dialog}
+
+    #TODO replace with real screens
+    main_screen.set_join_game_listener{ |game_id| @window_manager.push_information_dialog "Requested to join game #{game_id}"}
+
+    @window_manager.set_head_and_kill_rest main_screen
+    @window_manager.start unless @window_manager.started
+  end
+
+  def push_load_game_screen
+    load_game_screen = LoadGameScreen.new(@master.saved_games)
+
+    load_game_screen.set_on_ok_listener {|id| @master.start_saved_game id }
+    @window_manager.open_window(load_game_screen)
+    @window_manager.start unless @window_manager.started
+  end
+
+  def push_login_Screen
+    screen = LoginScreen.new
+    screen.set_sign_in_listener do |u, p, ip|
+      puts "Signed in with: #{u}, #{p}, #{ip}"
+      connect_to_server(u, p, ip)
+      attempt_login(u, p)
     end
-    new_game.start
+    @window_manager.open_window(screen)
+    @window_manager.start unless @window_manager.started
   end
 
-  # @param [GameConfig] game_config
-  def set_game_model(game_config)
-    puts "Creating game with config: #{game_config}"
-    @game_type = GameTypeFactory.get_game_type game_config
-    @data_source = DataSource.new game_config
-    @data_source.add_observer self
+  def push_stats_screen
+    username = 'Bob'
+    stats = []
+    stats << GameStat.new(:connect4, username, 1, 2, 3)
+    stats << GameStat.new(:otto, username, 4, 5, 6)
+    15.times {|i| stats << GameStat.new(:connect4, 'c4_player' + i.to_s, 7, 7, 7)}
+    15.times {|i| stats << GameStat.new(:otto, 'otto_player' + i.to_s, 7, 7, 7)}
+
+    stats_screen = StatsScreen.new(username, stats)
+    @window_manager.open_window stats_screen
+    @window_manager.start unless @window_manager.started
   end
 
-  # @param [GameConfig] game_config
-  def start_game_screen(game_config)
-    @game_screen = GameScreen.new @game_type, @data_source, game_config
+  def push_game_screen
+    @game_config = GameConfig.new(:connect4, :human, :human, 'player1', 'player2', :hard, 10, 10) unless @game_config
+    set_up_game_config unless @game_type
 
-    @game_screen.set_column_selected_listener do |col|
-      current_player_id = @data_source.board.current_player_id
-      @data_source.place_token(current_player_id,
-                               col,
-                               @game_type.get_player_token_type(current_player_id))
+    game_screen = GameScreen.new @game_type, @data_source, @game_config
+    game_screen.set_column_selected_listener { |num| puts "Column Selected: #{num}" }
+    game_screen.set_close_listener {push_main_screen}
+    game_screen.set_board_full_listenener{@window_manager.push_information_dialog 'Board Full'}
+    game_screen.set_win_listener {@window_manager.push_information_dialog 'There was a winner'}
+
+    @window_manager.set_head_and_kill_rest game_screen
+    @window_manager.start unless @window_manager.started
+  end
+
+  def set_up_game_config()
+    #@game_config = GameConfig.new(:connect4, :human, :human, 'player1', 'player2', :hard, 10, 10)
+    @game_type = GameTypeFactory.get_game_type @game_config
+    #TODO talk to kirby about how to start a game server
+    #@data_source = DataSource.new @game_config
+  end
+
+  def push_new_game_dialog
+    new_game_dialog = NewGameDialog.new
+    new_game_dialog.set_ok_listener do |gameconfig|
+      @game_config = gameconfig
+      set_up_game_config
+      push_game_screen
     end
 
-    @game_screen.set_close_listener { @data_source.exit_game(@data_source.board.current_player_id) }
+    @window_manager.open_window new_game_dialog
+    @window_manager.start unless @window_manager.started
+  end
 
-    @game_screen.set_new_game_listener do |game_config|
-      #@game_screen.kill
-      puts "ENGINE: creating new game with config: #{game_config}"
-      set_game_model game_config
-      start_game_screen game_config
+  private
+  def connect_to_server(username, password, ip)
+    server_address = ip.split(':')
+    begin
+      server = XMLRPC::Client.new(server_address[0], '/',server_address[1])
+      server.timeout = 3000
+      @master = MasterDataSource.new server.proxy('master')
+    rescue Errno::ECONNREFUSED => e
+      puts 'ERROR: COULD NOT CONNECT TO SERVER'
+      @window_manager.push_information_dialog('Could not connect to server!')
     end
-
-    attempt_ai_player @data_source.board
-
-    @game_screen.start
   end
 
-  def new_token_command(coordinate)
-    CommonContracts.valid_coordinate(coordinate)
-  end
-
-  # @param [Board] board
-  def update(board)
-    #TODO is a board
-    attempt_ai_player board
-  end
-
-  # @param [Board] board
-  def attempt_ai_player(board)
-    unless board.winner
-      current_player_id = @data_source.board.current_player_id
-      opponent_id = 1 + current_player_id % 2
-      ai_player = @data_source.board.get_player(current_player_id)
-      ai_column = ai_player.get_column(@data_source.board,
-                                       @game_type.get_win_pattern(current_player_id),
-                                       @game_type.get_win_pattern(opponent_id))
-      unless ai_column.nil?
-        @game_screen.update board
-        puts "ENGINE: AI player #{current_player_id} placing in column #{ai_column}"
-        @data_source.place_token(current_player_id,
-                                 ai_column,
-                                 @game_type.get_player_token_type(current_player_id))
+  def attempt_login(username, password)
+    if @master
+      begin
+        if @master.login(username, password)
+          push_main_screen
+        else
+          @window_manager.push_information_dialog('Login Credentials, are incorrect')
+        end
+      rescue
+        @window_manager.push_information_dialog('Server Connection Error')
       end
     end
   end
 
-  def setupColumnClickListener
-  end
-
-  def setupNewGameListener
-  end
-
-  def setupCloseListener
-  end
-
-  def startNewGameMenu
-  end
-
-  def startNewGameScreen
-  end
-
 end
+
+engine = Engine.new
+engine.start
