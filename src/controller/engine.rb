@@ -68,14 +68,7 @@ class Engine
   end
 
   def push_stats_screen
-    username = 'Bob'
-    stats = []
-    stats << GameStat.new(:connect4, username, 1, 2, 3)
-    stats << GameStat.new(:otto, username, 4, 5, 6)
-    15.times {|i| stats << GameStat.new(:connect4, 'c4_player' + i.to_s, 7, 7, 7)}
-    15.times {|i| stats << GameStat.new(:otto, 'otto_player' + i.to_s, 7, 7, 7)}
-
-    stats_screen = StatsScreen.new(username, stats)
+    stats_screen = StatsScreen.new(@master.username, @master.get_stats)
     @window_manager.open_window stats_screen
     @window_manager.start unless @window_manager.started
   end
