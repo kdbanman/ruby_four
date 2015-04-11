@@ -1,5 +1,6 @@
 require 'observer'
-require 'socket'
+require 'xmlrpc/client'
+require 'xmlrpc/server'
 require_relative '../model/rpc_data_source_contracts'
 
 # GameServer communication layer.
@@ -8,7 +9,7 @@ require_relative '../model/rpc_data_source_contracts'
 # Allows command sending to the server with RPC method calls.
 class RPCDataSource
 
-  attr_reader :board
+  attr_reader :board, :game_id
 
   include Observable
   include RPCDataSourceContracts
@@ -16,6 +17,7 @@ class RPCDataSource
   private
 
   @board
+  @game_id
 
   @client_rpc
   @server_proxy
@@ -28,15 +30,32 @@ class RPCDataSource
     # connect with server and send serialized game config
     puts "DATASOURCE: connecting to server at #{config.ip}:#{config.port}"
 
+    server = XMLRPC::Client.new( config.ip, '/', config.port)
+    master = server.proxy('master')
+
     # call master server create game with config (return game id)
+    id_and_port = master.create_game(config, config.name1)
+    @game_id = id_and_port[0]
+    port = id_and_port[1]
 
     # get game server proxy using game id
+    server = XMLRPC::Client.new( config.ip, '/', port )
+    @server_proxy = server.proxy( @game_id )
 
     # declare client_rpc xmlrpc server with player joined, update, and exit handlers
     # start client xmlrpc server in new thread
+    my_port = unused_port
+    @client_rpc = XMLRPC::Server.new( my_port, 'localhost', 1)
+    @client_rpc.add_handler("#{game_id}", self);
+
+    spawn do
+      Signal.trap('INT') { @client_rpc.shutdown }
+      @client_rpc.serve
+    end
 
     # register client_rpc (random open port on local ip) with game server
     #  (no need to register twice, client messages ar broadcast)
+    @server_proxy.register_client( local_ip, my_port )
 
     verify_invariants
   end
@@ -49,7 +68,7 @@ class RPCDataSource
     is_integers player_id, column
     is_token_type token_type
 
-    # call place token on server proxy
+    @server_proxy.place_token(player_id, column, token_type)
 
     verify_invariants
   end
@@ -59,6 +78,7 @@ class RPCDataSource
     is_integers player_id
 
     # call ext command on server proxy
+    @server_proxy.exit_game(playerID)
 
     verify_invariants
   end
@@ -66,6 +86,10 @@ class RPCDataSource
   # called by game server
   def remote_update_board(board)
     # set board and update observers
+    @board = board
+
+    changed
+    notify_observers @board
 
     verify_invariants
   end
@@ -73,12 +97,14 @@ class RPCDataSource
   # called by game server
   def remote_exit_game(playerid)
     # kill client rpc server
+    @client_rpc.shutdown
 
     verify_invariants
   end
 
   def remote_sever_err(msg)
 
+    puts "Server problem: #{msg}"
     verify_invariants
   end
 

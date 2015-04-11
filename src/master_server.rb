@@ -17,6 +17,8 @@ class MasterServer
 
   @db
 
+  @curr_port = 50500
+
   @waiting      # Hash from game id (UUID string) to RPCGameServer
   @in_progress  # Same as above
 
@@ -118,7 +120,7 @@ class MasterServer
 
     # postconditions
 
-    new_id
+   [new_id, @curr_port]
   end
 
   def start_saved_game(game_id, username)
@@ -127,7 +129,7 @@ class MasterServer
 
     create_game_server_listener(new_id, game)
 
-    game_id
+    [game_id, @curr_port]
   end
 
   # note: a client *connects* with an in progress game by making RPC calls to the servlet at the game_id path, this
@@ -148,6 +150,8 @@ class MasterServer
     # postconditions
     is_true @waiting[wait_id].nil?
     is_true !@in_progress[wait_id].nil?
+
+    @curr_port
   end
 
   # Intended to be called from clients, who may use the list to choose a game and later call join_game(id, username)
@@ -200,12 +204,14 @@ class MasterServer
 
   def create_game_server_listener(new_id, game)
 
+
+    @curr_port = unused_port
+
     puts "forking game listener for #{new_id}"
     pid = fork do
       # TODO try until no EADDRINUSE
-      port = 50500 + Random.rand(50)
-      puts "Starting game #{new_id} server listener on port #{port}"
-      server = XMLRPC::Server.new(port, 'localhost', 2)
+      puts "Starting game #{new_id} server listener on port #{@curr_port}"
+      server = XMLRPC::Server.new(@curr_port, 'localhost', 2)
       server.add_handler("#{new_id}", game)
       Signal.trap('INT') { server.shutdown }
       server.serve
@@ -215,8 +221,23 @@ class MasterServer
     @game_server_listeners[new_id] = pid
   end
 
-  def destroy_game_server_listener(game_id)
+  def local_ip
+    ip = Socket.ip_address_list.each { |a| return a.ip_address if a.ipv4? && !a.ipv4_loopback? }
 
+    # postconditions
+    is_ip ip
+
+    ip
+  end
+
+  def unused_port
+    s = Socket.new(:INET, :STREAM, 0)
+    s.bind(Addrinfo.tcp('localhost', 0))
+    port = s.local_address.ip_port
+
+    #postconditions
+    is_integers port
+    port
   end
 
 end
