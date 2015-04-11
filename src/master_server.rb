@@ -122,7 +122,12 @@ class MasterServer
   end
 
   def start_saved_game(game_id, username)
+    game = @db.get_saved_game game_id
+    @waiting[game_id] = game
 
+    create_game_server_listener(new_id, game)
+
+    game_id
   end
 
   # note: a client *connects* with an in progress game by making RPC calls to the servlet at the game_id path, this
@@ -151,11 +156,6 @@ class MasterServer
     waiting_list = @waiting.each_pair.collect {|game_id, board| OpenGame.new(game_id, board.player1.name, board.config.type)}
 
     Marshal.dump(waiting_list)
-  end
-
-  def get_game_stats(username)
-    # return game stats object populated from database query results
-    #TODO
   end
 
   ####
