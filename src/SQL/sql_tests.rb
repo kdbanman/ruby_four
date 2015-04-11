@@ -100,4 +100,51 @@ class SQLTests < Minitest::Test
 
   end
 
+  def test_update_saved_game
+    user2 = 'Bob'
+    game_id = '1234'
+    @db_helper.add_user(@user, @user)
+    user_id1 = @db_helper.get_user_id(@user, @user)
+
+    @db_helper.add_user(user2, user2)
+    user_id2 = @db_helper.get_user_id(user2, user2)
+
+    my_obj = {'a' => 100, 'b' => 200}
+    @db_helper.add_saved_game(game_id, Marshal.dump(my_obj), user_id1, user_id2)
+
+    ret_obj = Marshal.load(@db_helper.get_saved_game(game_id))
+
+    assert_equal(my_obj, ret_obj)
+
+    my_obj = {'a' => 200, 'b' => 200}
+    @db_helper.update_saved_game(game_id, Marshal.dump(my_obj))
+
+    ret_obj = Marshal.load(@db_helper.get_saved_game(game_id))
+    assert_equal(my_obj, ret_obj)
+
+  end
+
+  def test_delete_saved_game
+    user2 = 'Bob'
+    game_id = '1234'
+    @db_helper.add_user(@user, @user)
+    user_id1 = @db_helper.get_user_id(@user, @user)
+
+    @db_helper.add_user(user2, user2)
+    user_id2 = @db_helper.get_user_id(user2, user2)
+
+    my_obj = {'a' => 100, 'b' => 200}
+    @db_helper.add_saved_game(game_id, Marshal.dump(my_obj), user_id1, user_id2)
+
+    @db_helper.delete_saved_game game_id
+
+    begin
+      ret_obj = Marshal.load(@db_helper.get_saved_game(game_id))
+      assert_equal(my_obj, ret_obj)
+      failure
+    rescue
+      #passed
+    end
+  end
+
 end
